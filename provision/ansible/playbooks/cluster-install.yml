@@ -1,0 +1,14 @@
+---
+- hosts:
+    - master
+    - worker
+  become: true
+  roles:
+    - installation
+    - kubecolor
+  post_tasks:
+    - name: Alias 'k' with kubectl
+      become: false
+      ansible.builtin.lineinfile:
+        path: "/home/{{ ansible_user }}/.profile"
+        line: 'alias k="kubectl"'
