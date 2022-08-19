@@ -1,3 +1,5 @@
+# Repo
+.env
 # Trash
 .DS_Store
 Thumbs.db
@@ -15,4 +17,5 @@ xanmanning.k3s*
 .terraform
 .terraform.tfstate*
 terraform.tfstate*
-.env
+# Output
+megalinter-reports
