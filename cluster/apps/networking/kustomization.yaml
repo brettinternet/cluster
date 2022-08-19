@@ -7,4 +7,5 @@ resources:
   - external-dns
   - ingress-nginx
   - metallb
+  # - nfs
   - k8s-gateway
