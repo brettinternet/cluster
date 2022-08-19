@@ -1,0 +1,64 @@
+---
+version: "3"
+
+vars:
+  PROJECT_DIR:
+    sh: git rev-parse --show-toplevel
+  CLUSTER_DIR: "{{.PROJECT_DIR}}/cluster"
+  ANSIBLE_DIR: "{{.PROJECT_DIR}}/provision/ansible"
+  TERRAFORM_DIR: "{{.PROJECT_DIR}}/provision/terraform"
+
+dotenv: [.env]
+
+env:
+  KUBECONFIG: "{{.PROJECT_DIR}}/provision/kubeconfig"
+
+includes:
+  setup: .taskfiles/setup_{{OS}}.yaml
+  ansible: .taskfiles/ansible.yaml
+  cluster: .taskfiles/cluster.yaml
+  precommit: .taskfiles/precommit.yaml
+  terraform: .taskfiles/terraform.yaml
+  sops: .taskfiles/sops.yaml
+
+tasks:
+  init:
+    desc: Install dependencies and setup environment
+    cmds:
+      - task: setup:init
+      - task: precommit:init
+      - task: precommit:update
+      - task: setup-age
+      - task: create-env
+      - echo "Next, run 'task verify'"
+
+  create-env:
+    cmds:
+      - cp example.env .env
+      - printf "\x1B[01;93m✔ .env created\n\x1B[0m"
+    status:
+      - test -f .env
+
+  setup-age:
+    cmds:
+      - age-keygen -o age.agekey
+      - mkdir -p $HOME/.config/sops/age
+      - mv age.agekey $HOME/.config/sops/age/keys.txt
+      - "echo 'Source from .profile: \n\nexport SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt'"
+    status:
+      - test -f $HOME/.config/sops/age/keys.txt
+
+  verify:
+    desc: Verify env settings
+    cmds:
+      - ./configure --verify
+
+  configure:
+    desc: Configure repository from env settings
+    cmds:
+      - ./configure
+
+  wip:
+    desc: Commit WIP to current branch and reconcile cluster
+    cmds:
+      - ./scripts/wip.sh

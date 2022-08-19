@@ -1,0 +1,15 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: local
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://github.com/brettinternet/cluster
+  ref:
+    branch: main
+  ignore: |
+    # exclude all
+    /*
+    # include local charts
+    !/cluster/charts/local
