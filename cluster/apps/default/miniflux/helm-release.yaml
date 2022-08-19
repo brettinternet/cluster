@@ -1,0 +1,111 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: miniflux
+  namespace: default
+spec:
+  interval: 15m
+  chart:
+    spec:
+      # registryUrl=https://charts.bitnami.com/bitnami
+      chart: miniflux
+      version: 5.1.2
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux-system
+      interval: 15m
+  dependsOn:
+    - name: miniflux-postgres
+      namespace: default
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 3
+  # https://github.com/k8s-at-home/charts/blob/master/charts/stable/miniflux/values.yaml
+  values:
+    controller:
+      replicas: 1
+      strategy: RollingUpdate
+    env:
+      TZ: "${TIMEZONE}"
+      ADMIN_PASSWORD: "${SECRET_MINIFLUX_ADMIN_PASSWORD}"
+      DATABASE_URL: "postgres://miniflux:${SECRET_MINIFLUX_POSTGRES_PASSWORD}@miniflux-postgres.default/miniflux?sslmode=disable"
+    postgresql:
+      enabled: false
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: "nginx"
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-staging"
+          external-dns.alpha.kubernetes.io/target: "ipv4.${SECRET_DOMAIN}"
+          external-dns/is-public: "true"
+          hajimari.io/enable: "true"
+          hajimari.io/icon: "rss"
+        hosts:
+          - host: &host "miniflux.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+            secretName: "miniflux-tls"
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        memory: 96Mi
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: miniflux-postgres
+  namespace: default
+spec:
+  interval: 1h
+  chart:
+    spec:
+      # registryUrl=https://charts.bitnami.com/bitnami
+      chart: postgresql
+      version: 11.7.3
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: flux-system
+  # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values.yaml
+  # https://artifacthub.io/packages/helm/bitnami/postgresql
+  values:
+    fullnameOverride: miniflux-postgres
+    image:
+      # Use image with ARM64 support
+      # https://hub.docker.com/_/postgres
+      repository: library/postgres
+      tag: 14
+      debug: true
+    auth:
+      enablePostgresUser: false
+      postgresPassword: "${SECRET_MINIFLUX_POSTGRES_PASSWORD}"
+      username: miniflux
+      password: "${SECRET_MINIFLUX_POSTGRES_PASSWORD}"
+      database: miniflux
+    postgresqlDataDir: /var/lib/postgresql/data
+    primary:
+      podSecurityContext:
+        enabled: false
+        # fsGroup: 1000
+      containerSecurityContext:
+        enabled: false
+        # runAsUser: 1000
+      persistence:
+        enabled: true
+        mountPath: /var/lib/postgresql/data
+        existingClaim: appdata
+        subPath: miniflux_db

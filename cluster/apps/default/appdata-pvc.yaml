@@ -1,0 +1,39 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: appdata
+spec:
+  storageClassName: appdata-nfs
+  capacity:
+    storage: 64Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - nfsvers=4.2
+    - nconnect=8
+    - hard
+    - noatime
+  csi:
+    driver: nfs.csi.k8s.io
+    readOnly: false
+    volumeHandle: appdata-nfs-storage
+    volumeAttributes:
+      server: "${SECRET_NFS_APPDATA_SERVER}"
+      share: "${APPDATA_DIR}"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: appdata
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeName: appdata
+  storageClassName: appdata-nfs
+  resources:
+    requests:
+      storage: 5Gi

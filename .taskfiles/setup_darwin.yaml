@@ -1,0 +1,32 @@
+---
+version: "3"
+
+tasks:
+  init:
+    desc: Install homebrew dependencies
+    cmds:
+      - brew install -q {{.DEPS}} {{.CLI_ARGS}}
+    preconditions:
+      - sh: command -v brew
+        msg: Homebrew is not installed
+    vars:
+      DEPS: >-
+        age
+        ansible
+        direnv
+        fluxcd/tap/flux
+        go-task/tap/go-task
+        helm
+        helm/tap/chart-releaser
+        ipcalc
+        jq
+        kubernetes-cli
+        kustomize
+        pre-commit
+        prettier
+        sops
+        stern
+        terraform
+        tflint
+        yamllint
+        yq
