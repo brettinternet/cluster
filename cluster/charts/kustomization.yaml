@@ -11,6 +11,7 @@ resources:
   - jetstack.yaml
   - k8s-at-home.yaml
   - k8s-gateway.yaml
+  - kubernetes-dashboard.yaml
   - metallb.yaml
   - metrics-server.yaml
   # - rook-ceph.yaml
