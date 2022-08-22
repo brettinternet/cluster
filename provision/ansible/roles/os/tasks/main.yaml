@@ -69,3 +69,30 @@
 - name: NFS
   ansible.builtin.include_tasks: nfs.yaml
   when: nfs_exports is defined and (nfs_exports | length > 0)
+# DNS
+# https://hub.docker.com/r/adguard/adguardhome#resolved-daemon
+# https://wiki.archlinux.org/title/systemd-resolved#DNS
+# - name: Disable Ubuntu's caching DNS resolver on port 53
+#   become: true
+#   lineinfile:
+#     dest: /etc/systemd/resolved.conf
+#     line: "DNSStubListener=no"
+#     regexp: "#?DNSStubListener=yes"
+#     state: present
+
+# - name: Create a symlink to resolv.conf
+#   become: true
+#   ansible.builtin.file:
+#     src: /run/systemd/resolve/resolv.conf
+#     dest: /etc/resolv.conf
+#     owner: root
+#     group: root
+#     state: link
+#   register: resolv_conf
+
+# - name: restart systemd-resolved
+#   become: true
+#   service:
+#     name: systemd-resolved
+#     state: restarted
+#   when: resolv_conf.changed

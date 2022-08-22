@@ -36,6 +36,7 @@ spec:
         matchNames:
           - default
           - networking
+          - monitoring
       name: Gardiners
       customApps:
         - name: OPNsense

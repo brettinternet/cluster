@@ -36,6 +36,9 @@ spec:
           metallb.universe.tf/loadBalancerIPs: |-
             ${METALLB_INGRESS_ADDR}
         externalTrafficPolicy: Local
+        # TODO: Setup internal ingress
+        # https://github.com/kubernetes/ingress-nginx/blob/a98c637872f8cfd878f66bf024f392d98e5ca729/charts/ingress-nginx/values.yaml#L520
+        # internal:
       publishService:
         enabled: true
       ingressClassResource:

@@ -29,6 +29,7 @@ spec:
       - --enable-skip-login
       - --disable-settings-authorizer
       - --enable-insecure-login
+      - --token-ttl=43200 # seconds time to expire
     metricsScraper:
       enabled: false
     ingress:

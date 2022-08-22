@@ -1,0 +1,74 @@
+# AdGuard does not support HA easily.
+# TODO: Use https://github.com/0xERR0R/blocky or Unbound on OPNsense
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: adguard
+  namespace: default
+spec:
+  interval: 15m
+  # dependsOn:
+  #   - name: metallb
+  #     namespace: networking
+  chart:
+    spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
+      chart: adguard-home
+      version: 5.5.2
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  # https://github.com/k8s-at-home/charts/tree/master/charts/stable/adguard-home
+  values:
+    fullnameOverride: adguard
+    env:
+      TZ: "${TIMEZONE}"
+    service:
+      dns-tcp:
+        type: LoadBalancer
+        externalTrafficPolicy: Local
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: "${METALLB_DNS_ADDR}"
+          metallb.universe.tf/allow-shared-ip: adguard-svc
+      dns-udp:
+        type: LoadBalancer
+        externalTrafficPolicy: Local
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: "${METALLB_DNS_ADDR}"
+          metallb.universe.tf/allow-shared-ip: adguard-svc
+    # uses existing AdguardHome.yaml config instead
+    initContainers: null
+    persistence:
+      config:
+        enabled: true
+        mountPath: /opt/adguardhome/conf
+        existingClaim: appdata
+        subPath: adguard
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: "nginx"
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-staging"
+          external-dns.alpha.kubernetes.io/target: "ipv4.${SECRET_DOMAIN}"
+          external-dns/is-public: "true"
+          hajimari.io/enable: "true"
+          hajimari.io/icon: "shield-check"
+        hosts:
+          - host: &host adguard.${SECRET_DOMAIN}
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+            secretName: "adguard-tls"
