@@ -7,7 +7,6 @@ resources:
   - csi-driver-nfs
   # - kured
   - metrics-server
-  - reflector
   - reloader
   - kube-vip
   - kubernetes-dashboard

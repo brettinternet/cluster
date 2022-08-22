@@ -5,11 +5,11 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m
-  url: https://github.com/brettinternet/cluster
+  url: https://github.com/brettinternet/charts
   ref:
     branch: main
   ignore: |
     # exclude all
     /*
     # include local charts
-    !/cluster/charts/local
+    !/charts
