@@ -6,6 +6,7 @@ resources:
   - namespace.yaml
   - adguard
   - babybuddy
+  - dokuwiki
   - echo-server
   - hajimari
   - miniflux
