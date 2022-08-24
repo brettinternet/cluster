@@ -17,7 +17,6 @@ tasks:
         fluxcd/tap/flux
         go-task/tap/go-task
         helm
-        helm/tap/chart-releaser
         ipcalc
         jq
         kubernetes-cli

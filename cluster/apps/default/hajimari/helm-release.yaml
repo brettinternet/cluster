@@ -37,6 +37,11 @@ spec:
           - default
           - networking
           - monitoring
+      # Use with hajimari.io/instance
+      # https://github.com/toboshii/hajimari#ingresses
+      # instanceName: personal # family
+      # title: New Tab
+      title: Landing
       name: Gardiners
       customApps:
         - name: OPNsense
@@ -117,13 +122,13 @@ spec:
           hajimari.io/icon: "weather-sunset"
           nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
         hosts:
-          - host: "hajimari.${SECRET_DOMAIN}"
+          - host: &host "landing.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
         tls:
           - hosts:
-              - "hajimari.${SECRET_DOMAIN}"
+              - *host
             secretName: "hajimari-tls"
     persistence:
       data:

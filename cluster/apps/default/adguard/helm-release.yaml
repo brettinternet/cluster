@@ -8,18 +8,16 @@ metadata:
   namespace: default
 spec:
   interval: 15m
-  # dependsOn:
-  #   - name: metallb
-  #     namespace: networking
   chart:
     spec:
-      # renovate: registryUrl=https://k8s-at-home.com/charts/
-      chart: adguard-home
-      version: 5.5.2
+      # renovate: registryUrl=https://brettinternet.com/charts/
+      chart: ./charts/adguard
+      version: 0.1.0
       sourceRef:
-        kind: HelmRepository
-        name: k8s-at-home
+        kind: GitRepository
+        name: brettinternet
         namespace: flux-system
+      interval: 15m
   install:
     createNamespace: true
     remediation:
@@ -45,8 +43,6 @@ spec:
         annotations:
           metallb.universe.tf/loadBalancerIPs: "${METALLB_DNS_ADDR}"
           metallb.universe.tf/allow-shared-ip: adguard-svc
-    # uses existing AdguardHome.yaml config instead
-    initContainers: null
     persistence:
       config:
         enabled: true

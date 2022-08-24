@@ -22,6 +22,11 @@ includes:
   sops: .taskfiles/sops.yaml
 
 tasks:
+  default:
+    silent: true
+    cmds:
+      - task -l
+
   init:
     desc: Install dependencies and setup environment
     cmds:

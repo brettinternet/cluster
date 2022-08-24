@@ -8,11 +8,11 @@ spec:
   interval: 15m
   chart:
     spec:
-      chart: babybuddy
-      version: 1.2.2
+      chart: ./charts/babybuddy
+      version: 0.1.0
       sourceRef:
-        kind: HelmRepository
-        name: k8s-at-home
+        kind: GitRepository
+        name: brettinternet
         namespace: flux-system
       interval: 15m
   install:
