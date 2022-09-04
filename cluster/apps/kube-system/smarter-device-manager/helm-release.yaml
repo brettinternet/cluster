@@ -1,0 +1,35 @@
+# https://gitlab.com/arm-research/smarter/smarter-device-manager/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app smarter-device-manager
+  namespace: kube-system
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: ./charts/smarter-device-manager
+      version: 0.1.0
+      sourceRef:
+        kind: GitRepository
+        name: brettinternet
+        namespace: flux-system
+      interval: 15m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    image:
+      tag: latest
+    global:
+      nameOverride: *app
+    hostNetwork: true
+    dnsPolicy: ClusterFirstWithHostNet
+    config: |
+      - devicematch: ^sda1$
+        nummaxdevices: 1

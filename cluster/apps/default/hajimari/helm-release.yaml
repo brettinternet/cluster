@@ -31,11 +31,12 @@ spec:
       TZ: "${TIMEZONE}"
     # https://hajimari.io/charts/hajimari/
     hajimari:
-      defaultEnable: false
+      defaultEnable: true
       namespaceSelector:
         matchNames:
           - default
           - networking
+          - kube-system
           - monitoring
       # Use with hajimari.io/instance
       # https://github.com/toboshii/hajimari#ingresses
@@ -115,12 +116,11 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "nginx"
+        ingressClassName: nginx-internal
         annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-staging"
+          cert-manager.io/cluster-issuer: letsencrypt-staging
           hajimari.io/enable: "true"
-          hajimari.io/icon: "weather-sunset"
-          nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+          hajimari.io/icon: weather-sunset
         hosts:
           - host: &host "landing.${SECRET_DOMAIN}"
             paths:
@@ -129,13 +129,13 @@ spec:
         tls:
           - hosts:
               - *host
-            secretName: "hajimari-tls"
+            secretName: hajimari-tls
     persistence:
       data:
         enabled: true
         existingClaim: hajimari-config
     podAnnotations:
-      configmap.reloader.stakater.com/reload: "hajimari-settings"
+      configmap.reloader.stakater.com/reload: hajimari-settings
     resources:
       requests:
         cpu: 100m

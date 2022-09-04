@@ -7,6 +7,12 @@
     - installation
     - kubecolor
   post_tasks:
+    - name: Label node
+      ansible.builtin.command:
+        cmd: "kubectl label node {{ inventory_hostname }} {{ item }}"
+      loop: "{{ node_labels }}"
+      when:
+        - node_labels is defined and node_labels | length > 0
     - name: Alias 'k' with kubectl
       become: false
       ansible.builtin.lineinfile:

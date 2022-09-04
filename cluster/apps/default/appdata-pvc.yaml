@@ -4,12 +4,11 @@ kind: PersistentVolume
 metadata:
   name: appdata
 spec:
-  storageClassName: appdata-nfs
   capacity:
     storage: 64Gi
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
+  persistentVolumeReclaimPolicy: Delete
   mountOptions:
     - nfsvers=4.2
     - nconnect=8
@@ -20,8 +19,8 @@ spec:
     readOnly: false
     volumeHandle: appdata-nfs-storage
     volumeAttributes:
-      server: "${SECRET_NFS_APPDATA_SERVER}"
-      share: "${APPDATA_DIR}"
+      server: "10.43.1.10"
+      share: /
 
 ---
 apiVersion: v1
@@ -33,7 +32,7 @@ spec:
   accessModes:
     - ReadWriteMany
   volumeName: appdata
-  storageClassName: appdata-nfs
+  storageClassName: ""
   resources:
     requests:
       storage: 5Gi

@@ -14,7 +14,6 @@ tasks:
     dir: provision/ansible
     cmds:
       - ansible-galaxy install -r requirements.yaml
-      - printf "\x1B[01;93m✔ Galaxy collections installed\n\x1B[0m"
 
   list:
     desc: List all the hosts

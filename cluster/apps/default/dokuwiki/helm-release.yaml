@@ -22,7 +22,6 @@ spec:
   upgrade:
     remediation:
       retries: 5
-  # https://github.com/k8s-at-home/charts/tree/master/charts/incubator/babybuddy
   values:
     image:
       repository: lscr.io/linuxserver/dokuwiki
@@ -38,13 +37,14 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "nginx"
+        ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-staging"
+          cert-manager.io/cluster-issuer: letsencrypt-staging
           external-dns.alpha.kubernetes.io/target: "ipv4.${SECRET_DOMAIN}"
           external-dns/is-public: "true"
           hajimari.io/enable: "true"
-          hajimari.io/icon: "file-document-multiple"
+          hajimari.io/icon: file-document-multiple
+          hajimari.io/instance: public
         hosts:
           - host: &host "wiki.${SECRET_DOMAIN}"
             paths:
@@ -53,4 +53,4 @@ spec:
         tls:
           - hosts:
               - *host
-            secretName: "dokuwiki-tls"
+            secretName: dokuwiki-tls

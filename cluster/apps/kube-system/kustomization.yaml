@@ -5,8 +5,9 @@ resources:
   - namespace.yaml
   - cert-manager
   - csi-driver-nfs
-  # - kured
+  - kured
   - metrics-server
   - reloader
   - kube-vip
   - kubernetes-dashboard
+  - smarter-device-manager
