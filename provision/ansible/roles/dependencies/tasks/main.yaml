@@ -30,13 +30,6 @@
       - unzip
       - vim
 
-- name: Clean up unused packages
-  ansible.builtin.apt:
-    state: absent
-    name:
-      - nfs-common
-      - nfs-kernel-server
-
 - name: Install RasPi specific packages
   ansible.builtin.apt:
     name:

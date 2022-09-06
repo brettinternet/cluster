@@ -1,6 +1,5 @@
 ---
 - name: Clear MOTD
-  become: true
   ansible.builtin.copy:
     content: ""
     dest: /etc/motd
@@ -19,6 +18,19 @@
   ansible.builtin.lineinfile:
     path: /etc/hosts
     line: "127.0.1.1  {{ inventory_hostname }}"
+
+# https://wiki.debian.org/depmod
+# May require reboot or `/usr/sbin/depmod -a` if fails
+- name: Add br_netfilter to /etc/modules-load.d/
+  ansible.builtin.copy:
+    content: "br_netfilter"
+    dest: /etc/modules-load.d/br_netfilter.conf
+    mode: 0644
+
+- name: Load br_netfilter
+  community.general.modprobe:
+    name: br_netfilter
+    state: present
 
 - name: Enable forwarding and set other sysctl
   ansible.posix.sysctl:
