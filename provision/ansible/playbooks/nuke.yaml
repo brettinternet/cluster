@@ -7,7 +7,7 @@
     - name: nuke_confirmation
       prompt: |-
         Are you sure you want to nuke this cluster?
-        Type HELL YES to proceed
+        Type DESTROY to proceed
       default: "n"
       private: false
 
@@ -15,7 +15,7 @@
     - name: Check for confirmation
       ansible.builtin.fail:
         msg: Aborted nuking the cluster
-      when: nuke_confirmation != 'HELL YES'
+      when: nuke_confirmation != 'DESTROY'
 
   tasks:
     - name: Uninstall k3s
@@ -24,6 +24,22 @@
         public: true
       vars:
         k3s_state: uninstalled
+
+    # If previous step fails...
+    # https://rancher.com/docs/k3s/latest/en/installation/uninstall/
+    - name: Run server uninstall script as fail-safe
+      ansible.builtin.script: /usr/local/bin/k3s-uninstall.sh
+      args:
+        removes: /usr/local/bin/k3s-uninstall.sh
+      when: inventory_hostname in groups['master']
+
+    - name: Run agent uninstall script as fail-safe
+      ansible.builtin.script: /usr/local/bin/k3s-agent-uninstall.sh
+      args:
+        removes: /usr/local/bin/k3s-agent-uninstall.sh
+      when:
+        - "'worker' in groups"
+        - inventory_hostname in groups['worker']
 
     - name: Gather list of CNI files
       ansible.builtin.find:
@@ -44,3 +60,4 @@
         state: absent
       with_items:
         - /var/lib/rook
+        - /etc/rancher

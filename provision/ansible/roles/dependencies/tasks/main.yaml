@@ -10,6 +10,7 @@
 
 - name: Install
   ansible.builtin.apt:
+    state: present
     name:
       - arptables
       - ebtables
@@ -23,12 +24,18 @@
       - ipvsadm
       - lvm2
       - net-tools
-      - nfs-common
       - open-iscsi
       - smartmontools
       - sudo
       - unzip
       - vim
+
+- name: Clean up unused packages
+  ansible.builtin.apt:
+    state: absent
+    name:
+      - nfs-common
+      - nfs-kernel-server
 
 - name: Install RasPi specific packages
   ansible.builtin.apt:

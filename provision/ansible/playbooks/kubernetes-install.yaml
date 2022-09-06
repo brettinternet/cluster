@@ -4,7 +4,7 @@
     - worker
   become: true
   roles:
-    - installation
+    - kubernetes
     - kubecolor
   post_tasks:
     - name: Label node
