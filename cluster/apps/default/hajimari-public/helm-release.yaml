@@ -46,7 +46,7 @@ spec:
           hajimari.io/enable: "true"
           hajimari.io/icon: weather-sunset
         hosts:
-          - host: &host "apps.${SECRET_DOMAIN}"
+          - host: &host "apps.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
@@ -60,9 +60,9 @@ spec:
         existingClaim: hajimari-config
     podAnnotations:
       configmap.reloader.stakater.com/reload: "hajimari-settings"
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        memory: 256Mi
+    # resources:
+    #   requests:
+    #     cpu: 100m
+    #     memory: 128Mi
+    #   limits:
+    #     memory: 256Mi

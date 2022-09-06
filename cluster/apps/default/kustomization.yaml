@@ -5,11 +5,14 @@ resources:
   - appdata-pvc.yaml
   - namespace.yaml
   - adguard
+  - authelia
   - babybuddy
   # - busybox
   # - dnsutils
   - dokuwiki
   - echo-server
+  # - glauth
   - hajimari
   - hajimari-public
+  - lldap
   - miniflux

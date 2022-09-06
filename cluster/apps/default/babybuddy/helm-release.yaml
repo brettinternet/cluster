@@ -38,14 +38,12 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-staging
-          external-dns.alpha.kubernetes.io/target: "ipv4.${SECRET_DOMAIN}"
-          external-dns/is-public: "true"
+          external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
           hajimari.io/icon: baby
           hajimari.io/instance: public
         hosts:
-          - host: &host "baby.${SECRET_DOMAIN}"
+          - host: &host "baby.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix

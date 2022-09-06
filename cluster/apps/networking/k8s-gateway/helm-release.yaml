@@ -28,8 +28,9 @@ spec:
       namespace: networking
   values:
     fullnameOverride: k8s-gateway
-    domain: ${SECRET_DOMAIN}
+    domain: ${PUBLIC_DOMAIN}
     ttl: 1
+    priorityClassName: system-cluster-critical
     service:
       type: LoadBalancer
       port: 53

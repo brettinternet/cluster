@@ -75,12 +75,10 @@ spec:
         enabled: true
         ingressClassName: nginx-internal
         annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-staging
-          external-dns.alpha.kubernetes.io/target: "ipv4.${SECRET_DOMAIN}"
           hajimari.io/enable: "true"
           hajimari.io/icon: video-input-antenna
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
@@ -88,9 +86,9 @@ spec:
           - hosts:
               - *host
             secretName: echo-server-tls
-    resources:
-      requests:
-        cpu: 50m
-        memory: 64Mi
-      limits:
-        memory: 96Mi
+    # resources:
+    #   requests:
+    #     cpu: 50m
+    #     memory: 64Mi
+    #   limits:
+    #     memory: 96Mi

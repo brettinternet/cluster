@@ -1,0 +1,98 @@
+# https://github.com/authelia/authelia/blob/master/config.template.yml
+---
+theme: light
+
+default_redirection_url: "https://auth.${PUBLIC_DOMAIN}"
+
+log:
+  # info, debug, trace
+  level: trace
+
+jwt_secret: "${AUTHELIA_JWT_SECRET}"
+
+server:
+  port: 9091
+
+session:
+  domain: "${PUBLIC_DOMAIN}"
+  secret: "${AUTHELIA_SESSION_SECRET}"
+  redis:
+    host: authelia-redis.auth.svc.cluster.local
+    password: "${AUTHELIA_REDIS_PASSWORD}"
+
+storage:
+  encryption_key: "${AUTHELIA_ENCRYPTION_KEY}"
+  postgres:
+    host: authelia-postgres.auth.svc.cluster.local
+    password: "${AUTHELIA_POSTGRES_PASSWORD}"
+    database: authelia
+
+notifier:
+  smtp:
+    host: maddy.default.svc.cluster.local
+    port: 2525
+    sender: "Authelia <${SMTP_USER}>"
+    disable_require_tls: true
+
+# With LLDAP: https://github.com/nitnelave/lldap/blob/main/example_configs/authelia_config.yml
+authentication_backend:
+  password_reset:
+    disable: false
+  refresh_interval: 1m
+  ldap:
+    implementation: custom
+    url: ldap://lldap.auth.svc.cluster.local:3890
+    timeout: 5s
+    start_tls: false
+    base_dn: dc=home,dc=arpa
+    username_attribute: uid
+    additional_users_dn: ou=people
+    users_filter: "(&({username_attribute}={input})(objectClass=person))"
+    additional_groups_dn: ou=groups
+    groups_filter: (member={dn})
+    group_name_attribute: cn
+    display_name_attribute: displayName
+    mail_attribute: mail
+    user: cn=admin,ou=people,dc=home,dc=arpa
+    password: "${AUTHELIA_LDAP_PASSWORD}"
+
+duo_api:
+  disable: true
+
+withauthn:
+  disable: true
+
+access_control:
+  default_policy: two_factor
+  networks:
+    - name: internal
+      networks: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+  rules:
+    # - domain: ["grafana.${PUBLIC_DOMAIN}"]
+    #   policy: bypass
+
+    - domain:
+        - "radarr.${PUBLIC_DOMAIN}"
+        - "sonarr.${PUBLIC_DOMAIN}"
+        - "nzbget.${PUBLIC_DOMAIN}"
+      policy: bypass
+      resources: ["^/api([?/].*)?$"]
+
+identity_providers:
+  oidc:
+    hmac_secret: "${AUTHELIA_OIDC_HMAC_SECRET}"
+    # openssl genrsa -out oidc.key 4096
+    issuer_private_key: "${AUTHELIA_OIDC_ISSUER_PRIVATE_KEY}"
+    cors:
+      endpoints: ["authorization", "token", "revocation", "introspection"]
+      allowed_origins_from_client_redirect_uris: true
+    clients:
+      - id: miniflux
+        description: Miniflux
+        secret: "${MINIFLUX_OAUTH_CLIENT_SECRET}"
+        public: false
+        authorization_policy: two_factor
+        pre_configured_consent_duration: 1y
+        scopes: ["openid", "profile", "groups", "email"]
+        redirect_uris: ["https://rss.${PUBLIC_DOMAIN}/oauth2/oidc/callback"]
+        userinfo_signing_algorithm: none

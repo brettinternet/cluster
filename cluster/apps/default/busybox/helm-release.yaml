@@ -25,6 +25,9 @@ spec:
     image:
       repository: docker.io/library/busybox
       tag: latest
+    service:
+      main:
+        enabled: false
     command:
       - sleep
       - "3600"

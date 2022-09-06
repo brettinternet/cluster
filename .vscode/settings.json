@@ -5,7 +5,8 @@
     "**/provision/ansible/**/*.yaml": "ansible",
     "**/provision/terraform/**/*.tf": "terraform",
     ".env": "shellscript",
-    "example.env": "shellscript"
+    "example.env": "shellscript",
+    "**/cluster/**/*.sops.toml": "plaintext"
   },
   "prettier.configPath": ".github/linters/.prettierrc.yaml",
   "prettier.ignorePath": ".github/linters/.prettierignore",
