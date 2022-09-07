@@ -13,19 +13,30 @@ tasks:
       DEPS: >-
         age
         ansible
-        direnv
+        cloudflare/cloudflare/cloudflared
         fluxcd/tap/flux
         go-task/tap/go-task
         helm
-        ipcalc
-        jq
         kubernetes-cli
         kustomize
         pre-commit
         prettier
         sops
-        stern
         terraform
         tflint
         yamllint
-        yq
+
+# age: SOP dependency
+# ansible: homelab provisioning
+# cloudflare/cloudflare/cloudflared: Cloudflared tunnel credentials
+# fluxcd/tap/flux: cluster reconciliation
+# go-task/tap/go-task: Task runner
+# helm: Deployment charts
+# kubernetes-cli
+# kustomize: Define k8s manifests
+# pre-commit: Repo helper
+# prettier: Repo helper
+# sops: Secrets encryption
+# terraform: Cloudflare provisioning
+# tflint: Terraform linting
+# yamllint: Yaml linting

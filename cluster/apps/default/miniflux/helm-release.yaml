@@ -2,20 +2,18 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: miniflux
+  name: &app miniflux
   namespace: default
 spec:
   interval: 15m
   chart:
     spec:
-      # renovate: registryUrl=https://brettinternet.com/charts
-      chart: ./charts/miniflux
-      version: 0.1.0
+      chart: app-template
+      version: 0.1.1
       sourceRef:
-        kind: GitRepository
-        name: brettinternet
+        kind: HelmRepository
+        name: bjw-s
         namespace: flux-system
-      interval: 15m
   dependsOn:
     - name: miniflux-postgres
       namespace: default
@@ -27,36 +25,64 @@ spec:
     remediation:
       retries: 3
   values:
+    image:
+      repository: docker.io/miniflux/miniflux
+      tag: latest
     env:
       TZ: "${TIMEZONE}"
-      ADMIN_PASSWORD: "${SECRET_MINIFLUX_ADMIN_PASSWORD}"
-      DATABASE_URL: "postgres://miniflux:${SECRET_MINIFLUX_POSTGRES_PASSWORD}@miniflux-postgres.default/miniflux?sslmode=disable"
+      CREATE_ADMIN: "1"
+      RUN_MIGRATIONS: "1"
+      LOG_DATE_TIME: "1"
+      # OAUTH2_CLIENT_ID: miniflux
+      # # openssl rand -hex 16
+      # OAUTH2_CLIENT_SECRET: "${MINIFLUX_OAUTH_CLIENT_SECRET}"
+      # OAUTH2_USER_CREATION: "1"
+      # OAUTH2_OIDC_DISCOVERY_ENDPOINT: "https://auth.${PUBLIC_DOMAIN}"
+      # OAUTH2_PROVIDER: oidc
+      # OAUTH2_REDIRECT_URL: "https://rss.${PUBLIC_DOMAIN}/oauth2/oidc/callback"
+    envFrom:
+      - secretRef:
+          name: *app
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+    probes:
+      liveness:
+        enabled: true
+        custom: true
+        spec:
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+          httpGet:
+            path: /healthcheck
+            port: 8080
     ingress:
       main:
         enabled: true
         ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-staging
-          external-dns.alpha.kubernetes.io/target: "ipv4.${SECRET_DOMAIN}"
-          external-dns/is-public: "true"
+          external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
           hajimari.io/icon: rss
           hajimari.io/instance: public
         hosts:
-          - host: &host "miniflux.${SECRET_DOMAIN}"
+          - host: &host "rss.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
         tls:
           - hosts:
               - *host
-            secretName: miniflux-tls
-    resources:
-      requests:
-        cpu: 50m
-        memory: 64Mi
-      limits:
-        memory: 96Mi
+    # resources:
+    #   requests:
+    #     cpu: 50m
+    #     memory: 64Mi
+    #   limits:
+    #     memory: 96Mi
 
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
@@ -70,7 +96,7 @@ spec:
     spec:
       # renovate: registryUrl=https://charts.bitnami.com/bitnami
       chart: postgresql
-      version: 11.7.3
+      version: 11.8.1
       sourceRef:
         kind: HelmRepository
         name: bitnami
@@ -86,10 +112,11 @@ spec:
       tag: 14
     auth:
       enablePostgresUser: false
-      postgresPassword: "${SECRET_MINIFLUX_POSTGRES_PASSWORD}"
       username: miniflux
-      password: "${SECRET_MINIFLUX_POSTGRES_PASSWORD}"
       database: miniflux
+      existingSecret: miniflux
+      secretKeys:
+        userPasswordKey: POSTGRES_PASSWORD
     postgresqlDataDir: /var/lib/postgresql/data
     primary:
       podSecurityContext:

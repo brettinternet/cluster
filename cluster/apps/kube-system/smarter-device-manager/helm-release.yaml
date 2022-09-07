@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: ./charts/smarter-device-manager
-      version: 0.1.0
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: brettinternet

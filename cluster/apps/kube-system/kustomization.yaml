@@ -5,8 +5,11 @@ resources:
   - namespace.yaml
   - cert-manager
   - csi-driver-nfs
+  - descheduler
   - kured
+  - kyverno
   - metrics-server
+  # - node-feature-discovery
   - reloader
   - kube-vip
   - kubernetes-dashboard

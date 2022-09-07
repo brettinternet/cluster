@@ -39,17 +39,17 @@ spec:
             key: api-key
     extraArgs:
       - --cloudflare-proxied
-      - --annotation-filter=external-dns/is-public in (true)
+      - --annotation-filter=external-dns.home.arpa/enabled in (true)
     policy: sync
     sources:
       - ingress
     txtPrefix: "k8s."
     txtOwnerId: "default"
     domainFilters:
-      - "${SECRET_DOMAIN}"
-    resources:
-      requests:
-        memory: 100Mi
-        cpu: 25m
-      limits:
-        memory: 250Mi
+      - "${PUBLIC_DOMAIN}"
+    # resources:
+    #   requests:
+    #     memory: 100Mi
+    #     cpu: 25m
+    #   limits:
+    #     memory: 250Mi

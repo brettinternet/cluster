@@ -22,14 +22,13 @@ repos:
       - id: remove-crlf
       - id: remove-tabs
   - repo: https://github.com/sirosen/texthooks
-    rev: 0.3.1
+    rev: 0.4.0
     hooks:
       - id: fix-smartquotes
   - repo: https://github.com/k8s-at-home/sops-pre-commit
     rev: v2.1.1
     hooks:
       - id: forbid-secrets
-        exclude: ^tmpl
   - repo: https://github.com/gruntwork-io/pre-commit
     rev: v0.1.17
     hooks:

@@ -24,6 +24,9 @@ spec:
     remediation:
       retries: 5
   values:
+    image:
+      tag: latest-arm
+    # Additional options https://hub.docker.com/r/itsthenetwork/nfs-server-alpine/
     env:
       TZ: "${TIMEZONE}"
       SHARED_DIRECTORY: /data
@@ -37,7 +40,7 @@ spec:
         # https://github.com/kubernetes/minikube/issues/3417#issuecomment-493366877
         # https://github.com/kubernetes/examples/issues/418
         # https://github.com/kubernetes/examples/issues/390
-        clusterIP: "10.43.1.10"
+        clusterIP: "${APPDATA_NFS_SERVER_CLUSTERIP}"
     persistence:
       data:
         enabled: true
@@ -47,6 +50,14 @@ spec:
     securityContext:
       capabilities:
         add: ["SYS_ADMIN", "SETPCAP"]
+    # https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/
+    # https://kubernetes.io/docs/tasks/administer-cluster/guaranteed-scheduling-critical-addon-pods/
+    priorityClassName: system-cluster-critical
+    tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      - effect: NoExecute
+        operator: Exists
     resources:
       limits:
         smarter-devices/sda1: 1

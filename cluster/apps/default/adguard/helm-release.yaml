@@ -12,7 +12,7 @@ spec:
     spec:
       # renovate: registryUrl=https://brettinternet.com/charts/
       chart: ./charts/adguard
-      version: 0.1.0
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: brettinternet
@@ -53,16 +53,14 @@ spec:
         enabled: true
         ingressClassName: "nginx"
         annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-staging"
-          external-dns.alpha.kubernetes.io/target: "ipv4.${SECRET_DOMAIN}"
+          external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
           hajimari.io/icon: "shield-check"
         hosts:
-          - host: &host adguard.${SECRET_DOMAIN}
+          - host: &host adguard.${PUBLIC_DOMAIN}
             paths:
               - path: /
                 pathType: Prefix
         tls:
           - hosts:
               - *host
-            secretName: "adguard-tls"

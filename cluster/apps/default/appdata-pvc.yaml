@@ -19,7 +19,7 @@ spec:
     readOnly: false
     volumeHandle: appdata-nfs-storage
     volumeAttributes:
-      server: "10.43.1.10"
+      server: "${APPDATA_NFS_SERVER_CLUSTERIP}"
       share: /
 
 ---
