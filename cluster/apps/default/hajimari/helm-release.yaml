@@ -116,9 +116,9 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx-internal
+        ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-staging
+          auth.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
           hajimari.io/icon: weather-sunset
         hosts:
@@ -134,7 +134,7 @@ spec:
         enabled: true
         existingClaim: hajimari-config
     podAnnotations:
-      configmap.reloader.stakater.com/reload: hajimari-settings
+      configmap.reloader.stakater.com/reload: hajimari-config
     # resources:
     #   requests:
     #     cpu: 100m

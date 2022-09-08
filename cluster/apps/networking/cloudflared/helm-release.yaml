@@ -25,18 +25,21 @@ spec:
   values:
     priorityClassName: system-cluster-critical
     controller:
-      replicas: 2
+      replicas: 1
     # Example: https://github.com/cloudflare/postgres-postgrest-cloudflared-example
     image:
       # https://hub.docker.com/r/cloudflare/cloudflared
-      repository: docker.io/cloudflare/cloudflared
-      tag: 2022.8.0
+      repository: cloudflare/cloudflared
+      tag: 2022.9.0-arm64
+    env:
+      TZ: "${TIMEZONE}"
     # Outbound traffic is proxied through port 8080
     # https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-useful-terms/#configuration-file
     # Arguments: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide/local/local-management/arguments/#metrics
     args:
       - tunnel
-      - --config=/etc/cloudflared/config.yaml
+      - --config
+      - /etc/cloudflared/config.yaml
       - --metrics=0.0.0.0:3333
       - --no-autoupdate
       - run
@@ -46,7 +49,7 @@ spec:
     persistence:
       config:
         enabled: true
-        type: secret
+        type: configMap
         name: *app
         mountPath: /etc/cloudflared/config.yaml
         subPath: config.yaml

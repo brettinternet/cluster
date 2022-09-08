@@ -15,4 +15,5 @@ resources:
   - hajimari
   - hajimari-public
   - lldap
+  - maddy
   - miniflux

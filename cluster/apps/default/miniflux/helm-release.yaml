@@ -33,13 +33,14 @@ spec:
       CREATE_ADMIN: "1"
       RUN_MIGRATIONS: "1"
       LOG_DATE_TIME: "1"
-      # OAUTH2_CLIENT_ID: miniflux
-      # # openssl rand -hex 16
-      # OAUTH2_CLIENT_SECRET: "${MINIFLUX_OAUTH_CLIENT_SECRET}"
+      # https://miniflux.app/docs/howto.html#oauth2
+      OAUTH2_PROVIDER: oidc
+      OAUTH2_CLIENT_ID: miniflux
+      # openssl rand -hex 16
+      OAUTH2_CLIENT_SECRET: "${MINIFLUX_OAUTH_CLIENT_SECRET}"
       # OAUTH2_USER_CREATION: "1"
-      # OAUTH2_OIDC_DISCOVERY_ENDPOINT: "https://auth.${PUBLIC_DOMAIN}"
-      # OAUTH2_PROVIDER: oidc
-      # OAUTH2_REDIRECT_URL: "https://rss.${PUBLIC_DOMAIN}/oauth2/oidc/callback"
+      OAUTH2_REDIRECT_URL: "https://rss.${PUBLIC_DOMAIN}/oauth2/oidc/callback"
+      OAUTH2_OIDC_DISCOVERY_ENDPOINT: "https://auth.${PUBLIC_DOMAIN}/.well-known/openid-configuration"
     envFrom:
       - secretRef:
           name: *app

@@ -24,6 +24,7 @@ spec:
       mutate:
         patchStrategicMerge:
           metadata:
+            # https://www.authelia.com/integration/kubernetes/nginx-ingress/#nginx-ingress-controller-ingress-nginx
             annotations:
               +(nginx.ingress.kubernetes.io/auth-method): GET
               +(nginx.ingress.kubernetes.io/auth-url): |-

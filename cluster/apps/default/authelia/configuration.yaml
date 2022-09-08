@@ -9,7 +9,7 @@ log:
   level: trace
 
 server:
-  port: 9091
+  port: 80
 
 session:
   domain: "${PUBLIC_DOMAIN}"
@@ -22,12 +22,15 @@ storage:
     username: authelia
     host: authelia-postgres.default.svc.cluster.local
     database: authelia
+    port: 5432
 
 notifier:
+  # filesystem:
+  #   filename: /config/notification.txt
   smtp:
     host: maddy.default.svc.cluster.local
     port: 2525
-    sender: "Authelia <${SMTP_USER}>"
+    sender: "${SMTP_USER}"
     disable_require_tls: true
 
 # With LLDAP: https://github.com/nitnelave/lldap/blob/main/example_configs/authelia_config.yml
@@ -79,7 +82,9 @@ identity_providers:
     # openssl genrsa -out oidc.key 4096
     cors:
       endpoints: ["authorization", "token", "revocation", "introspection"]
-      allowed_origins_from_client_redirect_uris: true
+      allowed_origins:
+        - https://${PUBLIC_DOMAIN}
+      # allowed_origins_from_client_redirect_uris: true
     clients:
       - id: miniflux
         description: Miniflux
