@@ -9,7 +9,7 @@ resources:
   - kured
   - kyverno
   - metrics-server
-  # - node-feature-discovery
+  - node-feature-discovery
   - reloader
   - kube-vip
   - kubernetes-dashboard
