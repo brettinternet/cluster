@@ -4,8 +4,8 @@ kind: Kustomization
 resources:
   - namespace.yaml
   # - blocky
-  # - cloudflared
-  - cloudflare-ddns
+  - cloudflared
+  # - cloudflare-ddns
   - external-dns
   - ingress-nginx
   - ingress-nginx-internal

@@ -38,11 +38,17 @@ tasks:
       - flux reconcile -n flux-system source git flux-cluster
       - flux reconcile -n flux-system kustomization flux-cluster
 
-  # # https://github.com/fluxcd/helm-controller/issues/454#issuecomment-962208864
-  # delete-release:
-  #   desc: Force reset helmrelease upgrade
-  #   cmds:
-  #     - flux delete -n default hr miniflux
+  errors:
+    desc: List errors from all namespaces
+    cmds:
+      - flux logs -A --level=error
+
+  # https://github.com/fluxcd/helm-controller/issues/454#issuecomment-962208864
+  delete-tunnel:
+    desc: |
+      Force delete cloudflared tunnel release to stop external ingress
+    cmds:
+      - flux delete -n networking hr cloudflared
 
   nodes:
     desc: List all the nodes in your cluster

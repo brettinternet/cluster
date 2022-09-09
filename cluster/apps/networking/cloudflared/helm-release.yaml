@@ -1,4 +1,5 @@
 # https://github.com/cloudflare/cloudflared
+# https://github.com/cloudflare/argo-tunnel-examples/tree/master/terraform-gcp-gke-ingress-controller
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
