@@ -30,7 +30,7 @@ notifier:
   smtp:
     host: maddy.default.svc.cluster.local
     port: 2525
-    sender: "${SMTP_USER}"
+    sender: "Authelia <authelia@${PUBLIC_DOMAIN}>"
     disable_require_tls: true
 
 # With LLDAP: https://github.com/nitnelave/lldap/blob/main/example_configs/authelia_config.yml

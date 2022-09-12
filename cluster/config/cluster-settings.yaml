@@ -5,6 +5,7 @@ metadata:
   name: cluster-settings
   namespace: flux-system
 data:
+  CLUSTER_NAME: home
   TIMEZONE: America/Denver
   # Must be the same subnet as Node https://github.com/metallb/metallb/issues/433
   METALLB_LB_RANGE: 10.1.2.101-10.1.2.120
