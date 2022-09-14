@@ -22,13 +22,11 @@ spec:
     remediation:
       retries: 5
   values:
-    nodeFeatureRule:
-      createCRD: false
     worker:
       annotations:
         configmap.reloader.stakater.com/reload: node-feature-discovery-worker-conf
-      nodeSelector:
-        node-role.kubernetes.io/worker: "true"
+      # nodeSelector:
+      #   node-role.kubernetes.io/worker: "true"
       config:
         core:
           sources:

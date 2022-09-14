@@ -11,7 +11,7 @@ spec:
       # official Authelia chart is still in beta
       # https://github.com/authelia/chartrepo
       chart: app-template
-      version: 0.1.1
+      version: 0.2.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -173,43 +173,61 @@ metadata:
   name: authelia-postgres
   namespace: default
 spec:
-  interval: 1h
+  interval: 15m
   chart:
     spec:
-      # renovate: registryUrl=https://charts.bitnami.com/bitnami
-      chart: postgresql
-      version: 11.8.1
+      chart: app-template
+      version: 0.2.1
       sourceRef:
         kind: HelmRepository
-        name: bitnami
+        name: bjw-s
         namespace: flux-system
-  # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values.yaml
-  # https://artifacthub.io/packages/helm/bitnami/postgresql
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 3
   values:
-    fullnameOverride: authelia-postgres
     image:
-      # Use image with ARM64 support
-      # https://hub.docker.com/_/postgres
       repository: library/postgres
-      tag: 14
-    auth:
-      enablePostgresUser: false
-      username: authelia
-      database: authelia
-      existingSecret: authelia
-      secretKeys:
-        userPasswordKey: AUTHELIA_STORAGE_POSTGRES_PASSWORD
-    postgresqlDataDir: /var/lib/postgresql/data
-    primary:
-      podSecurityContext:
-        enabled: false
-      containerSecurityContext:
-        enabled: false
-      persistence:
+      tag: "14"
+    env:
+      - name: POSTGRES_USER
+        value: authelia
+      - name: POSTGRES_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: authelia
+            key: POSTGRES_PASSWORD
+      - name: POSTGRES_DB
+        value: authelia
+      - name: PGDATA
+        value: /var/lib/postgresql/data
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+    service:
+      main:
+        enabled: true
+        ports:
+          http:
+            enabled: false
+            primary: false
+          sql:
+            enabled: true
+            primary: true
+            port: 5432
+            protocol: TCP
+    persistence:
+      data:
         enabled: true
         mountPath: /var/lib/postgresql/data
         existingClaim: appdata
         subPath: authelia_db
+
 
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
@@ -222,7 +240,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 0.1.1
+      version: 0.2.1
       interval: 15m
       sourceRef:
         kind: HelmRepository
@@ -251,8 +269,10 @@ spec:
         ports:
           http:
             enabled: false
+            primary: false
           redis:
             enabled: true
+            primary: true
             port: 6379
     # resources:
     #   requests:

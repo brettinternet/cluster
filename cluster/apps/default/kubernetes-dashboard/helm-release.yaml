@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: kubernetes-dashboard
-  namespace: kube-system
+  namespace: default
 spec:
   interval: 15m
   chart:
@@ -34,13 +34,10 @@ spec:
       enabled: false
     ingress:
       enabled: true
-      className: "nginx"
+      className: nginx
       annotations:
-        hajimari.io/enable: "true"
+        auth.home.arpa/enabled: "true"
         hajimari.io/icon: "kubernetes"
-        nginx.ingress.kubernetes.io/proxy-body-size: "100m"
-        # nginx.ingress.kubernetes.io/configuration-snippet: |
-        #   auth_request_set $required_groups 'kubernetes_dashboard';
       hosts:
         - &host "kubernetes.${PUBLIC_DOMAIN}"
       tls:

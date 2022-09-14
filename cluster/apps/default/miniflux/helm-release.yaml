@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 0.1.1
+      version: 0.2.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -92,41 +92,56 @@ metadata:
   name: miniflux-postgres
   namespace: default
 spec:
-  interval: 1h
+  interval: 15m
   chart:
     spec:
-      # renovate: registryUrl=https://charts.bitnami.com/bitnami
-      chart: postgresql
-      version: 11.8.1
+      chart: app-template
+      version: 0.2.1
       sourceRef:
         kind: HelmRepository
-        name: bitnami
+        name: bjw-s
         namespace: flux-system
-  # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values.yaml
-  # https://artifacthub.io/packages/helm/bitnami/postgresql
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 3
   values:
-    fullnameOverride: miniflux-postgres
     image:
-      # Use image with ARM64 support
-      # https://hub.docker.com/_/postgres
       repository: library/postgres
-      tag: 14
-    auth:
-      enablePostgresUser: false
-      username: miniflux
-      database: miniflux
-      existingSecret: miniflux
-      secretKeys:
-        userPasswordKey: POSTGRES_PASSWORD
-    postgresqlDataDir: /var/lib/postgresql/data
-    primary:
-      podSecurityContext:
-        enabled: false
-        # fsGroup: 1000
-      containerSecurityContext:
-        enabled: false
-        # runAsUser: 1000
-      persistence:
+      tag: "14"
+    env:
+      - name: POSTGRES_USER
+        value: miniflux
+      - name: POSTGRES_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: miniflux
+            key: POSTGRES_PASSWORD
+      - name: POSTGRES_DB
+        value: miniflux
+      - name: PGDATA
+        value: /var/lib/postgresql/data
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+    service:
+      main:
+        enabled: true
+        ports:
+          http:
+            enabled: false
+            primary: false
+          sql:
+            enabled: true
+            primary: true
+            port: 5432
+            protocol: TCP
+    persistence:
+      data:
         enabled: true
         mountPath: /var/lib/postgresql/data
         existingClaim: appdata

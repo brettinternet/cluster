@@ -8,8 +8,10 @@ resources:
   - brettinternet.yaml
   # - cloudnative-pg.yaml
   - csi-driver-nfs.yaml
+  - deliveryhero.yaml
   - descheduler.yaml
   - external-dns.yaml
+  - grafana.yaml
   - hajimari.yaml
   - ingress-nginx.yaml
   - jetstack.yaml
@@ -18,7 +20,10 @@ resources:
   - kyverno.yaml
   - metallb.yaml
   - metrics-server.yaml
+  - minio.yaml
+  - nextcloud.yaml
   - node-feature-discovery.yaml
+  - prometheus-community.yaml
   # - rook-ceph.yaml
   - stakater.yaml
   - weaveworks-kured.yaml

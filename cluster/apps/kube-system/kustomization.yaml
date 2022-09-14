@@ -12,5 +12,4 @@ resources:
   - node-feature-discovery
   - reloader
   - kube-vip
-  - kubernetes-dashboard
   - smarter-device-manager

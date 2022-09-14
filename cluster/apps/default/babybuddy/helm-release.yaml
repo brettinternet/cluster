@@ -8,13 +8,12 @@ spec:
   interval: 15m
   chart:
     spec:
-      chart: ./charts/babybuddy
-      reconcileStrategy: Revision
+      chart: app-template
+      version: 0.2.1
       sourceRef:
-        kind: GitRepository
-        name: brettinternet
+        kind: HelmRepository
+        name: bjw-s
         namespace: flux-system
-      interval: 15m
   install:
     createNamespace: true
     remediation:
@@ -24,9 +23,18 @@ spec:
       retries: 5
   values:
     image:
+      repository: linuxserver/babybuddy
       tag: arm64v8-latest
     env:
       TZ: "${TIMEZONE}"
+      CSRF_TRUSTED_ORIGINS: "https://baby.${PUBLIC_DOMAIN}"
+      PUID: 1000
+      PGID: 1000
+    service:
+      main:
+        ports:
+          http:
+            port: 8000
     persistence:
       config:
         enabled: true
@@ -55,6 +63,6 @@ spec:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
             - matchExpressions:
-              - key: "kubernetes.io/arch"
-                operator: In
-                values: ["arm64"]
+                - key: "kubernetes.io/arch"
+                  operator: In
+                  values: ["arm64"]

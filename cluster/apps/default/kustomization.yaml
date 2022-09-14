@@ -14,6 +14,7 @@ resources:
   # - glauth
   - hajimari
   - hajimari-public
+  - kubernetes-dashboard
   - lldap
   - maddy
   - miniflux

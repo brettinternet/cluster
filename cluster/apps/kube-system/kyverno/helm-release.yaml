@@ -21,6 +21,8 @@ spec:
   upgrade:
     remediation:
       retries: 5
+  # Some resources are filtered from rules by default:
+  # https://artifacthub.io/packages/helm/kyverno/kyverno#default-resource-filters
   values:
     installCRDs: false
     replicaCount: 3
