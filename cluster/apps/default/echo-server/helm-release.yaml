@@ -71,7 +71,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx-internal
+        ingressClassName: nginx
         annotations:
           hajimari.io/enable: "true"
           hajimari.io/icon: video-input-antenna

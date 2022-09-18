@@ -20,7 +20,6 @@ resources:
   - kyverno.yaml
   - metallb.yaml
   - metrics-server.yaml
-  - minio.yaml
   - nextcloud.yaml
   - node-feature-discovery.yaml
   - prometheus-community.yaml
