@@ -19,3 +19,5 @@ xanmanning.k3s*
 terraform.tfstate*
 # Output
 megalinter-reports
+# scripts
+node_modules
