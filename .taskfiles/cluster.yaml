@@ -43,6 +43,17 @@ tasks:
     cmds:
       - flux logs -A --level=error
 
+  kubectl:
+    desc: Run kubectl command
+    cmds:
+      - kubectl {{.CLI_ARGS}}
+
+  top:
+    desc: List top metrics
+    cmds:
+      - kubectl top node
+      - kubectl top pod
+
   # https://github.com/fluxcd/helm-controller/issues/454#issuecomment-962208864
   delete-tunnel:
     desc: |

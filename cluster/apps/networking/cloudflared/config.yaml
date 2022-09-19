@@ -5,10 +5,6 @@ no-autoupdate: true
 originRequest:
   connectTimeout: 30s
 ingress:
-  - hostname: "*.${PUBLIC_DOMAIN}"
-    service: https://ingress-nginx-controller.networking.svc.cluster.local
-    originRequest:
-      noTLSVerify: true
-  - service: http://ingress-nginx-defaultbackend.networking.svc.cluster.local
+  - service: https://ingress-nginx-controller.networking.svc.cluster.local
     originRequest:
       noTLSVerify: true

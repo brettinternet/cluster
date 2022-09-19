@@ -1,0 +1,170 @@
+# https://wiki.archlinux.org/title/NFS
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: plex
+  namespace: media
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 0.2.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+      interval: 15m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    image:
+      repository: docker.io/plexinc/pms-docker:plexpass
+      tag: latest
+      pullPolicy: IfNotPresent
+
+    # See https://support.plex.tv/articles/201105343-advanced-hidden-server-settings/
+    # NOTE: Plex preference options are camelCase and CASE SENSITIVE!
+    # You can do horrible things to your Plex configuration if you are not careful
+    env:
+      TZ: UTC
+      # PLEX_UID: 1000
+      # PLEX_GID: 1000
+      # PLEX_CLAIM: "{{ plex_claim_code }}"
+      # # Remote access will look at `ADVERTISE_IP`, but because it's behind a proxy, it's likely that
+      # # the dashboard will say "Not available outside your network" even though it is... >:(
+      # ADVERTISE_IP: "http://192.168.1.100:32400,https://plex.example.com:443"
+
+    # Ports: https://support.plex.tv/articles/201543147-what-network-ports-do-i-need-to-allow-through-my-firewall/
+    service:
+      main:
+        primary: true
+        ports:
+          http:
+            port: 32400
+      # Plex DLNA Server
+      # https://support.plex.tv/articles/200350536-dlna/
+      dnla-tcp:
+        enabled: true
+        type: NodePort
+        ports:
+          dnla-tcp:
+            enabled: true
+            port: 32469
+            protocol: TCP
+            targetPort: 32469
+        externalTrafficPolicy: Local
+      dnla-udp:
+        enabled: true
+        type: NodePort
+        ports:
+          dnla-udp:
+            enabled: true
+            port: 1900
+            protocol: UDP
+            targetPort: 1900
+        externalTrafficPolicy: Local
+      # GDM Network discovery
+      # https://support.plex.tv/articles/200430283-network/
+      gdm-1-udp:
+        enabled: true
+        type: NodePort
+        ports:
+          gdm-1-udp:
+            enabled: true
+            port: 32410
+            protocol: UDP
+            targetPort: 32410
+        externalTrafficPolicy: Local
+      gdm-2-udp:
+        enabled: true
+        type: NodePort
+        ports:
+          gdm-2-udp:
+            enabled: true
+            port: 32412
+            protocol: UDP
+            targetPort: 32412
+        externalTrafficPolicy: Local
+      gdm-3-udp:
+        enabled: true
+        type: NodePort
+        ports:
+          gdm-3-udp:
+            enabled: true
+            port: 32413
+            protocol: UDP
+            targetPort: 32413
+        externalTrafficPolicy: Local
+      gdm-4-udp:
+        enabled: true
+        type: NodePort
+        ports:
+          gdm-4-udp:
+            enabled: true
+            port: 32414
+            protocol: UDP
+            targetPort: 32414
+        externalTrafficPolicy: Local
+
+    # Enable devices to be discoverable
+    hostNetwork: false
+
+    probes:
+      liveness:
+        enabled: true
+        custom: true
+        spec:
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+          httpGet:
+            path: /identity
+            port: 32400
+
+    persistence:
+      config:
+        enabled: false
+        mountPath: /config
+
+      transcode:
+        enabled: false
+        mountPath: /transcode
+
+    podSecurityContext: {}
+      # runAsUser: 568
+      # runAsGroup: 568
+      # fsGroup: 568
+      # # Hardware acceleration using an Intel iGPU w/ QuickSync
+      # # These IDs below should be matched to your `video` and `render` group on the host
+      # # To obtain those IDs run the following grep statement on the host:
+      # # $ cat /etc/group | grep "video\|render"
+      # # video:x:44:
+      # # render:x:109:
+      # supplementalGroups:
+      # - 44
+      # - 109
+
+    resources: {}
+      # requests:
+      #   # Hardware acceleration using an Intel iGPU w/ QuickSync and
+      #   # using intel-gpu-plugin (https://github.com/intel/intel-device-plugins-for-kubernetes)
+      #   gpu.intel.com/i915: 1
+      #   cpu: 200m
+      #   memory: 256Mi
+      # limits:
+      #   # Hardware acceleration using an Intel iGPU w/ QuickSync and
+      #   # using intel-gpu-plugin (https://github.com/intel/intel-device-plugins-for-kubernetes)
+      #   gpu.intel.com/i915: 1
+      #   memory: 4096Mi
+
+    ingress:
+      main:
+        enabled: false

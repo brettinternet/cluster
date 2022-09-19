@@ -8,11 +8,11 @@ spec:
   interval: 15m
   chart:
     spec:
-      chart: ./charts/dokuwiki
-      reconcileStrategy: Revision
+      chart: app-template
+      version: 0.2.1
       sourceRef:
-        kind: GitRepository
-        name: brettinternet
+        kind: HelmRepository
+        name: bjw-s
         namespace: flux-system
       interval: 15m
   install:
@@ -28,12 +28,21 @@ spec:
       tag: arm64v8-latest
     env:
       TZ: "${TIMEZONE}"
+    podSecurityContext:
+      runAsUser: "${SECURITY_CONTEXT_RUN_AS_USER}"
+      runAsGroup: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
+      fsGroup: "${SECURITY_CONTEXT_FS_GROUP}"
     persistence:
       data:
         enabled: true
         mountPath: /config
         existingClaim: appdata
         subPath: dokuwiki
+    service:
+      main:
+        ports:
+          http:
+            port: 80
     ingress:
       main:
         enabled: true
