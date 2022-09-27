@@ -5,6 +5,7 @@ metadata:
   name: cluster-settings
   namespace: flux-system
 data:
+  CLUSTER_NAME: home
   TIMEZONE: America/Denver
   # Must be the same subnet as Node https://github.com/metallb/metallb/issues/433
   METALLB_LB_RANGE: 10.1.2.101-10.1.2.120
@@ -12,9 +13,13 @@ data:
   METALLB_INGRESS_ADDR: 10.1.2.102
   METALLB_INGRESS_INTERNAL_ADDR: 10.1.2.103
   METALLB_DNS_ADDR: 10.1.2.104
+  UPSTREAM_DNS_ADDR: 10.1.2.1:4053 # fallback/alternate
   METALLB_MADDY_ADDR: 10.1.2.105
   APPDATA_NFS_SERVER_CLUSTERIP: 10.43.1.10
   APPDATA_DIR: /mnt/storage
+  SECURITY_CONTEXT_RUN_AS_USER: "1000"
+  SECURITY_CONTEXT_RUN_AS_GROUP: "1000"
+  SECURITY_CONTEXT_FS_GROUP: "1000"
   # NET_POD_CIDR: "10.42.0.0/16"
   # NET_SVC_CIDR: "10.43.0.0/16"
   # NET_NODE_CIDR: "10.1.2.0/24"

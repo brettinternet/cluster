@@ -9,6 +9,8 @@ kubernetes:
           ansible_host: 10.1.2.11
         k8s-2:
           ansible_host: 10.1.2.12
+    worker:
+      hosts:
         k8s-3:
           ansible_host: 10.1.2.13
         k8s-4:

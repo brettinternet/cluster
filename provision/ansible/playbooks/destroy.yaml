@@ -4,9 +4,9 @@
     - worker
   become: true
   vars_prompt:
-    - name: nuke_confirmation
+    - name: destroy_confirmation
       prompt: |-
-        Are you sure you want to nuke this cluster?
+        Are you sure you want to destroy this cluster?
         Type DESTROY to proceed
       default: "n"
       private: false
@@ -15,7 +15,7 @@
     - name: Check for confirmation
       ansible.builtin.fail:
         msg: Aborted nuking the cluster
-      when: nuke_confirmation != 'DESTROY'
+      when: destroy_confirmation != 'DESTROY'
 
   tasks:
     - name: Uninstall k3s
@@ -61,3 +61,4 @@
       with_items:
         - /var/lib/rook
         - /etc/rancher
+        - /var/lib/rancher

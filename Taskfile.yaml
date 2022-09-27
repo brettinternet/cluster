@@ -76,3 +76,14 @@ tasks:
     desc: Commit WIP to current branch and reconcile cluster
     cmds:
       - ./scripts/wip.sh
+
+  check-internal-404s:
+    desc: Check internal URLs for 404
+    cmds:
+      - npx zx ./scripts/check-internal-404s.mjs
+    env:
+      NODE_ENV: development
+      PUBLIC_DOMAIN: home.arpa
+    preconditions:
+      - sh: command -v node
+        msg: Node is not installed

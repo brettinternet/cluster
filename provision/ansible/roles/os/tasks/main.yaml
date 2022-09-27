@@ -53,29 +53,16 @@
       # https://github.com/lucas-clemente/quic-go/wiki/UDP-Receive-Buffer-Size
       net.core.rmem_max: 2500000
 
-# https://serverfault.com/a/881518
-# https://github.com/kubernetes/kubernetes/issues/53533
-- name: Disable swap at runtime
-  ansible.builtin.command: swapoff -a
-  when: ansible_swaptotal_mb > 0
-
-- name: Disable swap on boot
-  ansible.posix.mount:
-    name: "{{ item }}"
-    fstype: swap
-    state: absent
-  loop:
-    - swap
-    - none
-
 - name: Activating cgroup support
-  become: true
   ansible.builtin.lineinfile:
     path: /boot/cmdline.txt
     regexp: '^((?!.*\bcgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory\b).*)$'
     line: '\1 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory'
     backrefs: true
   notify: reboot
+
+- name: Swap
+  ansible.builtin.include_tasks: swap.yaml
 
 - name: Security
   ansible.builtin.include_tasks: security.yaml
@@ -84,7 +71,6 @@
 # https://hub.docker.com/r/adguard/adguardhome#resolved-daemon
 # https://wiki.archlinux.org/title/systemd-resolved#DNS
 # - name: Disable Ubuntu's caching DNS resolver on port 53
-#   become: true
 #   lineinfile:
 #     dest: /etc/systemd/resolved.conf
 #     line: "DNSStubListener=no"
@@ -92,7 +78,6 @@
 #     state: present
 
 # - name: Create a symlink to resolv.conf
-#   become: true
 #   ansible.builtin.file:
 #     src: /run/systemd/resolve/resolv.conf
 #     dest: /etc/resolv.conf
@@ -102,7 +87,6 @@
 #   register: resolv_conf
 
 # - name: restart systemd-resolved
-#   become: true
 #   service:
 #     name: systemd-resolved
 #     state: restarted

@@ -9,11 +9,11 @@ spec:
   interval: 15m
   chart:
     spec:
-      chart: ./charts/nfs-server
-      reconcileStrategy: Revision
+      chart: app-template
+      version: 0.2.1
       sourceRef:
-        kind: GitRepository
-        name: brettinternet
+        kind: HelmRepository
+        name: bjw-s
         namespace: flux-system
       interval: 15m
   install:
@@ -25,6 +25,7 @@ spec:
       retries: 5
   values:
     image:
+      repository: docker.io/itsthenetwork/nfs-server-alpine
       tag: latest-arm
     # Additional options https://hub.docker.com/r/itsthenetwork/nfs-server-alpine/
     env:
@@ -32,6 +33,7 @@ spec:
       SHARED_DIRECTORY: /data
     service:
       main:
+        enabled: true
         # NFS DNS problems with pod setup
         # This doesn't seem to work:
         # https://github.com/kubernetes-csi/csi-driver-nfs/tree/master/deploy/example/nfs-provisioner
@@ -41,6 +43,9 @@ spec:
         # https://github.com/kubernetes/examples/issues/418
         # https://github.com/kubernetes/examples/issues/390
         clusterIP: "${APPDATA_NFS_SERVER_CLUSTERIP}"
+        ports:
+          http:
+            port: 2049
     persistence:
       data:
         enabled: true
@@ -58,8 +63,5 @@ spec:
         operator: Exists
       - effect: NoExecute
         operator: Exists
-    resources:
-      limits:
-        smarter-devices/sda1: 1
-      requests:
-        smarter-devices/sda1: 1
+    nodeSelector:
+      feature.node.kubernetes.io/custom-storage-usb: "true"
