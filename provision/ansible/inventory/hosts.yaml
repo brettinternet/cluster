@@ -3,13 +3,19 @@ kubernetes:
   children:
     master:
       hosts:
-        k8s-0:
+        pi-0:
           ansible_host: 10.1.2.10
-        k8s-1:
+        pi-1:
           ansible_host: 10.1.2.11
-        k8s-2:
+        archie:
+          ansible_host: 10.1.2.15
+    worker:
+      hosts:
+        pi-2:
           ansible_host: 10.1.2.12
-        k8s-3:
+        pi-3:
           ansible_host: 10.1.2.13
-        k8s-4:
+        pi-4:
           ansible_host: 10.1.2.14
+        harambe:
+          ansible_host: 10.1.2.16

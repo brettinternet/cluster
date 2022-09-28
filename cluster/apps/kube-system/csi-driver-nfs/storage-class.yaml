@@ -1,3 +1,5 @@
+# Set as default storage class:
+# kubectl patch storageclass appdata-nfs -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -5,7 +7,7 @@ metadata:
   name: appdata-nfs
 provisioner: nfs.csi.k8s.io
 parameters:
-  server: "${APPDATA_NFS_SERVER_CLUSTERIP}"
+  server: "${NFS_APPDATA_CLUSTERIP}"
   share: /pvc
 reclaimPolicy: Delete
 volumeBindingMode: Immediate

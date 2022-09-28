@@ -5,7 +5,7 @@
   become: true
   roles:
     - kubernetes
-    - kubecolor
+    # - kubecolor
   post_tasks:
     - name: Label node
       ansible.builtin.command:
@@ -13,8 +13,17 @@
       loop: "{{ node_labels }}"
       when:
         - node_labels is defined and node_labels | length > 0
-    - name: Alias 'k' with kubectl
-      become: false
-      ansible.builtin.lineinfile:
-        path: "/home/{{ ansible_user }}/.profile"
-        line: 'alias k="kubectl"'
+
+    # - name: Alias 'k' with kubectl
+    #   become: false
+    #   ansible.builtin.lineinfile:
+    #     path: "/home/{{ ansible_user }}/.profile"
+    #     line: 'alias k="kubectl"'
+
+    # Commands to run once on a server node
+    - block:
+        - name: Remove default StorageClass
+          ansible.builtin.command: |
+            kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+      when:
+        - inventory_hostname == groups['master'][0]

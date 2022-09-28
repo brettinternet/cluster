@@ -13,7 +13,7 @@ tasks:
     desc: Install / Upgrade Ansible galaxy deps
     dir: provision/ansible
     cmds:
-      - ansible-galaxy install -r requirements.yaml
+      - ansible-galaxy install -r requirements.yaml -f
 
   list:
     desc: List all the hosts
@@ -39,12 +39,12 @@ tasks:
     cmds:
       - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/status.yaml
 
-  nuke:
+  destroy:
     desc: Uninstall Kubernetes on the nodes
     dir: provision/ansible
     interactive: true
     cmds:
-      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/nuke.yaml
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/destroy.yaml
 
   ping:
     desc: Ping all the hosts
@@ -69,3 +69,9 @@ tasks:
     dir: provision/ansible
     cmds:
       - ansible kubernetes -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml -a '/usr/bin/systemctl poweroff' --become
+
+  update:
+    desc: Update dependencies
+    dir: provision/ansible
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/update.yaml

@@ -12,4 +12,4 @@ resources:
   - node-feature-discovery
   - reloader
   - kube-vip
-  - smarter-device-manager
+  # - smarter-device-manager

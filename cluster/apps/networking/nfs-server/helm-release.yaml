@@ -3,17 +3,17 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: nfs-server
+  name: nfs-server-appdata
   namespace: networking
 spec:
   interval: 15m
   chart:
     spec:
-      chart: ./charts/nfs-server
-      reconcileStrategy: Revision
+      chart: app-template
+      version: 0.2.1
       sourceRef:
-        kind: GitRepository
-        name: brettinternet
+        kind: HelmRepository
+        name: bjw-s
         namespace: flux-system
       interval: 15m
   install:
@@ -25,13 +25,15 @@ spec:
       retries: 5
   values:
     image:
-      tag: latest-arm
+      repository: docker.io/itsthenetwork/nfs-server-alpine
+      tag: latest
     # Additional options https://hub.docker.com/r/itsthenetwork/nfs-server-alpine/
     env:
       TZ: "${TIMEZONE}"
       SHARED_DIRECTORY: /data
     service:
       main:
+        enabled: true
         # NFS DNS problems with pod setup
         # This doesn't seem to work:
         # https://github.com/kubernetes-csi/csi-driver-nfs/tree/master/deploy/example/nfs-provisioner
@@ -40,13 +42,16 @@ spec:
         # https://github.com/kubernetes/minikube/issues/3417#issuecomment-493366877
         # https://github.com/kubernetes/examples/issues/418
         # https://github.com/kubernetes/examples/issues/390
-        clusterIP: "${APPDATA_NFS_SERVER_CLUSTERIP}"
+        clusterIP: "${NFS_APPDATA_CLUSTERIP}"
+        ports:
+          http:
+            port: 2049
     persistence:
       data:
         enabled: true
         mountPath: /data
         type: hostPath
-        hostPath: "${APPDATA_DIR}"
+        hostPath: "${NFS_APPDATA_DIR}"
     securityContext:
       capabilities:
         add: ["SYS_ADMIN", "SETPCAP"]
@@ -58,8 +63,61 @@ spec:
         operator: Exists
       - effect: NoExecute
         operator: Exists
-    resources:
-      limits:
-        smarter-devices/sda1: 1
-      requests:
-        smarter-devices/sda1: 1
+    nodeSelector:
+      kubernetes.io/hostname: archie
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: nfs-server-media
+  namespace: networking
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 0.2.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+      interval: 15m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    image:
+      repository: docker.io/itsthenetwork/nfs-server-alpine
+      tag: latest
+    env:
+      TZ: "${TIMEZONE}"
+      SHARED_DIRECTORY: /data
+    service:
+      main:
+        enabled: true
+        clusterIP: "${NFS_MEDIA_CLUSTERIP}"
+        ports:
+          http:
+            port: 2049
+    persistence:
+      data:
+        enabled: true
+        mountPath: /data
+        type: hostPath
+        hostPath: "${NFS_MEDIA_DIR}"
+    securityContext:
+      capabilities:
+        add: ["SYS_ADMIN", "SETPCAP"]
+    priorityClassName: system-cluster-critical
+    tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      - effect: NoExecute
+        operator: Exists
+    nodeSelector:
+      kubernetes.io/hostname: harambe

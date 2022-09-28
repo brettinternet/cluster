@@ -1,3 +1,4 @@
 ---
-nfs_exports: []
-nfs_server_daemon: nfs-kernel-server
+supported_distributions:
+  - archlinux
+  - debian

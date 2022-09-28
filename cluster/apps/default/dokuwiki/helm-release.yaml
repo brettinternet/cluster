@@ -1,3 +1,5 @@
+# Plugins:
+# https://www.dokuwiki.org/plugin:authldap
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
@@ -8,11 +10,11 @@ spec:
   interval: 15m
   chart:
     spec:
-      chart: ./charts/dokuwiki
-      reconcileStrategy: Revision
+      chart: app-template
+      version: 0.2.1
       sourceRef:
-        kind: GitRepository
-        name: brettinternet
+        kind: HelmRepository
+        name: bjw-s
         namespace: flux-system
       interval: 15m
   install:
@@ -28,18 +30,26 @@ spec:
       tag: arm64v8-latest
     env:
       TZ: "${TIMEZONE}"
+      PUID: "${SECURITY_CONTEXT_RUN_AS_USER}"
+      PGID: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
     persistence:
       data:
         enabled: true
         mountPath: /config
         existingClaim: appdata
         subPath: dokuwiki
+    service:
+      main:
+        ports:
+          http:
+            port: 80
     ingress:
       main:
         enabled: true
         ingressClassName: nginx
         annotations:
           external-dns.home.arpa/enabled: "true"
+          auth.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
           hajimari.io/icon: file-document-multiple
           hajimari.io/instance: public

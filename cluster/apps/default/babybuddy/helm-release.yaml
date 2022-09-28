@@ -23,13 +23,13 @@ spec:
       retries: 5
   values:
     image:
-      repository: linuxserver/babybuddy
+      repository: lscr.io/linuxserver/babybuddy
       tag: arm64v8-latest
     env:
       TZ: "${TIMEZONE}"
       CSRF_TRUSTED_ORIGINS: "https://baby.${PUBLIC_DOMAIN}"
-      PUID: 1000
-      PGID: 1000
+      PUID: "${SECURITY_CONTEXT_RUN_AS_USER}"
+      PGID: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
     service:
       main:
         ports:

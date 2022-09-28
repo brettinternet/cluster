@@ -11,7 +11,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 0.1.1
+      version: 0.2.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -71,7 +71,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx-internal
+        ingressClassName: nginx
         annotations:
           hajimari.io/enable: "true"
           hajimari.io/icon: video-input-antenna

@@ -43,12 +43,25 @@ tasks:
     cmds:
       - flux logs -A --level=error
 
-  # https://github.com/fluxcd/helm-controller/issues/454#issuecomment-962208864
+  top:
+    desc: List top metrics
+    cmds:
+      - kubectl top node
+      - kubectl top pod
+
   delete-tunnel:
     desc: |
       Force delete cloudflared tunnel release to stop external ingress
     cmds:
-      - flux delete -n networking hr cloudflared
+      - flux suspend hr -n networking cloudflared
+
+  # https://github.com/fluxcd/helm-controller/issues/454#issuecomment-962208864
+  redo:
+    desc: Force reset drift in HelmRelease
+    cmds:
+      - flux suspend hr {{.CLI_ARGS}}
+      - flux resume hr {{.CLI_ARGS}}
+
 
   nodes:
     desc: List all the nodes in your cluster

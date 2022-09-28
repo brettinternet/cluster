@@ -5,7 +5,7 @@ metadata:
   name: appdata
 spec:
   capacity:
-    storage: 64Gi
+    storage: 800G
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Delete
@@ -19,7 +19,7 @@ spec:
     readOnly: false
     volumeHandle: appdata-nfs-storage
     volumeAttributes:
-      server: "${APPDATA_NFS_SERVER_CLUSTERIP}"
+      server: "${NFS_APPDATA_CLUSTERIP}"
       share: /
 
 ---
@@ -35,4 +35,4 @@ spec:
   storageClassName: ""
   resources:
     requests:
-      storage: 5Gi
+      storage: 800G
