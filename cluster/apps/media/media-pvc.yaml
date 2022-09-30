@@ -19,8 +19,8 @@ spec:
     readOnly: false
     volumeHandle: media-nfs-storage
     volumeAttributes:
-      server: "${NFS_MEDIA_CLUSTERIP}"
-      share: /
+      server: "${NFS_JBOD_CLUSTERIP}"
+      share: /media
 
 ---
 apiVersion: v1

@@ -69,7 +69,6 @@ spec:
           external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
           hajimari.io/icon: rss
-          hajimari.io/instance: public
         hosts:
           - host: &host "rss.${PUBLIC_DOMAIN}"
             paths:
@@ -111,7 +110,7 @@ spec:
   values:
     image:
       repository: library/postgres
-      tag: "14"
+      tag: "10.10"
     env:
       - name: POSTGRES_USER
         value: miniflux

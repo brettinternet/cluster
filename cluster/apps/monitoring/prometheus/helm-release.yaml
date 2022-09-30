@@ -257,7 +257,7 @@ spec:
         honor_timestamps: true
         static_configs:
           - targets:
-              - "opnsense.${PUBLIC_DOMAIN}:9100"
+              - "opnsense.${PRIVATE_DOMAIN}:9100"
 
 # ---
 # apiVersion: helm.toolkit.fluxcd.io/v2beta1

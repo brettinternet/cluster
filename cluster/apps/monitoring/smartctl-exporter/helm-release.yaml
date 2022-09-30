@@ -27,6 +27,8 @@ spec:
       # repository: prometheuscommunity/smartctl-exporter
       repository: prometheuscommunity/smartctl-exporter-linux-arm64
       tag: 0.7-2
+    nodeSelector:
+      kubernetes.io/arch: arm64
     config:
       devices:
         # - /dev/sda

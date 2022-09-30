@@ -4,10 +4,10 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: appdata-nfs
+  name: nfs-fast-tank
 provisioner: nfs.csi.k8s.io
 parameters:
-  server: "${NFS_APPDATA_CLUSTERIP}"
+  server: "${NFS_TANK_CLUSTERIP}"
   share: /pvc
 reclaimPolicy: Delete
 volumeBindingMode: Immediate

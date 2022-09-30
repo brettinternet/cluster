@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: nfs-server-appdata
+  name: nfs-server-fast-tank
   namespace: networking
 spec:
   interval: 15m
@@ -42,7 +42,7 @@ spec:
         # https://github.com/kubernetes/minikube/issues/3417#issuecomment-493366877
         # https://github.com/kubernetes/examples/issues/418
         # https://github.com/kubernetes/examples/issues/390
-        clusterIP: "${NFS_APPDATA_CLUSTERIP}"
+        clusterIP: "${NFS_FAST_TANK_CLUSTERIP}"
         ports:
           http:
             port: 2049
@@ -51,7 +51,7 @@ spec:
         enabled: true
         mountPath: /data
         type: hostPath
-        hostPath: "${NFS_APPDATA_DIR}"
+        hostPath: "${NFS_FAST_TANK_DIR}"
     securityContext:
       capabilities:
         add: ["SYS_ADMIN", "SETPCAP"]
@@ -70,7 +70,7 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: nfs-server-media
+  name: nfs-server-jbod
   namespace: networking
 spec:
   interval: 15m
@@ -100,7 +100,7 @@ spec:
     service:
       main:
         enabled: true
-        clusterIP: "${NFS_MEDIA_CLUSTERIP}"
+        clusterIP: "${NFS_JBOD_CLUSTERIP}"
         ports:
           http:
             port: 2049
@@ -109,10 +109,12 @@ spec:
         enabled: true
         mountPath: /data
         type: hostPath
-        hostPath: "${NFS_MEDIA_DIR}"
+        hostPath: "${NFS_JBOD_DIR}"
     securityContext:
-      capabilities:
-        add: ["SYS_ADMIN", "SETPCAP"]
+      privileged: true
+      # capabilities didn't work on this node
+      # capabilities:
+      #   add: ["SYS_ADMIN", "SETPCAP"]
     priorityClassName: system-cluster-critical
     tolerations:
       - effect: NoSchedule

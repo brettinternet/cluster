@@ -42,7 +42,6 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-staging
           hajimari.io/enable: "true"
           hajimari.io/icon: weather-sunset
         hosts:
@@ -56,9 +55,10 @@ spec:
     persistence:
       data:
         enabled: true
-        existingClaim: hajimari-public-config
+        existingClaim: appdata
+        subPath: hajimari/default
     podAnnotations:
-      configmap.reloader.stakater.com/reload: hajimari-public-config
+      configmap.reloader.stakater.com/reload: appdata
     # resources:
     #   requests:
     #     cpu: 100m

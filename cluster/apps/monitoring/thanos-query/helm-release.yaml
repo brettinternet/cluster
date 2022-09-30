@@ -28,6 +28,8 @@ spec:
     image:
       repository: quay.io/thanos/thanos-linux-arm64
       tag: latest
+    nodeSelector:
+      kubernetes.io/arch: arm64
     query:
       enabled: true
       replicaCount: 1

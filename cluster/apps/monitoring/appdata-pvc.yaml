@@ -5,7 +5,7 @@ metadata:
   name: appdata-monitoring
 spec:
   capacity:
-    storage: 800G
+    storage: 400G
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Delete
@@ -19,8 +19,8 @@ spec:
     readOnly: false
     volumeHandle: appdata-nfs-storage-monitoring
     volumeAttributes:
-      server: "${NFS_APPDATA_CLUSTERIP}"
-      share: /
+      server: "${NFS_FAST_TANK_CLUSTERIP}"
+      share: /appdata
 
 ---
 apiVersion: v1
@@ -35,4 +35,4 @@ spec:
   storageClassName: ""
   resources:
     requests:
-      storage: 800G
+      storage: 400G

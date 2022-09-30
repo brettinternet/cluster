@@ -1,12 +1,12 @@
 name: Check Internal 404s
 
-on: {}
-# on: # yamllint disable-line rule:truthy
-#   schedule:
-#     - cron: '0 * * * *'
+on: # yamllint disable-line rule:truthy
+  schedule:
+    - cron: '0 * * * *'
 
 jobs:
   build:
+    if: ${{ false }}
     name: Check internal URLs for 404
     runs-on: ubuntu-latest
     steps:

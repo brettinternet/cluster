@@ -5,7 +5,8 @@ resources:
   - default
   - flux-system
   - kube-system
-  - monitoring
+  # - media
+  # - monitoring
   - networking
   - system-upgrade
   # - trivy

@@ -11,10 +11,13 @@ resources:
   # - dnsutils
   - dokuwiki
   - echo-server
-  # - glauth
+  - espial
+  # # - glauth
   - hajimari
-  - hajimari-public
+  # - hajimari-public
   - kubernetes-dashboard
   - lldap
   - maddy
+  - mealie
   - miniflux
+  - uptime-kuma
