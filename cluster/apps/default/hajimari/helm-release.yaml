@@ -41,7 +41,7 @@ spec:
       # Use with hajimari.io/instance
       # https://github.com/toboshii/hajimari#ingresses
       # instanceName: personal # family
-      title: New Tab
+      title: Homelab
       name: Brett
       customApps:
         - name: OPNsense
@@ -75,11 +75,12 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
+          external-dns.home.arpa/enabled: "true"
           auth.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
           hajimari.io/icon: weather-sunset
         hosts:
-          - host: &host "landing.${PUBLIC_DOMAIN}"
+          - host: &host "lab.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix

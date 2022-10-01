@@ -6,7 +6,6 @@ on: # yamllint disable-line rule:truthy
 
 jobs:
   build:
-    if: ${{ false }}
     name: Check internal URLs for 404
     runs-on: ubuntu-latest
     steps:

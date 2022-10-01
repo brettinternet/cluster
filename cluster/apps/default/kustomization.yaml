@@ -12,6 +12,7 @@ resources:
   - dokuwiki
   - echo-server
   - espial
+  - frigate
   # # - glauth
   - hajimari
   # - hajimari-public
@@ -20,4 +21,7 @@ resources:
   - maddy
   - mealie
   - miniflux
+  - mosquitto
+  - unifi
   - uptime-kuma
+  - zwavejs2mqtt

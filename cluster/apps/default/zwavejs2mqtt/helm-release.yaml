@@ -1,10 +1,8 @@
-# Plugins:
-# https://www.dokuwiki.org/plugin:authldap
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: dokuwiki
+  name: &app zwavejs2mqtt
   namespace: default
 spec:
   interval: 15m
@@ -24,36 +22,56 @@ spec:
   upgrade:
     remediation:
       retries: 5
+  dependsOn:
+    - name: mosquitto
+      namespace: default
   values:
     image:
-      repository: lscr.io/linuxserver/dokuwiki
-      tag: arm64v8-latest
+      # https://hub.docker.com/r/zwavejs/zwavejs2mqtt
+      repository: docker.io/zwavejs/zwavejs2mqtt
+      tag: latest
     env:
       TZ: "${TIMEZONE}"
-      PUID: "${SECURITY_CONTEXT_RUN_AS_USER}"
-      PGID: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
+      ZWAVEJS_EXTERNAL_CONFIG: /usr/src/app/store/.config-db
+    envFrom:
+      - secretRef:
+          name: *app
     persistence:
       data:
         enabled: true
-        mountPath: /config
+        type: pvc
         existingClaim: appdata
-        subPath: dokuwiki
+        mountPath: /usr/src/app/store
+        subPath: zwavejs2mqtt
+      usb:
+        enabled: true
+        type: hostPath
+        mountPath: /dev/zwave
+        hostPath: /dev/serial/by-id/${DEVICE_ID_ZWAVE}
     service:
       main:
         ports:
           http:
-            port: 80
+            port: 8091
+      # Z-Wave JS websocket server
+      socket:
+        enabled: true
+        ports:
+          socket:
+            enabled: true
+            port: 3000
+            protocol: TCP
+            targetPort: 3000
     ingress:
       main:
         enabled: true
         ingressClassName: nginx
         annotations:
-          external-dns.home.arpa/enabled: "true"
           auth.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
-          hajimari.io/icon: file-document-multiple
+          hajimari.io/icon: z-wave
         hosts:
-          - host: &host "wiki.${PUBLIC_DOMAIN}"
+          - host: &host "zwavejs2mqtt.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
@@ -61,4 +79,4 @@ spec:
           - hosts:
               - *host
     nodeSelector:
-      kubernetes.io/arch: arm64
+      feature.node.kubernetes.io/custom-zwave: "true"

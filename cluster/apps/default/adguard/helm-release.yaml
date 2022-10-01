@@ -61,17 +61,14 @@ spec:
             protocol: UDP
             targetPort: 53
     persistence:
-      config:
-        enabled: true
-        mountPath: /opt/adguardhome/conf
-        existingClaim: appdata
-        subPath: adguard/conf
       data:
-        # ...?
-        enabled: false
-        mountPath: /opt/adguardhome/work
+        enabled: true
         existingClaim: appdata
-        subPath: adguard/data
+        subPath:
+          - path: adguard/conf
+            mountPath: /opt/adguardhome/conf
+          - path: adguard/data
+            mountPath: /opt/adguardhome/work
     ingress:
       main:
         enabled: true

@@ -49,7 +49,6 @@ spec:
           external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
           hajimari.io/icon: baby
-          hajimari.io/instance: public
         hosts:
           - host: &host "baby.${PUBLIC_DOMAIN}"
             paths:
