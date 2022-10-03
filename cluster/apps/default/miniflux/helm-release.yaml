@@ -48,7 +48,7 @@ spec:
       main:
         ports:
           http:
-            port: 8080
+            port: &port 8080
     probes:
       liveness:
         enabled: true
@@ -60,7 +60,7 @@ spec:
           failureThreshold: 3
           httpGet:
             path: /healthcheck
-            port: 8080
+            port: *port
     ingress:
       main:
         enabled: true

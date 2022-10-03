@@ -22,6 +22,8 @@ resources:
   - mealie
   - miniflux
   - mosquitto
+  - ntfy
+  - paperless-ngx
   - unifi
   - uptime-kuma
   - zwavejs2mqtt
