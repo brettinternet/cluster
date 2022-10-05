@@ -67,6 +67,16 @@ spec:
         medium: Memory
         sizeLimit: 4Gi
         mountPath: /tmp/cache
+      tmpfs:
+        enabled: true
+        type: emptyDir
+        medium: Memory
+        # https://docs.frigate.video/installation/#calculating-required-shm-size
+        # (width * height * 1.5 * 9 + 270480)/1048576
+        # 2560 * 1440: Amcrest ASH41-W = ~48
+        # shm_size: 64m # default 64m
+        sizeLimit: 1Gi
+        mountPath: /dev/shm
     service:
       main:
         ports:
@@ -98,5 +108,6 @@ spec:
           - hosts:
               - *host
     # Detection is resource demanding on CPU until I get a Coral device
+    # And limitations on RPi: https://docs.frigate.video/installation/#raspberry-pi-34
     nodeSelector:
       kubernetes.io/arch: amd64

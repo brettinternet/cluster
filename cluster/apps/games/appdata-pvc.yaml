@@ -17,7 +17,7 @@ spec:
   csi:
     driver: nfs.csi.k8s.io
     readOnly: false
-    volumeHandle: appdata-nfs-storage
+    volumeHandle: appdata-nfs-storage-games
     volumeAttributes:
       server: "${NFS_FAST_TANK_CLUSTERIP}"
       share: /appdata

@@ -1,14 +1,11 @@
-# Follow directory organization suggested here:
-# https://wiki.servarr.com/docker-guide
-# Except "media" contains "library" (media) and various download folders
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: media
+  name: appdata-media
 spec:
   capacity:
-    storage: 12T
+    storage: 400G
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Delete
@@ -20,22 +17,22 @@ spec:
   csi:
     driver: nfs.csi.k8s.io
     readOnly: false
-    volumeHandle: media-nfs-storage-media
+    volumeHandle: appdata-nfs-storage-media
     volumeAttributes:
-      server: "${NFS_JBOD_CLUSTERIP}"
-      share: /media
+      server: "${NFS_FAST_TANK_CLUSTERIP}"
+      share: /appdata
 
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: media
+  name: appdata
   namespace: media
 spec:
   accessModes:
     - ReadWriteMany
-  volumeName: media
+  volumeName: appdata-media
   storageClassName: ""
   resources:
     requests:
-      storage: 12T
+      storage: 400G

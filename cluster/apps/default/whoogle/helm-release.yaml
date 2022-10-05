@@ -1,10 +1,9 @@
-# Plugins:
-# https://www.dokuwiki.org/plugin:authldap
+# https://github.com/benbusby/whoogle-search/blob/main/docker-compose.yml
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: dokuwiki
+  name: whoogle
   namespace: default
 spec:
   interval: 15m
@@ -26,23 +25,37 @@ spec:
       retries: 5
   values:
     image:
-      repository: lscr.io/linuxserver/dokuwiki
+      repository: docker.io/benbusby/whoogle-search
       tag: latest
     env:
       TZ: "${TIMEZONE}"
-      PUID: "${SECURITY_CONTEXT_RUN_AS_USER}"
-      PGID: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
     persistence:
-      data:
+      # /config/:size=10M,uid=927,gid=927,mode=1700
+      # /var/lib/tor/:size=15M,uid=927,gid=927,mode=1700
+      # /run/tor/:size=1M,uid=927,gid=927,mode=1700
+      config:
         enabled: true
-        mountPath: /config
-        existingClaim: appdata
-        subPath: dokuwiki
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 10Mi
+        mountPath: /config/
+      tor-1:
+        enabled: true
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 15Mi
+        mountPath: /var/lib/tor/
+      tor-2:
+        enabled: true
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 1Mi
+        mountPath: /run/tor/
     service:
       main:
         ports:
           http:
-            port: 80
+            port: 5000
     ingress:
       main:
         enabled: true
@@ -51,14 +64,17 @@ spec:
           external-dns.home.arpa/enabled: "true"
           auth.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
-          hajimari.io/icon: file-document-multiple
+          hajimari.io/icon: search
         hosts:
-          - host: &host "wiki.${PUBLIC_DOMAIN}"
+          - host: &host "search.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
         tls:
           - hosts:
               - *host
-    nodeSelector:
-      kubernetes.io/arch: arm64
+    # resources:
+    #   requests:
+    #     memory: 256mb
+    #   limits:
+    #     memory: 256mb

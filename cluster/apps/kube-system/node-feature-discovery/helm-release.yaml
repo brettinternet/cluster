@@ -53,6 +53,7 @@ spec:
                     # Bus 002 Device 002: ID 090c:1000
                     vendor: ["090c"]
                     device: ["1000"]
+            # https://github.com/walthowd/husbzb-firmware
             # Bus 001 Device 002: ID 10c4:8a2a Silicon Labs HubZ Smart Home Controller
             - name: "zwave"
               matchOn:
@@ -60,11 +61,12 @@ spec:
                     # class: ["02"]
                     vendor: ["10c4"]
                     device: ["8a2a"]
-            # - name: "intel-gpu"
-            #   matchOn:
-            #     - pciId:
-            #         class: [""]
-            #         vendor: [""]
+            # Hauppauge WinTV-quadHD: https://amazon.com/dp/B01DZSVLTW
+            - name: "tuner"
+              matchOn:
+                - pciId:
+                    vendor: ["14f1"]
+                    device: ["8880"]
             # - name: "coral-tpu"
             #   matchOn:
             #     - usbId:

@@ -4,9 +4,9 @@ kind: Kustomization
 resources:
   - default
   - flux-system
-  - games
+  # - games
   - kube-system
-  # - media
+  - media
   # - monitoring
   - networking
   - system-upgrade

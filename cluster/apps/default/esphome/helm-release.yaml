@@ -1,8 +1,15 @@
+# https://github.com/jonschoning/espial
+
+# First run requires user creation
+# podman exec espial ./migration createuser \
+#   --conn /app/data/espial.sqlite3 -\
+#   -userName myusername --userPassword myuserpassword
+
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: babybuddy
+  name: espial
   namespace: default
 spec:
   interval: 15m
@@ -14,6 +21,7 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+      interval: 15m
   install:
     createNamespace: true
     remediation:
@@ -23,24 +31,24 @@ spec:
       retries: 5
   values:
     image:
-      repository: lscr.io/linuxserver/babybuddy
-      tag: latest
+      repository: docker.io/jonschoning/espial
+      tag: espial
     env:
       TZ: "${TIMEZONE}"
-      CSRF_TRUSTED_ORIGINS: "https://baby.${PUBLIC_DOMAIN}"
-      PUID: "${SECURITY_CONTEXT_RUN_AS_USER}"
-      PGID: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
+      IP_FROM_HEADER: true
+      SQLITE_DATABASE: /app/data/espial.sqlite3
+      SHOULD_LOG_ALL: false
+    persistence:
+      data:
+        enabled: true
+        mountPath: /app/data
+        existingClaim: appdata
+        subPath: espial
     service:
       main:
         ports:
           http:
-            port: 8000
-    persistence:
-      config:
-        enabled: true
-        mountPath: /config
-        existingClaim: appdata
-        subPath: babybuddy
+            port: 3000
     ingress:
       main:
         enabled: true
@@ -48,9 +56,9 @@ spec:
         annotations:
           external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
-          hajimari.io/icon: baby
+          hajimari.io/icon: bookmark-box
         hosts:
-          - host: &host "baby.${PUBLIC_DOMAIN}"
+          - host: &host "bookmarks.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
@@ -58,4 +66,5 @@ spec:
           - hosts:
               - *host
     nodeSelector:
-      kubernetes.io/arch: arm64
+      # https://github.com/jonschoning/espial/issues/23
+      kubernetes.io/arch: amd64

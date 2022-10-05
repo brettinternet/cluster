@@ -1,18 +1,17 @@
-# https://github.com/zwave-js/zwavejs2mqtt
-# https://github.com/zwave-js/zwavejs2mqtt/blob/master/docker/docker-compose.yml
-# https://www.makeitwork-tech.com/easy-mailbox-notifications-in-home-assistant/
+# Tag reader - https://www.home-assistant.io/blog/2020/09/15/home-assistant-tags/
+# floorplan - https://experiencelovelace.github.io/ha-floorplan/docs/quick-start/
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: &app zwavejs2mqtt
+  name: home-assistant
   namespace: default
 spec:
   interval: 15m
   chart:
     spec:
       chart: app-template
-      version: 0.2.1
+      version: 0.2.2
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -25,58 +24,52 @@ spec:
   upgrade:
     remediation:
       retries: 5
-  dependsOn:
-    - name: mosquitto
-      namespace: default
   values:
     image:
-      # https://hub.docker.com/r/zwavejs/zwavejs2mqtt
-      repository: docker.io/zwavejs/zwavejs2mqtt
+      repository: lscr.io/linuxserver/homeassistant
       tag: latest
     env:
       TZ: "${TIMEZONE}"
-      ZWAVEJS_EXTERNAL_CONFIG: /usr/src/app/store/.config-db
-    envFrom:
-      - secretRef:
-          name: *app
+      PUID: "${SECURITY_CONTEXT_RUN_AS_USER}"
+      PGID: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
     securityContext:
+      # Privileged securityContext may be required if USB devices are accessed directly through the host machine
       privileged: true
+      # capabilities:
+      #   add: ["CAP_NET_RAW", "CAP_NET_BIND_SERVICE"]
     persistence:
       data:
         enabled: true
-        type: pvc
         existingClaim: appdata
-        mountPath: /usr/src/app/store
-        subPath: zwavejs2mqtt
+        mountPath: /config
+        subPath: homeassistant
       zwave:
         enabled: true
         type: hostPath
-        mountPath: /dev/zwave
+        # mountPath: /dev/zwave
+        mountPath: /dev/ttyUSB0
         hostPath: /dev/serial/by-id/${DEVICE_ID_ZWAVE}
+      zigbee:
+        enabled: true
+        type: hostPath
+        # mountPath: /dev/zigbee
+        mountPath: /dev/ttyUSB1
+        hostPath: /dev/serial/by-id/${DEVICE_ID_ZIGBEE}
     service:
       main:
         ports:
           http:
-            port: 8091
-      # Z-Wave JS websocket server
-      socket:
-        enabled: true
-        ports:
-          socket:
-            enabled: true
-            port: 3000
-            protocol: TCP
-            targetPort: 3000
+            port: 8123
     ingress:
       main:
         enabled: true
         ingressClassName: nginx
         annotations:
-          auth.home.arpa/enabled: "true"
+          external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
-          hajimari.io/icon: z-wave
+          hajimari.io/icon: home-assistant
         hosts:
-          - host: &host "zwavejs2mqtt.${PUBLIC_DOMAIN}"
+          - host: &host "home.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix

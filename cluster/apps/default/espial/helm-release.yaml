@@ -1,15 +1,11 @@
-# https://github.com/jonschoning/espial
-
-# First run requires user creation
-# podman exec espial ./migration createuser \
-#   --conn /app/data/espial.sqlite3 -\
-#   -userName myusername --userPassword myuserpassword
-
+# https://github.com/gabe565/esphome-configs
+# AirGradient: https://forum.airgradient.com/t/sharing-my-experiences/152
+# (TODO: add AQI to AirGradient)
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: espial
+  name: esphome
   namespace: default
 spec:
   interval: 15m
@@ -31,24 +27,23 @@ spec:
       retries: 5
   values:
     image:
-      repository: docker.io/jonschoning/espial
-      tag: espial
+      # https://hub.docker.com/r/esphome/esphome
+      repository: docker.io/esphome/esphome
+      tag: latest
     env:
       TZ: "${TIMEZONE}"
-      IP_FROM_HEADER: true
-      SQLITE_DATABASE: /app/data/espial.sqlite3
-      SHOULD_LOG_ALL: false
+      ESPHOME_DASHBOARD_USE_PING: true
     persistence:
       data:
         enabled: true
-        mountPath: /app/data
+        mountPath: /config
         existingClaim: appdata
-        subPath: espial
+        subPath: esphome
     service:
       main:
         ports:
           http:
-            port: 3000
+            port: 6052
     ingress:
       main:
         enabled: true
@@ -56,15 +51,44 @@ spec:
         annotations:
           external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
-          hajimari.io/icon: bookmark-box
+          hajimari.io/icon: chip
         hosts:
-          - host: &host "bookmarks.${PUBLIC_DOMAIN}"
+          - host: &host "esphome.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
         tls:
           - hosts:
               - *host
-    nodeSelector:
-      # https://github.com/jonschoning/espial/issues/23
-      kubernetes.io/arch: amd64
+    # addons:
+    #   codeserver:
+    #     enabled: true
+    #     image:
+    #       repository: codercom/code-server
+    #       tag: 4.7.0
+    #     workingDir: "/config"
+    #     args:
+    #       - --user-data-dir
+    #       - "/config/.vscode"
+    #       - --auth
+    #       - "none"
+    #     service:
+    #       ports:
+    #         codeserver:
+    #           port: 12322
+    #     ingress:
+    #       enabled: true
+    #       annotations:
+    #         auth.home.arpa/enabled: "true"
+    #         external-dns.home.arpa/enabled: "true"
+    #       hosts:
+    #         - host: esphome-vscode.${PUBLIC_DOMAIN}
+    #           paths:
+    #             - path: /
+    #               pathType: Prefix
+    #       tls:
+    #         - hosts:
+    #             - *host
+    #     volumeMounts:
+    #     - name: config
+    #       mountPath: /config

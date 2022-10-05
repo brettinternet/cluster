@@ -61,12 +61,12 @@ spec:
         ports:
           http:
             port: 80
-      smtp:
-        enabled: true
-        ports:
-          smtp:
-            enabled: true
-            port: 25
+      # smtp:
+      #   enabled: true
+      #   ports:
+      #     smtp:
+      #       enabled: true
+      #       port: 25
     ingress:
       main:
         enabled: true

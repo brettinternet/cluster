@@ -5,17 +5,21 @@ resources:
   - appdata-pvc.yaml
   - namespace.yaml
   - adguard
+  - archivebox
   - authelia
   - babybuddy
   # - busybox
   # - dnsutils
+  - change-detection
   - dokuwiki
   - echo-server
+  - esphome
   - espial
   - frigate
-  # # - glauth
+  ## - glauth
   - hajimari
   # - hajimari-public
+  - home-assistant
   - kubernetes-dashboard
   - lldap
   - maddy
@@ -24,6 +28,8 @@ resources:
   - mosquitto
   - ntfy
   - paperless-ngx
+  - spotify-stats
   - unifi
   - uptime-kuma
+  - whoogle
   - zwavejs2mqtt
