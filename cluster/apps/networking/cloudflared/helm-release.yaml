@@ -31,7 +31,7 @@ spec:
     image:
       # https://hub.docker.com/r/cloudflare/cloudflared
       repository: cloudflare/cloudflared
-      tag: 2022.9.0-arm64
+      tag: 2022.10.0-arm64
     env:
       TZ: "${TIMEZONE}"
     # Outbound traffic is proxied through port 8080
