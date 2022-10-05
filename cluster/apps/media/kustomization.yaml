@@ -5,5 +5,8 @@ resources:
   - namespace.yaml
   - appdata-pvc.yaml
   - media-pvc.yaml
+  - nzbget
   - plex
-  # - youtubedl-material
+  - radarr
+  - sonarr
+  - youtubedl-material

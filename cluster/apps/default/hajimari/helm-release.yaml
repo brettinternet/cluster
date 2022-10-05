@@ -35,6 +35,8 @@ spec:
       namespaceSelector:
         matchNames:
           - default
+          - media
+          - games
           - networking
           - kube-system
           - monitoring
