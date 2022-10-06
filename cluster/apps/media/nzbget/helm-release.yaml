@@ -49,7 +49,7 @@ spec:
       media:
         enabled: true
         existingClaim: media
-        mountPath: /downloads
+        mountPath: /data/usenet
         subPath: usenet
     ingress:
       main:

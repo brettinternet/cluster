@@ -28,7 +28,6 @@ resources:
   - mosquitto
   - ntfy
   - paperless-ngx
-  - spotify-stats
   - unifi
   - uptime-kuma
   - whoogle

@@ -49,13 +49,13 @@ spec:
         enabled: true
         existingClaim: media
         subPath:
-          - path: youtubedl/audio
+          - path: library/youtube/audio
             mountPath: /app/audio
-          - path: youtubedl/video
+          - path: library/youtube/video
             mountPath: /app/video
-          - path: youtubedl/subscriptions
+          - path: library/youtube/subscriptions
             mountPath: /app/subscriptions
-          - path: youtubedl/users
+          - path: library/youtube/users
             mountPath: /app/users
     service:
       main:
