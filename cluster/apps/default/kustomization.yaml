@@ -5,6 +5,7 @@ resources:
   - appdata-pvc.yaml
   - namespace.yaml
   - adguard
+  # - apprise
   - archivebox
   - authelia
   - babybuddy
@@ -28,7 +29,6 @@ resources:
   - mosquitto
   - ntfy
   - paperless-ngx
-  - spotify-stats
   - unifi
   - uptime-kuma
   - whoogle
