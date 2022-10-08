@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 0.2.1
+      version: 0.2.2
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -27,8 +27,19 @@ spec:
     image:
       repository: docker.io/benbusby/whoogle-search
       tag: latest
+    # https://github.com/benbusby/whoogle-search#config-environment-variables
     env:
       TZ: "${TIMEZONE}"
+      WHOOGLE_CONFIG_SAFE: true
+      WHOOGLE_CONFIG_THEME: system
+      WHOOGLE_CONFIG_URL: "https://search.${PUBLIC_DOMAIN}"
+      WHOOGLE_CONFIG_PREFERENCES_ENCRYPTED: true
+      WHOOGLE_CONFIG_DISABLE: false
+      WHOOGLE_CONFIG_VIEW_IMAGE: true
+      WHOOGLE_CONFIG_NEW_TAB: false
+    envFrom:
+      - secretRef:
+          name: whoogle
     persistence:
       # /config/:size=10M,uid=927,gid=927,mode=1700
       # /var/lib/tor/:size=15M,uid=927,gid=927,mode=1700

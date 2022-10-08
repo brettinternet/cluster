@@ -1,12 +1,11 @@
-# https://github.com/linuxserver/docker-nzbget
-# provider map: https://upload.wikimedia.org/wikipedia/commons/7/7d/Usenet_Providers_and_Backbones.svg
-# provider wiki: https://www.reddit.com/r/usenet/wiki/providers#wiki_provider_map
+# https://github.com/PrivateBin/PrivateBin
+# https://github.com/PrivateBin/docker-nginx-fpm-alpine
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: nzbget
-  namespace: media
+  name: privatebin
+  namespace: default
 spec:
   interval: 15m
   chart:
@@ -17,7 +16,6 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-      interval: 15m
   install:
     createNamespace: true
     remediation:
@@ -27,39 +25,40 @@ spec:
       retries: 5
   values:
     image:
-      # https://hub.docker.com/r/linuxserver/nzbget
-      repository: lscr.io/linuxserver/nzbget
+      # https://hub.docker.com/r/privatebin/nginx-fpm-alpine/
+      repository: docker.io/privatebin/nginx-fpm-alpine
       tag: latest
-      pullPolicy: IfNotPresent
     env:
-      TZ: ${TIMEZONE}
-      PUID: "${SECURITY_CONTEXT_RUN_AS_USER}"
-      PGID: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
+      TZ: "${TIMEZONE}"
+      PHP_TZ: "${TIMEZONE}"
     service:
       main:
         ports:
           http:
-            port: 6789
+            port: 8080
+    podSecurityContext:
+      runAsUser: "${SECURITY_CONTEXT_RUN_AS_USER}"
+      runAsGroup: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
     persistence:
       config:
         enabled: true
         existingClaim: appdata
-        mountPath: /config
-        subPath: nzbget
-      media:
-        enabled: true
-        existingClaim: media
-        mountPath: /data/usenet
-        subPath: usenet
+        subPath:
+          - path: privatebin/data
+            mountPath: /srv/data
+          - path: privatebin/conf.php
+            mountPath: /srv/cfg/conf.php
+            readOnly: true
     ingress:
       main:
         enabled: true
         ingressClassName: nginx
         annotations:
+          external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
-          hajimari.io/icon: download-circle
+          hajimari.io/icon: content-paste
         hosts:
-          - host: &host nzbget.${PUBLIC_DOMAIN}
+          - host: &host "paste.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix

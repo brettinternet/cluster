@@ -1,10 +1,8 @@
-# https://github.com/linuxserver/docker-sonarr
-# notes on volumes: https://wiki.servarr.com/docker-guide#consistent-and-well-planned-paths
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: sonarr
+  name: overseer
   namespace: media
 spec:
   interval: 15m
@@ -26,43 +24,38 @@ spec:
       retries: 5
   values:
     image:
-    # https://hub.docker.com/r/linuxserver/sonarr
-      repository: lscr.io/linuxserver/sonarr
+    # https://hub.docker.com/r/sctx/overseerr
+      repository: docker.io/sctx/overseerr
       tag: latest
       pullPolicy: IfNotPresent
     env:
       TZ: ${TIMEZONE}
-      PUID: "${SECURITY_CONTEXT_RUN_AS_USER}"
-      PGID: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
+      LOG_LEVEL: debug
     service:
       main:
         ports:
           http:
-            port: 8989
+            port: 5055
     persistence:
       config:
         enabled: true
         existingClaim: appdata
-        mountPath: /config
-        subPath: sonarr
-      # give access to parent of download folder and tv directory destination
-      # https://wiki.servarr.com/docker-guide
-      media:
-        enabled: true
-        existingClaim: media
-        mountPath: /data
+        mountPath: /app/config
+        subPath: overseer
     ingress:
       main:
         enabled: true
         ingressClassName: "nginx"
         annotations:
+          external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
-          hajimari.io/icon: television-classic
+          hajimari.io/icon: movie-open-check
         hosts:
-          - host: &host sonarr.${PUBLIC_DOMAIN}
+          - host: &host2 request.${PUBLIC_DOMAIN}
             paths:
               - path: /
                 pathType: Prefix
         tls:
           - hosts:
               - *host
+              - *host2

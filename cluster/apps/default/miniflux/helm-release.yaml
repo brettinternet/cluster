@@ -132,11 +132,7 @@ spec:
         enabled: true
         ports:
           http:
-            enabled: false
-            primary: false
-          sql:
             enabled: true
-            primary: true
             port: 5432
             protocol: TCP
     persistence:

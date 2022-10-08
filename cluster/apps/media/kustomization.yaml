@@ -5,8 +5,15 @@ resources:
   - namespace.yaml
   - appdata-pvc.yaml
   - media-pvc.yaml
+  - audiobookshelf
+  - bazarr
+  - calibre
+  - calibre-web
   - nzbget
+  - overseer
   - plex
+  - prowlarr
   - radarr
+  - readarr
   - sonarr
   - youtubedl-material
