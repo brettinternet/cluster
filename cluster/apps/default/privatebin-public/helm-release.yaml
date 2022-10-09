@@ -1,10 +1,8 @@
-# https://github.com/PrivateBin/PrivateBin
-# https://github.com/PrivateBin/docker-nginx-fpm-alpine
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: privatebin
+  name: privatebin-public
   namespace: default
 spec:
   interval: 15m
@@ -25,7 +23,6 @@ spec:
       retries: 5
   values:
     image:
-      # https://hub.docker.com/r/privatebin/nginx-fpm-alpine/
       repository: docker.io/privatebin/nginx-fpm-alpine
       tag: latest
     env:
@@ -48,7 +45,7 @@ spec:
       conf:
         enabled: true
         type: configMap
-        name: privatebin-config
+        name: privatebin-public-config
         subPath: conf.ini
         mountPath: /srv/cfg/conf.php
         readOnly: true
@@ -57,12 +54,27 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          auth.home.arpa/enabled: "true"
+          # read-only for the public interface
+          # Alternative: https://github.com/PrivateBin/PrivateBin/wiki/Restrict-upload-using-NGINX
+          nginx.ingress.kubernetes.io/cors-allow-methods: GET
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            limit_except GET {
+              deny all;
+            }
+          # https://github.com/PrivateBin/PrivateBin/wiki/FAQ#how-to-make-privatebin-work-when-using-cloudflare-for-ddos-protection
+          # no-transform tells Cloudflare and others to not change the content of
+          # the file and thus breaking SRI.
+          # https://developers.cloudflare.com/cache/about/cache-control#other
+          nginx.ingress.kubernetes.io/server-snippet: |
+            location ~ \.js$ {
+              add_header Cache-Control "public, max-age=3600, must-revalidate, no-transform";
+              try_files $uri $uri/ =404;
+            }
           external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
           hajimari.io/icon: content-paste
         hosts:
-          - host: &host "paste.${PUBLIC_DOMAIN}"
+          - host: &host "copy.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
@@ -70,4 +82,4 @@ spec:
           - hosts:
               - *host
     podAnnotations:
-      configmap.reloader.stakater.com/reload: privatebin-config
+      configmap.reloader.stakater.com/reload: privatebin-public-config

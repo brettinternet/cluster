@@ -279,3 +279,5 @@ spec:
     #     memory: 64M
     #   limits:
     #     memory: 128M
+    podAnnotations:
+      secret.reloader.stakater.com/reload: authelia

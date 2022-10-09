@@ -1,66 +1,65 @@
+# https://github.com/wger-project/docker/blob/master/docker-compose.yml
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: &app miniflux
+  name: &app wger
   namespace: default
 spec:
   interval: 15m
   chart:
     spec:
       chart: app-template
-      version: 0.2.1
+      version: 0.2.2
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  dependsOn:
-    - name: miniflux-postgres
-      namespace: default
+      interval: 15m
   install:
     createNamespace: true
     remediation:
       retries: 5
   upgrade:
     remediation:
-      retries: 3
+      retries: 5
   values:
     image:
-      repository: docker.io/miniflux/miniflux
+      # https://hub.docker.com/r/wger/server
+      repository: docker.io/wger/server
       tag: latest
+    # https://github.com/wger-project/docker/blob/master/config/prod.env
     env:
-      TZ: "${TIMEZONE}"
-      CREATE_ADMIN: "1"
-      RUN_MIGRATIONS: "1"
-      LOG_DATE_TIME: "1"
-      # https://miniflux.app/docs/howto.html#oauth2
-      OAUTH2_PROVIDER: oidc
-      OAUTH2_CLIENT_ID: miniflux
-      # openssl rand -hex 16
-      OAUTH2_CLIENT_SECRET: "${MINIFLUX_OAUTH_CLIENT_SECRET}"
-      # OAUTH2_USER_CREATION: "1"
-      OAUTH2_REDIRECT_URL: "https://rss.${PUBLIC_DOMAIN}/oauth2/oidc/callback"
-      OAUTH2_OIDC_DISCOVERY_ENDPOINT: "https://auth.${PUBLIC_DOMAIN}"
+      TIME_ZONE: "${TIMEZONE}"
+      DJANGO_DB_ENGINE: django.db.backends.postgresql
+      DJANGO_DB_DATABASE: wger
+      DJANGO_DB_USER: wger
+      DJANGO_DB_HOST: wger
+      DJANGO_DB_PORT: 5432
+      FROM_EMAIL: "${SMTP_USER}"
+      SITE_URL: "workout.${PUBLIC_DOMAIN}"
+      EMAIL_HOST: maddy.default.svc.cluster.local
+      EMAIL_PORT: 2525
+      # DJANGO_CACHE_BACKEND: django_redis.cache.RedisCache
+      # DJANGO_CACHE_TIMEOUT: 1296000 # 60*60*24*15, 15 Days
+      # DJANGO_CACHE_CLIENT_CLASS: django_redis.client.DefaultClient
     envFrom:
       - secretRef:
           name: *app
+    persistence:
+      data:
+        enabled: true
+        existingClaim: appdata
+        subPath:
+          - path: wger/static
+            mountPath: /home/wger/static
+          - path: wger/media
+            mountPath: /home/wger/media
     service:
       main:
         ports:
           http:
-            port: &port 8080
-    probes:
-      liveness:
-        enabled: true
-        custom: true
-        spec:
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 1
-          failureThreshold: 3
-          httpGet:
-            path: /healthcheck
-            port: *port
+            port: 8000
     ingress:
       main:
         enabled: true
@@ -68,21 +67,15 @@ spec:
         annotations:
           external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
-          hajimari.io/icon: rss
+          hajimari.io/icon: weight-lifter
         hosts:
-          - host: &host "rss.${PUBLIC_DOMAIN}"
+          - host: &host "workout.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
         tls:
           - hosts:
               - *host
-    # resources:
-    #   requests:
-    #     cpu: 50m
-    #     memory: 64Mi
-    #   limits:
-    #     memory: 96Mi
     podAnnotations:
       secret.reloader.stakater.com/reload: *app
 
@@ -90,14 +83,14 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: miniflux-postgres
+  name: wger-postgres
   namespace: default
 spec:
   interval: 15m
   chart:
     spec:
       chart: app-template
-      version: 0.2.1
+      version: 0.2.2
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -108,33 +101,28 @@ spec:
       retries: 5
   upgrade:
     remediation:
-      retries: 3
+      retries: 5
   values:
     image:
-      repository: library/postgres
-      tag: "10.10"
+      repository: docker.io/library/postgres
+      tag: "14"
     env:
-      - name: POSTGRES_USER
-        value: miniflux
-      - name: POSTGRES_PASSWORD
+      POSTGRES_USER: wger
+      POSTGRES_PASSWORD:
         valueFrom:
           secretKeyRef:
-            name: miniflux
-            key: POSTGRES_PASSWORD
-      - name: POSTGRES_DB
-        value: miniflux
-      - name: PGDATA
-        value: /var/lib/postgresql/data
+            name: wger
+            key: DJANGO_DB_PASSWORD
+      POSTGRES_DB: wger
+      PGDATA: /var/lib/postgresql/data
     podSecurityContext:
       runAsUser: "${SECURITY_CONTEXT_RUN_AS_USER}"
       runAsGroup: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
       fsGroup: "${SECURITY_CONTEXT_FS_GROUP}"
     service:
       main:
-        enabled: true
         ports:
           http:
-            enabled: true
             port: 5432
             protocol: TCP
     persistence:
@@ -142,6 +130,7 @@ spec:
         enabled: true
         mountPath: /var/lib/postgresql/data
         existingClaim: appdata
-        subPath: miniflux_db
+        subPath: wger_db
+    # healthcheck: pg_isready -U wger
     podAnnotations:
-      secret.reloader.stakater.com/reload: miniflux
+      secret.reloader.stakater.com/reload: wger

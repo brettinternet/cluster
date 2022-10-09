@@ -1,11 +1,15 @@
-# https://github.com/gabe565/esphome-configs
-# AirGradient: https://forum.airgradient.com/t/sharing-my-experiences/152
-# (TODO: add AQI to AirGradient)
+# https://github.com/jonschoning/espial
+
+# First run requires user creation
+# podman exec espial ./migration createuser \
+#   --conn /app/data/espial.sqlite3 -\
+#   -userName myusername --userPassword myuserpassword
+
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: esphome
+  name: espial
   namespace: default
 spec:
   interval: 15m
@@ -27,23 +31,24 @@ spec:
       retries: 5
   values:
     image:
-      # https://hub.docker.com/r/esphome/esphome
-      repository: docker.io/esphome/esphome
-      tag: latest
+      repository: docker.io/jonschoning/espial
+      tag: espial
     env:
       TZ: "${TIMEZONE}"
-      ESPHOME_DASHBOARD_USE_PING: true
+      IP_FROM_HEADER: true
+      SQLITE_DATABASE: /app/data/espial.sqlite3
+      SHOULD_LOG_ALL: false
     persistence:
       data:
         enabled: true
-        mountPath: /config
+        mountPath: /app/data
         existingClaim: appdata
-        subPath: esphome
+        subPath: espial
     service:
       main:
         ports:
           http:
-            port: 6052
+            port: 3000
     ingress:
       main:
         enabled: true
@@ -51,44 +56,15 @@ spec:
         annotations:
           external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
-          hajimari.io/icon: chip
+          hajimari.io/icon: bookmark-box
         hosts:
-          - host: &host "esphome.${PUBLIC_DOMAIN}"
+          - host: &host "bookmarks.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
         tls:
           - hosts:
               - *host
-    # addons:
-    #   codeserver:
-    #     enabled: true
-    #     image:
-    #       repository: codercom/code-server
-    #       tag: 4.7.0
-    #     workingDir: "/config"
-    #     args:
-    #       - --user-data-dir
-    #       - "/config/.vscode"
-    #       - --auth
-    #       - "none"
-    #     service:
-    #       ports:
-    #         codeserver:
-    #           port: 12322
-    #     ingress:
-    #       enabled: true
-    #       annotations:
-    #         auth.home.arpa/enabled: "true"
-    #         external-dns.home.arpa/enabled: "true"
-    #       hosts:
-    #         - host: esphome-vscode.${PUBLIC_DOMAIN}
-    #           paths:
-    #             - path: /
-    #               pathType: Prefix
-    #       tls:
-    #         - hosts:
-    #             - *host
-    #     volumeMounts:
-    #     - name: config
-    #       mountPath: /config
+    nodeSelector:
+      # https://github.com/jonschoning/espial/issues/23
+      kubernetes.io/arch: amd64

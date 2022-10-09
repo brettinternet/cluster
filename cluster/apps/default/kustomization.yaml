@@ -17,11 +17,13 @@ resources:
   - esphome
   - espial
   - frigate
+  - ghostfolio
   ## - glauth
   - hajimari
   # - hajimari-public
   - home-assistant
   - kubernetes-dashboard
+  - linkding
   - lldap
   - maddy
   - mealie
@@ -30,7 +32,9 @@ resources:
   - ntfy
   - paperless-ngx
   - privatebin
+  - privatebin-public
   - unifi
   - uptime-kuma
+  # - wger
   - whoogle
   - zwavejs2mqtt

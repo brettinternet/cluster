@@ -73,6 +73,9 @@ access_control:
     - domain:
         - "radarr.${PUBLIC_DOMAIN}"
         - "sonarr.${PUBLIC_DOMAIN}"
+        - "lidarr.${PUBLIC_DOMAIN}"
+        - "readarr.${PUBLIC_DOMAIN}"
+        - "prowlarr.${PUBLIC_DOMAIN}"
         - "nzbget.${PUBLIC_DOMAIN}"
       policy: bypass
       resources: ["^/api([?/].*)?$"]

@@ -5,7 +5,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: archivebox
+  name: &app archivebox
   namespace: default
 spec:
   interval: 15m
@@ -43,7 +43,7 @@ spec:
       SEARCH_BACKEND_HOST_NAME: archivebox-sonic.default.svc.cluster.local
     envFrom:
       - secretRef:
-          name: archivebox
+          name: *app
     args: [server, --quick-init, 0.0.0.0:8000]
     persistence:
       data:
@@ -73,6 +73,8 @@ spec:
         tls:
           - hosts:
               - *host
+    podAnnotations:
+      secret.reloader.stakater.com/reload: *app
 
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
@@ -122,3 +124,5 @@ spec:
         ports:
           http:
             port: 1491
+    podAnnotations:
+      secret.reloader.stakater.com/reload: archivebox

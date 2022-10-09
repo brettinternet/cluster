@@ -5,7 +5,7 @@ namespace: default
 resources:
   - helm-release.yaml
 configMapGenerator:
-  - name: privatebin-config
+  - name: privatebin-public-config
     files:
       - conf.ini
 generatorOptions:
