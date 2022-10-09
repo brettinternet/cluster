@@ -1,4 +1,6 @@
 # https://github.com/ghostfolio/ghostfolio
+# Issues:
+# - https://github.com/ghostfolio/ghostfolio/issues/1146
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
