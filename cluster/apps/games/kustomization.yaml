@@ -5,3 +5,5 @@ resources:
   - namespace.yaml
   - appdata-pvc.yaml
   # - valheim
+
+# https://github.com/awesome-selfhosted/awesome-selfhosted#games

@@ -1,4 +1,5 @@
 # https://github.com/ghostfolio/ghostfolio
+# https://github.com/ghostfolio/ghostfolio/blob/main/docker/docker-compose.yml
 # Issues:
 # - https://github.com/ghostfolio/ghostfolio/issues/1146
 ---
@@ -34,8 +35,7 @@ spec:
       repository: docker.io/ghostfolio/ghostfolio
       tag: latest
     env:
-      POSTGRES_DB: ghostfolio
-      POSTGRES_USER: ghostfolio
+      NODE_ENV: production
       REDIS_HOST: ghostfolio-redis.default.svc.cluster.local
       REDIS_PORT: 6379
     envFrom:

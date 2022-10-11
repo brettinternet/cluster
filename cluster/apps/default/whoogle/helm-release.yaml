@@ -34,6 +34,7 @@ spec:
       WHOOGLE_CONFIG_THEME: system
       WHOOGLE_CONFIG_URL: "https://search.${PUBLIC_DOMAIN}"
       WHOOGLE_CONFIG_PREFERENCES_ENCRYPTED: true
+      WHOOGLE_CONFIG_GET_ONLY: true
       WHOOGLE_CONFIG_DISABLE: false
       WHOOGLE_CONFIG_VIEW_IMAGE: true
       WHOOGLE_CONFIG_NEW_TAB: false
@@ -72,8 +73,8 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          external-dns.home.arpa/enabled: "true"
           auth.home.arpa/enabled: "true"
+          external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
           hajimari.io/icon: search
         hosts:

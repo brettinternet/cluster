@@ -12,6 +12,8 @@ resources:
   # - busybox
   # - dnsutils
   - change-detection
+  # - cloudbeaver
+  - cyberchef
   - dokuwiki
   - echo-server
   - esphome
@@ -29,10 +31,14 @@ resources:
   - mealie
   - miniflux
   - mosquitto
+  # - neko
+  # - nextcloud
   - ntfy
   - paperless-ngx
+  - pinry
   - privatebin
   - privatebin-public
+  # - scrutiny
   - unifi
   - uptime-kuma
   # - wger

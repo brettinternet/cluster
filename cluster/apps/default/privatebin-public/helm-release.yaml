@@ -46,8 +46,8 @@ spec:
         enabled: true
         type: configMap
         name: privatebin-public-config
-        subPath: conf.ini
         mountPath: /srv/cfg/conf.php
+        subPath: conf.ini
         readOnly: true
     ingress:
       main:
@@ -65,11 +65,11 @@ spec:
           # no-transform tells Cloudflare and others to not change the content of
           # the file and thus breaking SRI.
           # https://developers.cloudflare.com/cache/about/cache-control#other
-          nginx.ingress.kubernetes.io/server-snippet: |
-            location ~ \.js$ {
-              add_header Cache-Control "public, max-age=3600, must-revalidate, no-transform";
-              try_files $uri $uri/ =404;
-            }
+          # nginx.ingress.kubernetes.io/server-snippet: |
+          #   location ~ \.js$ {
+          #     add_header Cache-Control "public, max-age=3600, must-revalidate, no-transform";
+          #     try_files $uri $uri/ =404;
+          #   }
           external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"
           hajimari.io/icon: content-paste

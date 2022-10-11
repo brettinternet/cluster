@@ -136,6 +136,8 @@ spec:
         ingressClassName: "nginx"
         annotations:
           external-dns.home.arpa/enabled: "true"
+          # redirect to /web since the plex server doesn't handle this and just returns 401 at root 🤔
+          nginx.ingress.kubernetes.io/app-root: /web
           hajimari.io/enable: "true"
           hajimari.io/icon: plex
         # be sure to access at `/web` instead of root `/`

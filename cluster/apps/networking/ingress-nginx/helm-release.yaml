@@ -111,6 +111,10 @@ spec:
           memory: 250Mi
         limits:
           memory: 500Mi
+    # tcp:
+    #   "8081": default/neko:8081
+    # udp:
+    #   "8082": default/neko:8082
     defaultBackend:
       enabled: true
       image:

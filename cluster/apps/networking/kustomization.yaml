@@ -6,6 +6,7 @@ resources:
   # - blocky
   - cloudflared
   # - cloudflare-ddns
+  # - crowdsec
   - external-dns
   - ingress-nginx
   # - ingress-nginx-internal
