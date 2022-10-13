@@ -112,9 +112,13 @@ spec:
         limits:
           memory: 500Mi
     # tcp:
-    #   "8081": default/neko:8081
+    #   "32469": media/plex:32469
     # udp:
-    #   "8082": default/neko:8082
+    #   "1900": media/plex:1900
+    #   "32410": media/plex:32410
+    #   "32412": media/plex:32412
+    #   "32413": media/plex:32413
+    #   "32414": media/plex:32414
     defaultBackend:
       enabled: true
       image:
