@@ -37,79 +37,54 @@ spec:
         existingClaim: appdata
         subPath: unifi
     service:
-      # Web admin
       main:
+        type: LoadBalancer
+        externalTrafficPolicy: Local
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: "${METALLB_UNIFI_ADDR}"
         ports:
+          # Web admin
           http:
             port: 8443
-      # device communication
-      device-comm:
-        enabled: true
-        ports:
+          # device communication
           device-comm:
             enabled: true
             port: 8080
             protocol: TCP
-            targetPort: 8080
-      # STUN
-      stun:
-        enabled: true
-        ports:
+          # STUN
           stun:
             enabled: true
             port: 3478
             protocol: UDP
-            targetPort: 3478
-      # AP discovery
-      ap-discovery:
-        enabled: true
-        ports:
+          # AP discovery
           ap-discovery:
             enabled: true
             port: 10001
             protocol: UDP
-            targetPort: 10001
-      # 'Make controller discoverable on L2 network' option
-      l2-discovery:
-        enabled: true
-        ports:
+          # 'Make controller discoverable on L2 network' option
           l2-discovery:
             enabled: true
             port: 1900
             protocol: UDP
-            targetPort: 1900
-      # mobile throughput test
-      mobile-test:
-        enabled: true
-        ports:
+          # mobile throughput test
           mobile-test:
             enabled: true
             port: 6789
             protocol: TCP
-            targetPort: 6789
-      # Remote syslog port
-      syslog:
-        enabled: true
-        ports:
+          # Remote syslog port
           syslog:
             enabled: true
             port: 5514
             protocol: UDP
-            targetPort: 5514
-      # guest portal redirect ports
-      guest-portal:
-        enabled: false
-        ports:
+          # guest portal redirect ports
           guest-portal-https:
             enabled: false
             port: 8843
             protocol: TCP
-            targetPort: 8843
           guest-portal-http:
             enabled: false
             port: 8880
             protocol: TCP
-            targetPort: 8880
     ingress:
       main:
         enabled: true
