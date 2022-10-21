@@ -8,8 +8,11 @@ resources:
   # - cloudflare-ddns
   # - crowdsec
   - external-dns
+  # - gluetun
   - ingress-nginx
   # - ingress-nginx-internal
   - metallb
-  - nfs-server
+  - nfs
+  - nfs-shared
+  - smb-shared
   - k8s-gateway

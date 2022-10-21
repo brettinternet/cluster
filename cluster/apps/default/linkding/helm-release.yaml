@@ -38,6 +38,8 @@ spec:
     envFrom:
       - secretRef:
           name: *app
+    # TODO: fix chown on mounted directory
+    # https://github.com/sissbruecker/linkding/issues/145
     persistence:
       data:
         enabled: true

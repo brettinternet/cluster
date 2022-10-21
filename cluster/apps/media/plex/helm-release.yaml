@@ -145,17 +145,15 @@ spec:
         tls:
           - hosts:
               - *host
-    # resources:
-    #   requests:
-    #     # Hardware acceleration using an Intel iGPU w/ QuickSync and
-    #     # using intel-gpu-plugin (https://github.com/intel/intel-device-plugins-for-kubernetes)
-    #     gpu.intel.com/i915: 1
-    #     cpu: 200m
-    #     memory: 256Mi
-    #   limits:
-    #     # Hardware acceleration using an Intel iGPU w/ QuickSync and
-    #     # using intel-gpu-plugin (https://github.com/intel/intel-device-plugins-for-kubernetes)
-    #     gpu.intel.com/i915: 1
-    #     memory: 4096Mi
+    resources:
+      requests:
+        # Hardware acceleration using an Intel iGPU w/ QuickSync and
+        # using intel-gpu-plugin (https://github.com/intel/intel-device-plugins-for-kubernetes)
+        cpu: 100m
+        memory: 2000Mi
+      limits:
+        # Hardware acceleration using an Intel iGPU w/ QuickSync and
+        # using intel-gpu-plugin (https://github.com/intel/intel-device-plugins-for-kubernetes)
+        memory: 10000Mi
     nodeSelector:
       feature.node.kubernetes.io/custom-tuner: "true"

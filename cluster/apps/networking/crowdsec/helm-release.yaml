@@ -53,6 +53,7 @@ spec:
           accessModes:
             - ReadWriteMany
           storageClassName: appdata
+          # existingClaim: appdata # subpath not supported
           size: 1Gi
         config:
           enabled: true

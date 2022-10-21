@@ -6,10 +6,12 @@ resources:
   - cert-manager
   - csi-driver-nfs
   - descheduler
+  # - goldilocks
+  - kube-vip
   - kured
   - kyverno
   - metrics-server
   - node-feature-discovery
   - reloader
-  - kube-vip
   # - smarter-device-manager
+  # - vpa

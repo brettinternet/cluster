@@ -10,9 +10,11 @@ resources:
   - calibre
   - calibre-web
   - nzbget
-  - overseer
+  - openbooks
+  - overseerr
   - plex
   - prowlarr
+  - qbittorrent
   - radarr
   - readarr
   - sonarr

@@ -12,6 +12,7 @@ resources:
   - deliveryhero.yaml
   - descheduler.yaml
   - external-dns.yaml
+  - goldilocks.yaml
   - grafana.yaml
   - hajimari.yaml
   - ingress-nginx.yaml

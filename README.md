@@ -9,6 +9,10 @@
 - SOPS
 - Renovate bot dependency updates
 
+## Deployments
+
+Most deployments in this repo use an `app-template` chart with [these configuration options](https://github.com/bjw-s/helm-charts/tree/main/charts/library/common).
+
 ## Setup
 
 [Install go-task](https://taskfile.dev/installation/)

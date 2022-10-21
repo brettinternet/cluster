@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 0.2.1
+      version: 0.2.2
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -26,10 +26,12 @@ spec:
     image:
       # https://hub.docker.com/r/nitnelave/lldap
       repository: docker.io/nitnelave/lldap
-      tag: v0.4
+      tag: latest
     env:
       TZ: "${TIMEZONE}"
       LLDAP_LDAP_BASE_DN: "dc=home,dc=arpa"
+      UID: "${SECURITY_CONTEXT_RUN_AS_USER}"
+      GID: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
     envFrom:
       - secretRef:
           name: *app
@@ -56,11 +58,6 @@ spec:
         tls:
           - hosts:
               - *host
-    podSecurityContext:
-      runAsUser: "${SECURITY_CONTEXT_RUN_AS_USER}"
-      runAsGroup: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
-      fsGroup: "${SECURITY_CONTEXT_FS_GROUP}"
-      fsGroupChangePolicy: "OnRootMismatch"
     persistence:
       data:
         enabled: true

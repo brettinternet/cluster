@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: appdata-games
+  name: appdata-backup
 spec:
   capacity:
     storage: 400G
@@ -17,7 +17,7 @@ spec:
   csi:
     driver: nfs.csi.k8s.io
     readOnly: false
-    volumeHandle: appdata-nfs-storage-games
+    volumeHandle: appdata-nfs-storage-backup
     volumeAttributes:
       server: "${NFS_FAST_TANK_CLUSTERIP}"
       share: /appdata
@@ -27,11 +27,11 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: appdata
-  namespace: games
+  namespace: backup
 spec:
   accessModes:
     - ReadWriteMany
-  volumeName: appdata-games
+  volumeName: appdata-backup
   storageClassName: ""
   resources:
     requests:

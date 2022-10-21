@@ -14,7 +14,7 @@ resources:
   - change-detection
   # - cloudbeaver
   - cyberchef
-  - dokuwiki
+  # - dokuwiki
   - echo-server
   - esphome
   - espial
@@ -43,4 +43,5 @@ resources:
   - uptime-kuma
   # - wger
   - whoogle
+  - wikijs
   - zwavejs2mqtt

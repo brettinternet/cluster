@@ -107,6 +107,16 @@ identity_providers:
         scopes: ["openid", "profile", "groups", "email"]
         redirect_uris: ["https://rss.${PUBLIC_DOMAIN}/oauth2/oidc/callback"]
         userinfo_signing_algorithm: none
+      - id: wikijs
+        description: Wiki.js
+        secret: "${WIKIJS_OAUTH_CLIENT_SECRET}"
+        public: false
+        authorization_policy: one_factor
+        pre_configured_consent_duration: 1y
+        scopes: ["openid", "profile", "groups", "email"]
+        redirect_uris: ["https://rss.${PUBLIC_DOMAIN}/login/f3fec479-555f-4594-bdee-b777b6951c52/callback"]
+        userinfo_signing_algorithm: none
+        response_modes: [form_post]
       - id: thanos-minio
         description: Thanos Minio S3
         secret: "${THANOS_MINIO_OAUTH_CLIENT_SECRET}"
