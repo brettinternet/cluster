@@ -2,7 +2,7 @@ name: Check Internal 404s
 
 on: # yamllint disable-line rule:truthy
   schedule:
-    - cron: '0 * * * *'
+    - cron: '0 0 * * *'
 
 jobs:
   build:
