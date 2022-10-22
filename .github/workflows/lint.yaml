@@ -59,3 +59,35 @@ jobs:
           YAML_YAMLLINT_CONFIG_FILE: .github/linters/.yamllint.yaml
           YAML_PRETTIER_CONFIG_FILE: .github/linters/.prettierrc.yaml
           YAML_PRETTIER_FILTER_REGEX_EXCLUDE: "(.*\\.sops\\.ya?ml)"
+
+  # yaml:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+
+  #     - name: Set up Python3
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: 3.x
+
+  #     - name: Install dependencies
+  #       run: pip3 install ansible yamllint ansible-lint
+
+  #     - name: Lint ansible yaml
+  #       run: |
+  #         ansible-lint --offline
+
+  # shell:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+
+  #     - name: Lint shell
+  #       run: |
+  #         find -type f \
+  #           \( -name '*.sh' -o -name '*.bash' -o -name '*.ksh' -o -name '*.bashrc' \
+  #             -o -name '*.bash_profile' -o -name '*.bash_login' -o -name '*.bash_logout' \) \
+  #           -not -path "./dotbot/*" \
+  #           | xargs shellcheck
