@@ -7,4 +7,4 @@ resources:
   - helm-release.yaml
 commonLabels:
   app.kubernetes.io/name: pod-gateway
-  app.kubernetes.io/instance: vpn-gateway
+  app.kubernetes.io/instance: bastion-gateway

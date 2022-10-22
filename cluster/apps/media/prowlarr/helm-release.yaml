@@ -59,4 +59,4 @@ spec:
           - hosts:
               - *host
     podAnnotations:
-      set-vpn-gateway: "true"
+      set-downloads-gateway: "true"

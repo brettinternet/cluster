@@ -1,6 +1,6 @@
 # Optional frontend: https://github.com/WDaan/VueTorrent
 
-# IP checker: https://torguard.net/checkmytorrentipaddress.php
+# IP checker: https://ipleak.net
 # Chromium addon: https://github.com/bogenpirat/remote-torrent-adder
 
 # TODO: https://bbs.archlinux.org/viewtopic.php?id=277867
@@ -29,7 +29,7 @@ spec:
     remediation:
       retries: 5
   dependsOn:
-    - name: vpn-gateway
+    - name: downloads-gateway
       namespace: vpn
   values:
     image:
@@ -47,20 +47,7 @@ spec:
         ports:
           http:
             port: *web-port
-      bittorrent:
-        ports:
-          enabled: true
-          bittorrent:
-            enabled: true
-            port: ${BIT_TORRENT_SERVICE_PORT}
-            protocol: TCP
-      bittorrent-udp:
-        ports:
-          enabled: true
-          bittorrent-udp:
-            enabled: true
-            port: ${BIT_TORRENT_SERVICE_PORT}
-            protocol: UDP
+      # bittorrent connection ports are access from gateway sidecar
     persistence:
       config:
         enabled: true
@@ -88,4 +75,4 @@ spec:
           - hosts:
               - *host
     podAnnotations:
-      set-vpn-gateway: "true"
+      set-downloads-gateway: "true"
