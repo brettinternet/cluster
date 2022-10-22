@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: busybox
-  namespace: default
+  namespace: busybox
 spec:
   interval: 15m
   chart:

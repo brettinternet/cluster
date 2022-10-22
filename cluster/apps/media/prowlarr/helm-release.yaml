@@ -58,3 +58,5 @@ spec:
         tls:
           - hosts:
               - *host
+    podAnnotations:
+      set-vpn-gateway: "true"

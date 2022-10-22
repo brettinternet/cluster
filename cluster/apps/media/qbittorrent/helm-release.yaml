@@ -1,4 +1,9 @@
 # Optional frontend: https://github.com/WDaan/VueTorrent
+
+# IP checker: https://torguard.net/checkmytorrentipaddress.php
+# Chromium addon: https://github.com/bogenpirat/remote-torrent-adder
+
+# TODO: https://bbs.archlinux.org/viewtopic.php?id=277867
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
@@ -24,8 +29,8 @@ spec:
     remediation:
       retries: 5
   dependsOn:
-    - name: gluetun
-      namespace: networking
+    - name: vpn-gateway
+      namespace: vpn
   values:
     image:
     # https://hub.docker.com/r/linuxserver/qbittorrent
@@ -35,25 +40,26 @@ spec:
       TZ: ${TIMEZONE}
       PUID: "${SECURITY_CONTEXT_RUN_AS_USER}"
       PGID: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
-      WEBUI_PORT: 8080
+      WEBUI_PORT: &web-port 8080
+    hostname: qbittorrent
     service:
       main:
         ports:
           http:
-            port: 8080
-      connection-tcp:
+            port: *web-port
+      bittorrent:
         ports:
           enabled: true
-          tcp:
+          bittorrent:
             enabled: true
-            port: 6881
+            port: ${BIT_TORRENT_SERVICE_PORT}
             protocol: TCP
-      connection-udp:
+      bittorrent-udp:
         ports:
           enabled: true
-          udp:
+          bittorrent-udp:
             enabled: true
-            port: 6881
+            port: ${BIT_TORRENT_SERVICE_PORT}
             protocol: UDP
     persistence:
       config:
@@ -81,3 +87,5 @@ spec:
         tls:
           - hosts:
               - *host
+    podAnnotations:
+      set-vpn-gateway: "true"

@@ -9,13 +9,10 @@ resources:
   - archivebox
   - authelia
   - babybuddy
-  # - busybox
-  # - dnsutils
   - change-detection
   # - cloudbeaver
   - cyberchef
   # - dokuwiki
-  - echo-server
   - esphome
   - espial
   - frigate
