@@ -2,6 +2,15 @@
 version: "3"
 
 tasks:
+  setup:
+    desc: Setup age key for sops
+    cmds:
+      - age-keygen -o age.agekey
+      - mkdir -p {{.AGE_DIR}}
+      - mv age.agekey {{.AGE_FILE}}
+    status:
+      - test -f {{.AGE_FILE}}
+
   encrypt:
     desc: encrypt sops file 'to use must include -- before path to file.' eg "task sops:encrypt -- file.yaml"
     cmds:
@@ -16,3 +25,24 @@ tasks:
     desc: List all sops files
     cmds:
       - find . -name '*.sops.yaml' | while read -r file; do echo "${file}"; done
+
+  encrypt-all:
+    desc: Encrypt all Kubernetes SOPS secrets that are not already encrypted
+    cmds:
+      - for: { var: file }
+        task: .encrypt-file
+        vars:
+          file: "{{.ITEM}}"
+    vars:
+      file:
+        sh: |
+          find "{{.KUBERNETES_DIR}}" "{{.ANSIBLE_DIR}}" -type f -name "*.sops.*" -exec grep -L "ENC\[AES256_GCM" {} \;
+
+  .encrypt-file:
+    internal: true
+    cmd: sops --encrypt --in-place {{.file}}
+    requires:
+      vars: ["file"]
+    preconditions:
+      - { msg: "Missing Sops config file", sh: "test -f {{.SOPS_CONFIG_FILE}}" }
+      - { msg: "Missing Sops Age key file", sh: "test -f {{.AGE_FILE}}" }

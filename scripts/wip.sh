@@ -2,7 +2,7 @@
 
 # Usage:  create WIP commit
 #         push to current branch
-#         reconcile the cluster with fluxcd
+#         reconcile the cluster with flux
 #         remove previous WIP commit
 
 # Source: https://github.com/ohmyzsh/ohmyzsh/blob/1546e1226a7b739776bda43f264b221739ba0397/lib/git.zsh#L68-L81
@@ -33,5 +33,5 @@ function gpcf {
 
 gwip
 gpcf
-task cluster:reconcile
+task flux:reconcile
 gunwip

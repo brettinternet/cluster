@@ -16,9 +16,13 @@ xanmanning.k3s*
 .terraform
 .terraform.tfstate*
 terraform.tfstate*
+# Taskfile
+.task
 # Output
 megalinter-reports
 # scripts
 node_modules
 *.log
 *.pem
+# Python
+.venv*
