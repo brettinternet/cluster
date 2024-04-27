@@ -9,10 +9,11 @@ vars:
   AGE_DIR: ~/.config/sops/age
   AGE_FILE: "{{.AGE_DIR}}/keys.txt"
   PIP_REQUIREMENTS_FILE: "{{.ROOT_DIR}}/requirements.txt"
+  KUBECONFIG_FILE: "{{.ROOT_DIR}}/kubeconfig"
 
 env:
   ROOT_DIR: "{{.ROOT_DIR}}"
-  KUBECONFIG: "{{.ROOT_DIR}}/provision/kubeconfig"
+  KUBECONFIG: "{{.KUBECONFIG_FILE}}"
   PYTHONDONTWRITEBYTECODE: "1"
   SOPS_AGE_KEY_FILE: "{{.AGE_FILE}}"
   VIRTUAL_ENV: "{{.ROOT_DIR}}/.venv"
