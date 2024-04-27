@@ -2,3 +2,5 @@
 - name: reboot
   become: true
   ansible.builtin.reboot:
+    msg: Rebooting hosts
+    reboot_timeout: 3600

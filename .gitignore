@@ -1,8 +1,7 @@
-# Repo
-.env
 # Trash
 .DS_Store
 Thumbs.db
+tmp
 # k8s
 kubeconfig
 # vscode-sops
@@ -21,3 +20,5 @@ terraform.tfstate*
 megalinter-reports
 # scripts
 node_modules
+*.log
+*.pem

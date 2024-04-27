@@ -1,8 +1,20 @@
 ---
-- hosts:
-    - master
-    - worker
+- name: Setup hosts
+  hosts: kubernetes
   become: true
+  pre_tasks:
+    - name: Install packages
+      ansible.builtin.package:
+        state: latest
+        name:
+          - git
+          - vim
+
   roles:
-    - dependencies
     - os
+    - role: upgrade
+      vars:
+        allow_reboot: false
+    - ssh
+    - user
+    - clamav

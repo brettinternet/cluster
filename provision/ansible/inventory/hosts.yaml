@@ -1,21 +1,19 @@
 ---
 kubernetes:
   children:
-    master:
+    controllers:
       hosts:
         pi-0:
-          ansible_host: 10.1.2.10
+          ansible_host: 10.1.2.30
+          k3s_primary_control_node: true
         pi-1:
-          ansible_host: 10.1.2.11
-        archie:
-          ansible_host: 10.1.2.15
-    worker:
+          ansible_host: 10.1.2.31
+
+    workers:
       hosts:
         pi-2:
-          ansible_host: 10.1.2.12
+          ansible_host: 10.1.2.32
         pi-3:
-          ansible_host: 10.1.2.13
+          ansible_host: 10.1.2.33
         pi-4:
-          ansible_host: 10.1.2.14
-        harambe:
-          ansible_host: 10.1.2.16
+          ansible_host: 10.1.2.34

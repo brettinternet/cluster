@@ -1,11 +1,11 @@
 ---
-- hosts:
-    - master
-    - worker
-  gather_facts: false
+- name: Reboot
+  hosts: kubernetes
   become: true
+  gather_facts: true
+  any_errors_fatal: true
   tasks:
     - name: Reboot
       ansible.builtin.reboot:
-      retries: 10
-      delay: 10
+        msg: Rebooting hosts
+        reboot_timeout: 3600

@@ -1,19 +1,35 @@
 # K8s Cluster
 
+[![Lint](https://github.com/brettinternet/cluster/actions/workflows/lint.yaml/badge.svg)](https://github.com/brettinternet/cluster/actions/workflows/lint.yaml)
+
 ## Features
 
-- Rancher's K3s
-- Flux
-- Ansible node provisioning
-- Terraform DNS updates
-- SOPS
-- Renovate bot dependency updates
+- Lots of [self-hosted services](./kubernetes/apps)
+- [Flux](https://toolkit.fluxcd.io/) GitOps with this repository ([kubernetes directory](./kubernetes))
+- Ansible node provisioning and [K3s setup](https://github.com/PyratLabs/ansible-role-k3s) (Ansible [roles](./provision/ansible/roles) and [playbooks](./provision/ansible))
+- Terraform DNS records ([terraform](./provision/terraform))
+- [SOPS](https://github.com/mozilla/sops) secrets stored in Git
+- [Renovate bot](https://github.com/renovatebot/renovate) dependency updates
+- WireGuard VPN pod gateway via paid service
+- WireGuard VPN proxy hosted on VPS
+- [Cloudflared HTTP tunnel](https://github.com/cloudflare/cloudflared)
+- [K8s gateway](https://github.com/ori-edge/k8s_gateway) for local DNS resolution to the cluster and [NGINX ingress controller](https://kubernetes.github.io/ingress-nginx/)
+- Both internal & external services with a service [gateway](https://github.com/ori-edge/k8s_gateway/)
+- OIDC [authentication](https://www.authelia.com/configuration/identity-providers/open-id-connect/) with [LDAP](https://github.com/nitnelave/lldap)
+- Automatic Cloudflare DNS updates ([ddns cronjob](./kubernetes/apps/networking/cloudflare-ddns))
+- [Cilium](https://cilium.io/) container networking interface (CNI) and [layer 4 loadbalancing](https://cilium.io/use-cases/load-balancer/)
+- [ZFS](https://wiki.archlinux.org/index.php/ZFS)
+- JBOD [mergerfs](https://github.com/trapexit/mergerfs) union NFS with [SnapRAID](https://www.snapraid.it) backup for low-touch media files ([snapraid-runner kubernetes cronjob](./kubernetes/apps/media/snapraid-runner))
+- [Restic](https://restic.net) backups to remote and local buckets ([backup namespace](./kubernetes/apps/backup))
+- [go-task](https://taskfile.dev) shorthand for useful commands ([Taskfile](./Taskfile.yaml) and [taskfiles](./.taskfiles))
 
-## Deployments
+## Usage
 
-Most deployments in this repo use an `app-template` chart with [these configuration options](https://github.com/bjw-s/helm-charts/tree/main/charts/library/common).
+Setup and usage is inspired heavily by [this homelab gitops template](https://github.com/onedr0p/flux-cluster-template) and the [k8s-at-home](https://github.com/k8s-at-home) community. You can find similar setups with the [k8s at home search](https://nanne.dev/k8s-at-home-search/). Historical revisions of this repository had rootless Podman containers deployed with ansible as systemd units, and a single-node docker compose orchestration before that.
 
-## Setup
+Looking for a simpler devops experience? Checkout my docker deployment at [brettinternet/homelab](https://github.com/brettinternet/homelab).
+
+### Setup
 
 [Install go-task](https://taskfile.dev/installation/)
 
@@ -21,55 +37,50 @@ Most deployments in this repo use an `app-template` chart with [these configurat
 task init
 ```
 
-Setup env vars in `.env`.
-
-```sh
-task verify
-
-task configure
-```
-
 Then, provision your infrastructure.
 
 ```sh
-task ansible:init
-
-task ansible:list
-
-task ansible:setup
-
-task ansible:install
-
-# Last install step which ensures k3s.service status sometimes fails,
-# use this to verify each k3s service is 'active' (instead of 'activating')
-task ansible:status
-task cluster:nodes
+task ansible:{list,setup,kubernetes,status}
 ```
 
-Setup DNS.
+Edit `provision/terraform/cloudflare/secret.sops.yaml` with your own values and encrypt with `task sops:encrypt -- <filepath>`.
+
+Setup Cloudflare DNS.
 
 ```sh
-task terraform:init
-
-task terraform:plan
-
-task terraform:apply
+task terraform:{init,cloudflare-plan,cloudflare-apply}
 ```
 
-Verify flux can be installed.
+### Deploy
+
+#### Kubernetes
+
+Verify flux can be installed. Then, push changes to remote repo and install.
 
 ```sh
-task cluster:verify
+task cluster:{verify,install}
 ```
 
-Push changes to remote repo.
+Push latest to repo - you can use the [wip.sh](./scripts/wip.sh) script for that with `task wip`.
 
 ```sh
-task cluster:install
-
-task cluster:resources
+task cluster:{reconcile,resources}
 ```
 
-## Renovate
+Most deployments in this repo use an `app-template` chart with [these configuration options](https://github.com/bjw-s/helm-charts/tree/main/charts/library/common).
 
-[Install Renovate Bot](https://github.com/apps/renovate), add to your repository and [view Renovate bot activity](https://app.renovatebot.com/dashboard), or use the self-hosted option.
+#### Bastion server
+
+Edit `provision/terraform/bastion/secret.sops.yaml` with your own values. [Generate WireGuard keys](https://www.wireguard.com/quickstart/).
+
+Deploy the remote bastion VPN server.
+
+```sh
+task terraform:{init,plan,apply}
+```
+
+Then, setup VPN services.
+
+```sh
+task ansible:bastion
+```

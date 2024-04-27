@@ -1,0 +1,95 @@
+---
+- name: Hush login
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/.hushlogin"
+    state: touch
+    mode: 0777
+
+- name: Clear Debian's MOTD
+  ansible.builtin.copy:
+    content: ""
+    dest: /etc/motd
+
+# https://wiki.archlinux.org/title/systemd-timesyncd
+- name: Start/enable systemd-timesyncd.service
+  ansible.builtin.systemd:
+    name: systemd-timesyncd.service
+    scope: system
+    enabled: true
+    state: started
+
+# https://serverfault.com/a/363098
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=316099
+- name: Update /etc/hosts to include inventory hostname
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "127.0.1.1  {{ inventory_hostname }}"
+
+# https://wiki.debian.org/depmod
+# May require reboot or `/usr/sbin/depmod -a` if fails
+- name: Add br_netfilter to /etc/modules-load.d/
+  ansible.builtin.copy:
+    content: "br_netfilter"
+    dest: /etc/modules-load.d/br_netfilter.conf
+    mode: 0644
+
+- name: Load br_netfilter
+  community.general.modprobe:
+    name: br_netfilter
+    state: present
+
+- name: Disable apparmor
+  when: ansible_facts.services['apparmor.service'] is defined
+  ansible.builtin.systemd:
+    name: apparmor
+    state: stopped
+    masked: true
+    enabled: false
+
+- name: Create Kernel modules
+  ansible.builtin.copy:
+    dest: "/etc/modules-load.d/{{ item }}.conf"
+    mode: "0644"
+    content: "{{ item }}"
+  loop:
+    - br_netfilter
+    - ceph
+    - ip_vs
+    - ip_vs_rr
+    - iptable_mangle
+    - iptable_raw
+    - nbd
+    - overlay
+    - rbd
+    - xt_socket
+  register: modules_status
+  notify: reboot
+
+- name: Reload Kernel modules
+  when: modules_status.changed
+  ansible.builtin.systemd:
+    name: systemd-modules-load
+    state: restarted
+
+- name: Activating cgroup support
+  ansible.builtin.lineinfile:
+    path: /boot/cmdline.txt
+    regexp: '^((?!.*\bcgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory\b).*)$'
+    line: '\1 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory'
+    backrefs: true
+  notify: reboot
+
+- name: System Configuration | Sysctl
+  ansible.posix.sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    sysctl_file: /etc/sysctl.d/99-kubernetes.conf
+    reload: true
+  with_dict: "{{ sysctl_config }}"
+  vars:
+    sysctl_config:
+      fs.inotify.max_queued_events: 65536
+      fs.inotify.max_user_watches: 524288
+      fs.inotify.max_user_instances: 8192
+      net.core.rmem_max: 2500000
+      net.core.wmem_max: 2500000

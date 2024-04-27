@@ -1,16 +1,17 @@
+# When pointing DNS records to home firewall (not via Cloudflared tunnels)
 terraform {
   required_providers {
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "3.24.0"
+      version = "4.8.0"
     }
     http = {
       source  = "hashicorp/http"
-      version = "3.0.1"
+      version = "3.3.0"
     }
     sops = {
       source  = "carlpett/sops"
-      version = "0.7.1"
+      version = "0.7.2"
     }
   }
 }
@@ -93,7 +94,8 @@ resource "cloudflare_record" "ipv4" {
 resource "cloudflare_record" "root" {
   name    = data.sops_file.cloudflare_secrets.data["cloudflare_domain"]
   zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
-  value   = "ipv4.${data.sops_file.cloudflare_secrets.data["cloudflare_domain"]}"
+  # TODO: change value to tunnel
+  value   = "tunnel.${data.sops_file.cloudflare_secrets.data["cloudflare_domain"]}"
   proxied = true
   type    = "CNAME"
   ttl     = 1
