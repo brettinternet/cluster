@@ -15,7 +15,6 @@
     name: "{{ ansible_user }}"
     shell: "{{ shell }}"
     groups:
-      - wheel
       - sudo
       - ssh
     append: true
