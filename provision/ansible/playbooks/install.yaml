@@ -1,4 +1,5 @@
 ---
-- hosts: kubernetes
+- name: Install kubernetes
+  hosts: kubernetes
   become: true
-  roles: kubernetes
+  roles: [kubernetes]
