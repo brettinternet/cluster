@@ -10,13 +10,8 @@ collections:
     version: 2.10.3
   - name: kubernetes.core
     version: 2.4.0
-  # https://github.com/kewlfft/ansible-aur
-  - name: kewlfft.aur
 
 roles:
-  # Galaxy v3.3.0 not working: https://github.com/PyratLabs/ansible-role-k3s/issues/196
   - name: xanmanning.k3s
     src: https://github.com/PyratLabs/ansible-role-k3s.git
-    version: v3.4.2
-  # https://github.com/geerlingguy/ansible-role-docker
-  - name: geerlingguy.docker
+    version: v3.4.4

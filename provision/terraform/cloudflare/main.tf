@@ -78,19 +78,6 @@ resource "cloudflare_zone_settings_override" "cloudflare_settings" {
   }
 }
 
-data "http" "ipv4" {
-  url = "http://ipv4.icanhazip.com"
-}
-
-resource "cloudflare_record" "ipv4" {
-  name    = "ipv4"
-  zone_id = data.cloudflare_zones.domain.zones[0]["id"]
-  value   = chomp(data.http.ipv4.response_body)
-  proxied = true
-  type    = "A"
-  ttl     = 1
-}
-
 resource "cloudflare_record" "root" {
   name    = data.sops_file.cloudflare_secrets.data["cloudflare_domain"]
   zone_id = data.cloudflare_zones.domain.zones[0]["id"]

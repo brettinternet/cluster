@@ -26,12 +26,6 @@
       - sudo
       - unzip
       - vim
-
-# nftables networking issues with k3s
-# https://github.com/k3s-io/k3s/issues/703#issuecomment-522355829
-- community.general.alternatives:
-    name: iptables
-    path: /usr/sbin/iptables-legacy
 #
 # More dependencies?
 #
@@ -64,3 +58,9 @@
 # software-properties-common
 # unzip
 # util-linux
+
+# nftables networking issues with k3s
+# https://github.com/k3s-io/k3s/issues/703#issuecomment-522355829
+# - community.general.alternatives:
+#     name: iptables
+#     path: /usr/sbin/iptables-legacy

@@ -33,23 +33,25 @@ Looking for a simpler devops experience? Checkout my docker deployment at [brett
 
 [Install go-task](https://taskfile.dev/installation/)
 
+Install dependencies and setup environment:
+
 ```sh
 task init
 ```
 
-Then, provision your infrastructure.
+Then, provision your infrastructure:
 
 ```sh
-task ansible:{list,setup,kubernetes,status}
+task ansible:{init,list,ping,setup,install,status}
 ```
 
-Edit `provision/terraform/cloudflare/secret.sops.yaml` with your own values and encrypt with `task sops:encrypt -- <filepath>`.
-
-Setup Cloudflare DNS.
+Setup a Cloudflare Tunnel.
 
 ```sh
-task terraform:{init,cloudflare-plan,cloudflare-apply}
+task terraform:{init,tunnel-plan,tunnel-apply}
 ```
+
+Add tunnel information to cluster settings.
 
 ### Deploy
 
@@ -58,29 +60,17 @@ task terraform:{init,cloudflare-plan,cloudflare-apply}
 Verify flux can be installed. Then, push changes to remote repo and install.
 
 ```sh
-task cluster:{verify,install}
+task flux:{verify,install}
 ```
 
 Push latest to repo - you can use the [wip.sh](./scripts/wip.sh) script for that with `task wip`.
 
 ```sh
-task cluster:{reconcile,resources}
+task flux:reconcile
+```
+
+```sh
+task kubernetes:resources
 ```
 
 Most deployments in this repo use an `app-template` chart with [these configuration options](https://github.com/bjw-s/helm-charts/tree/main/charts/library/common).
-
-#### Bastion server
-
-Edit `provision/terraform/bastion/secret.sops.yaml` with your own values. [Generate WireGuard keys](https://www.wireguard.com/quickstart/).
-
-Deploy the remote bastion VPN server.
-
-```sh
-task terraform:{init,plan,apply}
-```
-
-Then, setup VPN services.
-
-```sh
-task ansible:bastion
-```

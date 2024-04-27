@@ -83,6 +83,11 @@ tasks:
       - { msg: "Missing Sops Age key file", sh: "test -f {{.AGE_FILE}}" }
       - { msg: "Missing Github deploy key file", sh: "test -f {{.GITHUB_DEPLOY_KEY_FILE}}" }
 
+  delete-tunnel:
+    desc: |
+      Force delete cloudflared tunnel release to stop external ingress
+    cmd: flux suspend hr -n network cloudflared
+
   errors:
     desc: List errors from all namespaces
     cmd: flux logs -A --level=error

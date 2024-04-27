@@ -22,11 +22,6 @@ tasks:
       - kubectl top node
       - kubectl top pod
 
-  delete-tunnel:
-    desc: |
-      Force delete cloudflared tunnel release to stop external ingress
-    cmd: flux suspend hr -n network cloudflared
-
   resources:
     desc: Gather common resources in your cluster, useful when asking for support
     cmds:
