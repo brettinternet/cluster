@@ -18,11 +18,13 @@
       - ca-certificates
       - curl
       - dnsutils
+      - iptables
       - iputils-ping
       - ipvsadm
       - lvm2
       - net-tools
       - open-iscsi
+      - python3-kubernetes
       - sudo
       - unzip
       - vim

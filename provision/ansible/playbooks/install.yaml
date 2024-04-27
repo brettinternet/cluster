@@ -2,4 +2,10 @@
 - name: Install kubernetes
   hosts: kubernetes
   become: true
+  pre_tasks:
+    - name: Install dependencies
+      ansible.builtin.apt:
+        state: latest
+        name:
+          - python3-kubernetes
   roles: [kubernetes]
