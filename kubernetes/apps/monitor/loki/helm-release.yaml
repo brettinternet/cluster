@@ -209,9 +209,6 @@ spec:
       main:
         enabled: true
         ingressClassName: nginx
-        annotations:
-          forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: pail
         hosts:
           - host: &host "loki-s3.${PUBLIC_DOMAIN}"
             paths:

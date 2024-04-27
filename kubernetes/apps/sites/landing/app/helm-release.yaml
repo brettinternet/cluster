@@ -1,38 +1,39 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app landing
-  namespace: sites
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
       retries: 3
-  uninstall:
-    keepHistory: false
   values:
-    image:
-      repository: docker.io/library/httpd
-      tag: alpine
-    env:
-      TZ: "${TIMEZONE}"
+    controllers:
+      landing:
+        strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              repository: docker.io/library/httpd
+              tag: alpine
+            env:
+              TZ: "${TIMEZONE}"
     service:
-      main:
+      app:
+        controller: landing
         ports:
           http:
             port: 80
@@ -49,18 +50,18 @@ spec:
             mountPath: /usr/local/apache2/htdocs/favicon.ico
             readOnly: true
     ingress:
-      main:
+      app:
         enabled: true
-        ingressClassName: nginx
+        className: external
         annotations:
-          external-dns.home.arpa/enabled: "true"
-          forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: web
+          external-dns.alpha.kubernetes.io/target: "external.${PUBLIC_DOMAIN}"
         hosts:
           - host: &host "${PUBLIC_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
         tls:
           - hosts:
               - *host

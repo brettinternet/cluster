@@ -2,15 +2,19 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-maddy
+  name: &app maddy
   namespace: flux-system
 spec:
-  path: ./kubernetes/apps/comms/maddy/app
+  targetNamespace: comms
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  path: ./kubernetes/apps/monitor/maddy/app
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab
-  wait: false # no flux ks dependents
+    name: home-kubernetes
+  wait: false
   interval: 30m
   retryInterval: 1m
   timeout: 5m
