@@ -14,7 +14,6 @@
     - os
     - role: upgrade
       vars:
-        allow_reboot: false
+        allow_reboot: true
     - ssh
     - user
-    - clamav

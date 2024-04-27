@@ -1,7 +1,6 @@
 ---
-- hosts:
-    - master
-    - worker
+- name: Status
+  hosts: kubernetes
   become: true
   tasks:
     - name: Get k3s service status
