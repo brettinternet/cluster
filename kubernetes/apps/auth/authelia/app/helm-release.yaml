@@ -189,7 +189,7 @@ spec:
   values:
     image:
       repository: library/postgres
-      tag: "14"
+      tag: "16"
     env:
       - name: POSTGRES_USER
         value: authelia
