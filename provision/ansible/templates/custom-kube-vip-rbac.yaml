@@ -4,6 +4,7 @@ kind: ServiceAccount
 metadata:
   name: kube-vip
   namespace: kube-system
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -13,20 +14,39 @@ metadata:
   name: system:kube-vip-role
 rules:
   - apiGroups: [""]
-    resources: ["services/status"]
-    verbs: ["update"]
+    resources: [services/status]
+    verbs: [update]
   - apiGroups: [""]
-    resources: ["services", "endpoints"]
-    verbs: ["list","get","watch", "update"]
+    resources: [services, endpoints]
+    verbs:
+      - list
+      - get
+      - watch
+      - update
   - apiGroups: [""]
-    resources: ["nodes"]
-    verbs: ["list","get","watch", "update", "patch"]
-  - apiGroups: ["coordination.k8s.io"]
-    resources: ["leases"]
-    verbs: ["list", "get", "watch", "update", "create"]
-  - apiGroups: ["discovery.k8s.io"]
-    resources: ["endpointslices"]
-    verbs: ["list","get","watch", "update"]
+    resources: [nodes]
+    verbs:
+      - list
+      - get
+      - watch
+      - update
+      - patch
+  - apiGroups: [coordination.k8s.io]
+    resources: [leases]
+    verbs:
+      - list
+      - get
+      - watch
+      - update
+      - create
+  - apiGroups: [discovery.k8s.io]
+    resources: [endpointslices]
+    verbs:
+      - list
+      - get
+      - watch
+      - update
+
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -37,6 +57,6 @@ roleRef:
   kind: ClusterRole
   name: system:kube-vip-role
 subjects:
-- kind: ServiceAccount
-  name: kube-vip
-  namespace: kube-system
+  - kind: ServiceAccount
+    name: kube-vip
+    namespace: kube-system

@@ -32,7 +32,7 @@ data "cloudflare_zones" "domain" {
 }
 
 resource "cloudflare_zone_settings_override" "cloudflare_settings" {
-  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+  zone_id = data.cloudflare_zones.domain.zones[0]["id"]
   settings {
     # /ssl-tls
     ssl = "strict"
@@ -84,7 +84,7 @@ data "http" "ipv4" {
 
 resource "cloudflare_record" "ipv4" {
   name    = "ipv4"
-  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+  zone_id = data.cloudflare_zones.domain.zones[0]["id"]
   value   = chomp(data.http.ipv4.response_body)
   proxied = true
   type    = "A"
@@ -93,7 +93,7 @@ resource "cloudflare_record" "ipv4" {
 
 resource "cloudflare_record" "root" {
   name    = data.sops_file.cloudflare_secrets.data["cloudflare_domain"]
-  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+  zone_id = data.cloudflare_zones.domain.zones[0]["id"]
   # TODO: change value to tunnel
   value   = "tunnel.${data.sops_file.cloudflare_secrets.data["cloudflare_domain"]}"
   proxied = true
