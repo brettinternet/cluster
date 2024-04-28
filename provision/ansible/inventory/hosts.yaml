@@ -8,11 +8,11 @@ kubernetes:
           k3s_primary_control_node: true
         pi-1:
           ansible_host: 10.1.2.31
+        pi-2:
+          ansible_host: 10.1.2.32
 
     workers:
       hosts:
-        pi-2:
-          ansible_host: 10.1.2.32
         pi-3:
           ansible_host: 10.1.2.33
         pi-4:
