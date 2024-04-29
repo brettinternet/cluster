@@ -22,20 +22,18 @@ spec:
     remediation:
       retries: 3
   values:
-    env:
-      TZ: "${TIMEZONE}"
-    extraArgs:
-      - --enable-skip-login
-      - --disable-settings-authorizer
-      - --enable-insecure-login
-      - --token-ttl=43200 # seconds time to expire
     metricsScraper:
       enabled: true
-    ingress:
-      enabled: true
-      className: internal
-      hosts:
-        - &host "kubernetes.${PUBLIC_DOMAIN}"
-      tls:
-        - hosts:
-            - *host
+    app:
+      env:
+        TZ: "${TIMEZONE}"
+      extraArgs:
+        - --enable-skip-login
+        - --disable-settings-authorizer
+        - --enable-insecure-login
+        - --token-ttl=43200 # seconds time to expire
+      ingress:
+        enabled: true
+        ingressClassName: internal
+        hosts:
+          - "kubernetes.${PUBLIC_DOMAIN}"

@@ -1,13 +1,12 @@
 ---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: sites
 resources:
-  - helm-release.yaml
+  - ./helmrelease.yaml
 configMapGenerator:
-  - name: landing
+  - name: landing-configmap
     files:
-      - site/index.html
-      - site/favicon.ico
+      - ./site/index.html
+      - ./site/favicon.ico
 generatorOptions:
   disableNameSuffixHash: true

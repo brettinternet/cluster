@@ -9,7 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/monitor/maddy/app
+  path: ./kubernetes/apps/comms/maddy/app
   prune: true
   sourceRef:
     kind: GitRepository
