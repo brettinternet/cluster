@@ -2,6 +2,8 @@
 - name: Uninstall kubernetes
   hosts: kubernetes
   become: true
+  vars:
+    allow_storage_cleanup: false
   vars_prompt:
     - name: uninstall_confirmation
       prompt: |-
@@ -138,10 +140,18 @@
         state: absent
       loop: ["kubectl", "crictl", "ctr"]
 
-    - name: Remove local storage path
-      ansible.builtin.file:
-        path: /var/openebs/local
-        state: absent
+    - name: Cleanup storage
+      when: allow_storage_cleanup
+      block:
+        - name: Remove local openebs storage path
+          ansible.builtin.file:
+            path: /var/openebs/local
+            state: absent
+
+        - name: Remove local custom storage path
+          ansible.builtin.file:
+            path: /cluster
+            state: absent
 
     - name: Reboot
       ansible.builtin.reboot:

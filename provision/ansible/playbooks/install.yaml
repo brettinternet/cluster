@@ -3,9 +3,9 @@
   hosts: kubernetes
   become: true
   pre_tasks:
-    - name: Install dependencies
-      ansible.builtin.apt:
-        state: latest
-        name:
-          - python3-kubernetes
+    # - name: Add local openebs storage path
+    #   ansible.builtin.file:
+    #     path: /var/openebs/local
+    #     state: directory
+    #     recurse: true
   roles: [kubernetes]
