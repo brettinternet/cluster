@@ -28,7 +28,7 @@ spec:
   values:
     controllers:
       authelia:
-        replicas: 3
+        replicas: 2
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
@@ -62,8 +62,9 @@ spec:
               AUTHELIA_SERVER_DISABLE_HEALTHCHECK: "true"
               AUTHELIA_TELEMETRY_METRICS_ADDRESS: tcp://0.0.0.0:8080
               AUTHELIA_TELEMETRY_METRICS_ENABLED: "true"
-              AUTHELIA_SESSION_REDIS_HOST: redis.database.svc.cluster.local
+              AUTHELIA_SESSION_REDIS_HOST: redis-master.database.svc.cluster.local
               AUTHELIA_SESSION_REDIS_PORT: 6379
+              AUTHELIA_SESSION_REDIS_PASSWORD: "${REDIS_PASSWORD}"
               AUTHELIA_SESSION_REDIS_DATABASE_INDEX: 2
               AUTHELIA_STORAGE_POSTGRES_DATABASE: *dbName
               AUTHELIA_STORAGE_POSTGRES_ADDRESS: *dbHost
@@ -91,8 +92,9 @@ spec:
               AUTHELIA_ACCESS_CONTROL_DEFAULT_POLICY: one_factor
               AUTHELIA_TOTP_DISABLE: false
               AUTHELIA_TOTP_ISSUER: authelia.com
+              X_AUTHELIA_CONFIG: /config/configuration.yaml
+              X_AUTHELIA_CONFIG_FILTERS: template
               DOMAIN: "${PUBLIC_DOMAIN}"
-              GRAFANA_OAUTH_CLIENT_SECRET: "${GRAFANA_OAUTH_CLIENT_SECRET}"
               CLUSTER_CIDR: "${CLUSTER_CIDR}"
               NODE_CIDR: "${NODE_CIDR}"
               HOME_CIDR: "${HOME_CIDR}"
