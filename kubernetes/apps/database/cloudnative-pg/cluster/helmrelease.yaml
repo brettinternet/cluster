@@ -9,11 +9,11 @@ spec:
   interval: 30m
   chart:
     spec:
-      chart: cloudnative-pg
+      chart: cluster
       version: 0.0.8
       sourceRef:
         kind: HelmRepository
-        name: cluster
+        name: cloudnative-pg
         namespace: flux-system
   install:
     remediation:
@@ -49,12 +49,8 @@ spec:
         destinationPath: s3://cloudnative-pg/
         provider: s3
         s3: &s3
-          accessKey:
-            name: minio-secret
-            key: MINIO_ROOT_USER
-          secretKey:
-            name: minio-secret
-            key: MINIO_ROOT_PASSWORD
+          accessKey: "${MINIO_ROOT_USER}"
+          secretKey: "${MINIO_ROOT_PASSWORD}"
         scheduledBackups:
           - name: daily-backup # Daily at midnight
             schedule: "0 0 0 * * *" # Daily at midnight
