@@ -5,10 +5,11 @@ metadata:
   name: cluster-settings
   namespace: flux-system
 data:
-  CLUSTER_NAME: cluster
   TIMEZONE: America/Denver
+  CLUSTER_HOST_STORAGE_DIR: /var/openebs/local
   CLUSTER_CIDR: "10.69.0.0/16"
   NODE_CIDR: "10.1.2.0/24"
+  HOME_CIDR: "10.1.1.0/24"
 
   # Value also in `provision/ansible/inventory/group_vars/kubernetes/kube-vip.yaml`
   KUBE_VIP_ADDR: 10.1.2.200
@@ -18,6 +19,8 @@ data:
   LB_K8S_GATEWAY_ADDR: 10.1.2.203
   LB_DNS_ADDR: 10.1.2.204
   LB_MADDY_ADDR: 10.1.2.205
+  LB_POSTGRES_ADDR: 10.1.2.206
+  LB_VECTOR_ADDR: 10.1.2.207
 
   UPSTREAM_DNS_ADDR: 10.1.0.5:53 # fallback/alternate
 

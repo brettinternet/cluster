@@ -5,6 +5,7 @@ resources:
   - ./bjw-s.yaml
   - ./brettinternet.yaml
   - ./cilium.yaml
+  - ./cloudnative-pg.yaml
   - ./descheduler.yaml
   - ./external-dns.yaml
   - ./grafana.yaml
@@ -16,4 +17,5 @@ resources:
   - ./metrics-server.yaml
   - ./openebs.yaml
   - ./prometheus-community.yaml
+  - ./rook-ceph.yaml
   - ./stakater.yaml

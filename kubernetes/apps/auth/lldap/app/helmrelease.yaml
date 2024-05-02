@@ -1,0 +1,90 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: lldap
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.1.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      lldap:
+        replicas: 3
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16
+            env:
+              INIT_POSTGRES_HOST: postgres16-rw.database.svc.cluster.local
+              INIT_POSTGRES_DBNAME: lldap
+              INIT_POSTGRES_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: lldap-secret
+                    key: POSTGRES_USER
+              INIT_POSTGRES_PASS:
+                valueFrom:
+                  secretKeyRef:
+                    name: lldap-secret
+                    key: POSTGRES_PASSWORD
+              INIT_POSTGRES_SUPER_PASS: "${POSTGRES_SUPER_PASSWORD}"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/nitnelave/lldap
+              tag: 2024-04-24-alpine
+            env:
+              TZ: "${TIMEZONE}"
+              UID: "${SECURITY_CONTEXT_RUN_AS_USER}"
+              GID: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
+              LLDAP_LDAP_BASE_DN: "dc=home,dc=arpa"
+            envFrom:
+              - secretRef:
+                  name: lldap-secret
+            service:
+              app:
+                controller: lldap
+                ports:
+                  http:
+                    port: 17170
+                  ldap:
+                    enabled: true
+                    port: 3890
+            ingress:
+              app:
+                enabled: true
+                className: internal
+                hosts:
+                  - host: &host "ldap.${PUBLIC_DOMAIN}"
+                    paths:
+                      - path: /
+                        service:
+                          identifier: app
+                          port: http
+                tls:
+                  - hosts:
+                      - *host
+            resources:
+              requests:
+                cpu: 10m
+                memory: 100Mi
+              limits:
+                memory: 500Mi

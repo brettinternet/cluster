@@ -1,0 +1,67 @@
+# https://artifacthub.io/packages/helm/cloudnative-pg/cluster?modal=values
+---
+# yaml-language-server: $schema=https://github.com/cloudnative-pg/charts/blob/a6fa96741fa7b8777f1e8be03264c20ec8be9597/charts/cluster/values.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: cloudnative-pg-cluster
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: cloudnative-pg
+      version: 0.0.8
+      sourceRef:
+        kind: HelmRepository
+        name: cluster
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  dependsOn:
+    - name: minio
+      namespace: database
+  values:
+    mode: standalone
+    cluster:
+      instances: 3
+      imageName: ghcr.io/cloudnative-pg/postgresql:16.2-16
+      storage:
+        size: 20Gi
+        storageClass: openebs-hostpath
+      resources:
+        requests:
+          cpu: 500m
+          memory: 1Gi
+        limits:
+          memory: 1Gi
+      superuserSecret: cloudnative-pg-secret
+      monitoring:
+        enabled: true
+      backups:
+        enabled: true
+        endpointURL: http://minio.database.svc.cluster.local:9000
+        destinationPath: s3://cloudnative-pg/
+        provider: s3
+        s3: &s3
+          accessKey:
+            name: minio-secret
+            key: MINIO_ROOT_USER
+          secretKey:
+            name: minio-secret
+            key: MINIO_ROOT_PASSWORD
+        scheduledBackups:
+          - name: daily-backup # Daily at midnight
+            schedule: "0 0 0 * * *" # Daily at midnight
+            backupOwnerReference: self
+        retentionPolicy: 30d
+    recovery:
+      clusterName: &currentCluster postgres16-v6
+      backupName: &previousCluster postgres16-v5
+      method: object_store
+      s3: *s3

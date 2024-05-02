@@ -33,4 +33,4 @@ spec:
         enabled: true
         name: openebs-hostpath
         isDefaultClass: false
-        basePath: /var/openebs/local
+        basePath: "${CLUSTER_HOST_STORAGE_DIR}"

@@ -6,7 +6,7 @@ resources:
 configMapGenerator:
   - name: landing-configmap
     files:
-      - ./site/index.html
-      - ./site/favicon.ico
+      - ./resources/index.html
+      - ./resources/favicon.ico
 generatorOptions:
   disableNameSuffixHash: true
