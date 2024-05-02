@@ -30,9 +30,11 @@ spec:
       enabled: true
       password: ${REDIS_PASSWORD}
     master:
+      resourcesPreset: "nano"
       persistence:
         enabled: false
     replica:
+      resourcesPreset: "nano"
       persistence:
         enabled: false
     sentinel:

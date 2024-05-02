@@ -83,12 +83,9 @@ spec:
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${PUBLIC_DOMAIN}"
         hosts:
-          - host: &host "echo.${PUBLIC_DOMAIN}"
+          - host: "echo.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 service:
                   identifier: app
                   port: http
-        tls:
-          - hosts:
-              - *host

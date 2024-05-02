@@ -58,15 +58,12 @@ spec:
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${PUBLIC_DOMAIN}"
         hosts:
-          - host: &host "ntfy.${PUBLIC_DOMAIN}"
+          - host: "ntfy.${PUBLIC_DOMAIN}"
             paths:
               - path: /
                 service:
                   identifier: app
                   port: http
-        tls:
-          - hosts:
-              - *host
     persistance:
       cache:
         type: persistentVolumeClaim

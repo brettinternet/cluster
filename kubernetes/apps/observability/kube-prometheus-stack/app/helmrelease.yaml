@@ -64,10 +64,7 @@ spec:
         pathType: Prefix
         ingressClassName: nginx
         hosts:
-          - &host "alert-manager.${PUBLIC_DOMAIN}"
-        tls:
-          - hosts:
-              - *host
+          - "alert-manager.${PUBLIC_DOMAIN}"
       alertmanagerSpec:
         replicas: 1
         podAntiAffinity: hard
@@ -139,10 +136,7 @@ spec:
         pathType: Prefix
         ingressClassName: nginx
         hosts:
-          - &host "prometheus.${PUBLIC_DOMAIN}"
-        tls:
-          - hosts:
-              - *host
+          - "prometheus.${PUBLIC_DOMAIN}"
       thanosService:
         enabled: true
       thanosServiceMonitor:
@@ -155,10 +149,7 @@ spec:
           nginx.ingress.kubernetes.io/ssl-redirect: "true"
           nginx.ingress.kubernetes.io/backend-protocol: GRPC
         hosts:
-          - &host "thanos-sidecar.${PUBLIC_DOMAIN}"
-        tls:
-          - hosts:
-              - *host
+          - "thanos-sidecar.${PUBLIC_DOMAIN}"
       prometheusSpec:
         replicas: 3
         replicaExternalLabelName: __replica__
