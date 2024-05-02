@@ -31,6 +31,7 @@ function gpcf {
   git push --force-with-lease origin "$(git_current_branch)"
 }
 
+task sops:encrypt-all
 gwip
 gpcf
 task flux:reconcile
