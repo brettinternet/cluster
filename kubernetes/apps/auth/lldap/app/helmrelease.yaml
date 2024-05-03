@@ -49,6 +49,7 @@ spec:
               UID: "${SECURITY_CONTEXT_RUN_AS_USER}"
               GID: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
               LLDAP_LDAP_BASE_DN: "dc=home,dc=arpa"
+              LLDAP_LDAP_USER_DN: admin
               LLDAP_HTTP_PORT: &port 80
               LLDAP_LDAP_PORT: &ldapPort 389
             envFrom: *fromSecret
