@@ -35,17 +35,10 @@ spec:
             env:
               INIT_POSTGRES_HOST: postgres16-rw.database.svc.cluster.local
               INIT_POSTGRES_DBNAME: lldap
-              INIT_POSTGRES_USER:
-                valueFrom:
-                  secretKeyRef:
-                    name: lldap-secret
-                    key: POSTGRES_USER
-              INIT_POSTGRES_PASS:
-                valueFrom:
-                  secretKeyRef:
-                    name: lldap-secret
-                    key: POSTGRES_PASSWORD
               INIT_POSTGRES_SUPER_PASS: "${POSTGRES_SUPER_PASSWORD}"
+            envFrom: &fromSecret
+              - secretRef:
+                  name: lldap-secret
         containers:
           app:
             image:
@@ -58,9 +51,7 @@ spec:
               LLDAP_LDAP_BASE_DN: "dc=home,dc=arpa"
               LLDAP_HTTP_PORT: &port 80
               LLDAP_LDAP_PORT: &ldapPort 389
-            envFrom:
-              - secretRef:
-                  name: lldap-secret
+            envFrom: *fromSecret
             probes:
               liveness: &probes
                 enabled: true
