@@ -408,7 +408,7 @@ spec:
     ingress:
       enabled: true
       ingressClassName: internal
-      hosts: ["grafana.devbu.io"]
+      hosts: ["grafana.${PUBLIC_DOMAIN}"]
     persistence:
       enabled: false
     testFramework:

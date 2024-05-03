@@ -34,7 +34,7 @@ spec:
       dashboard:
         ingressClassName: internal
         host:
-          name: rook.devbu.io
+          name: rook."${PUBLIC_DOMAIN}"
           path: /
     toolbox:
       enabled: true
@@ -46,11 +46,11 @@ spec:
     cephClusterSpec:
       crashCollector:
         disable: false
-      dashboard:
-        enabled: true
-        urlPrefix: /
-        ssl: false
-        prometheusEndpoint: http://thanos-query-frontend.observability.svc.cluster.local:10902
+      # dashboard:
+      #   enabled: true
+      #   urlPrefix: /
+      #   ssl: false
+      #   prometheusEndpoint: http://thanos-query-frontend.observability.svc.cluster.local:10902
       mgr:
         modules:
           - name: pg_autoscaler
@@ -62,7 +62,6 @@ spec:
       storage:
         useAllNodes: true
         useAllDevices: true
-        deviceFilter: nvme0n1
         config:
           osdsPerDevice: "1"
       placement:
@@ -80,7 +79,7 @@ spec:
             cpu: 100m
             memory: 512Mi
           limits:
-            memory: 2Gi
+            memory: 1Gi
         mon:
           requests:
             cpu: 50m
@@ -90,9 +89,9 @@ spec:
         osd:
           requests:
             cpu: 500m
-            memory: 2Gi
+            memory: 512Mi
           limits:
-            memory: 6Gi
+            memory: 1Gi
         mgr-sidecar:
           requests:
             cpu: 50m
@@ -156,7 +155,7 @@ spec:
                 cpu: 100m
                 memory: 1Gi
               limits:
-                memory: 4Gi
+                memory: 2Gi
         storageClass:
           enabled: true
           isDefault: false
@@ -196,9 +195,9 @@ spec:
             resources:
               requests:
                 cpu: 100m
-                memory: 1Gi
+                memory: 512Mi
               limits:
-                memory: 2Gi
+                memory: 1Gi
             instances: 2
             priorityClassName: system-cluster-critical
           healthCheck:
@@ -210,7 +209,7 @@ spec:
           reclaimPolicy: Delete
           volumeBindingMode: Immediate
           parameters:
-            region: us-east-1
+            region: us-west-1
         ingress:
           enabled: true
           ingressClassName: internal

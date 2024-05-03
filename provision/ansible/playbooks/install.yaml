@@ -2,10 +2,4 @@
 - name: Install kubernetes
   hosts: kubernetes
   become: true
-  pre_tasks:
-    # - name: Add local openebs storage path
-    #   ansible.builtin.file:
-    #     path: /var/openebs/local
-    #     state: directory
-    #     recurse: true
   roles: [kubernetes]

@@ -74,7 +74,7 @@ spec:
         size: 10Gi
     query:
       replicas: 3
-      extraArgs: ["--alert.query-url=https://thanos.devbu.io"]
+      extraArgs: ["--alert.query-url=https://thanos.${PUBLIC_DOMAIN}"]
       additionalStores: ["thanos.turbo.ac:10901"]
     queryFrontend:
       enabled: true
@@ -90,7 +90,7 @@ spec:
         enabled: true
         ingressClassName: internal
         hosts:
-          - thanos.devbu.io
+          - "thanos.${PUBLIC_DOMAIN}"
       podAnnotations: &podAnnotations
         configmap.reloader.stakater.com/reload: *configMap
     rule:
