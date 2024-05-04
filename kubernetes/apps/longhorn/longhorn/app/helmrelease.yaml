@@ -32,6 +32,7 @@ spec:
     defaultSettings:
       # backupTarget: s3://longhorn@ca-west-1/
       # backupTargetCredentialSecret: longhorn-secret
+      defaultDataPath: /var/lib/longhorn
       createDefaultDiskLabeledNodes: true
       defaultDataLocality: true
       replicaAutoBalance: true

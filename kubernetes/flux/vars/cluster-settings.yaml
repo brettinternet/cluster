@@ -6,7 +6,6 @@ metadata:
   namespace: flux-system
 data:
   TIMEZONE: America/Denver
-  CLUSTER_HOST_STORAGE_DIR: /var/openebs/local
   CLUSTER_CIDR: "10.69.0.0/16"
   NODE_CIDR: "10.1.2.0/24"
   HOME_CIDR: "10.1.1.0/24"

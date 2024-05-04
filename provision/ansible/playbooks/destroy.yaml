@@ -148,9 +148,9 @@
             path: /var/openebs/local
             state: absent
 
-        - name: Remove local custom storage path
+        - name: Remove local longhorn storage path
           ansible.builtin.file:
-            path: /cluster
+            path: /var/lib/longhorn
             state: absent
 
     - name: Reboot
