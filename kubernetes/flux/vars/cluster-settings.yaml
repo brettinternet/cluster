@@ -9,7 +9,7 @@ data:
   CLUSTER_CIDR: "10.69.0.0/16"
   NODE_CIDR: "10.1.2.0/24"
   HOME_CIDR: "10.1.1.0/24"
-  LETSENCRYPT_ENVIRONMENT: staging
+  LETSENCRYPT_ENVIRONMENT: production
 
   # Value also in `provision/ansible/inventory/group_vars/kubernetes/kube-vip.yaml`
   KUBE_VIP_ADDR: 10.1.2.200
