@@ -20,7 +20,7 @@ tasks:
     desc: List top metrics
     cmds:
       - kubectl top node
-      - kubectl top pod
+      - kubectl top pod -A
 
   resources:
     desc: Gather common resources in your cluster, useful when asking for support

@@ -39,9 +39,9 @@ spec:
               NTFY_SMTP_SENDER_ADDR: maddy.comms.svc.cluster.local:25
               NTFY_SMTP_SENDER_FROM: "${SMTP_USER}"
               NTFY_AUTH_DEFAULT_ACCESS: read-only
-              # NTFY_AUTH_FILE: /var/lib/ntfy/auth.db
-              NTFY_CACHE_FILE: /var/cache/ntfy/cache.db
-              NTFY_ATTACHMENT_CACHE_DIR: /var/cache/ntfy/attachments
+              NTFY_AUTH_FILE: /var/lib/ntfy/auth.db
+              NTFY_CACHE_FILE: /var/lib/ntfy/cache.db
+              NTFY_ATTACHMENT_CACHE_DIR: /var/lib/ntfy/attachments
               NTFY_ENABLE_LOGIN: true
               NTFY_ENABLE_SIGNUP: true
             args: [serve]
@@ -66,7 +66,6 @@ spec:
                   port: http
     persistance:
       cache:
-        type: persistentVolumeClaim
-        storageClass: longhorn
-        accessMode: ReadWriteOnce
-        size: 5Gi
+        existingClaim: ntfy
+        globalMounts:
+          - path: /var/lib/ntfy

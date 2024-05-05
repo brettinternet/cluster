@@ -110,7 +110,6 @@ spec:
                   port: s3
     persistence:
       data:
-        type: persistentVolumeClaim
-        storageClass: longhorn
-        accessMode: ReadWriteOnce
-        size: 10Gi
+        existingClaim: minio
+        globalMounts:
+          - path: /data

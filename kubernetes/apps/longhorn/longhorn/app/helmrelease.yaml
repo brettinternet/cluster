@@ -25,13 +25,12 @@ spec:
   # https://github.com/longhorn/longhorn/blob/master/chart/README.md
   values:
     csi:
-      attacherReplicaCount: &replicas 2
+      attacherReplicaCount: &replicas 1
       provisionerReplicaCount: *replicas
       resizerReplicaCount: *replicas
       snapshotterReplicaCount: *replicas
     defaultSettings:
-      # backupTarget: s3://longhorn@ca-west-1/
-      # backupTargetCredentialSecret: longhorn-secret
+      defaultReplicaCount: *replicas
       defaultDataPath: /var/lib/longhorn
       createDefaultDiskLabeledNodes: true
       defaultDataLocality: true
@@ -42,6 +41,8 @@ spec:
       concurrentAutomaticEngineUpgradePerNodeLimit: 3
       guaranteedInstanceManagerCPU: 20
       orphanAutoDeletion: true
+      # backupTarget: s3://longhorn@ca-west-1/
+      # backupTargetCredentialSecret: longhorn-secret
     ingress:
       enabled: true
       ingressClassName: internal
