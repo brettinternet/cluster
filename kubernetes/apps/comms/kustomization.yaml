@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./maddy/ks.yaml
-  # - ./ntfy/ks.yaml
+  - ./ntfy/ks.yaml
