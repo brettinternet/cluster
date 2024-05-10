@@ -43,6 +43,11 @@ spec:
       orphanAutoDeletion: true
       # backupTarget: s3://longhorn@ca-west-1/
       # backupTargetCredentialSecret: longhorn-secret
+    persistence:
+      defaultClassReplicaCount: 2
+      reclaimPolicy: Retain
+    longhornUI:
+      replicas: *replicas
     ingress:
       enabled: true
       ingressClassName: internal

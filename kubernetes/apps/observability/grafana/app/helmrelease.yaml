@@ -46,7 +46,7 @@ spec:
               name: *secret
               key: GF_DATABASE_USER
           INIT_POSTGRES_SUPER_PASS: "${POSTGRES_SUPER_PASSWORD}"
-    replicas: 3
+    replicas: 1
     env:
       GF_AUTH_GENERIC_OAUTH_API_URL: "https://auth.${PUBLIC_DOMAIN}/api/oidc/userinfo"
       GF_AUTH_GENERIC_OAUTH_AUTH_URL: "https://auth.${PUBLIC_DOMAIN}/api/oidc/authorization"

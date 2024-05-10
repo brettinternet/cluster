@@ -6,7 +6,6 @@ metadata:
   name: loki
 spec:
   interval: 30m
-  timeout: 15m
   chart:
     spec:
       chart: loki
@@ -105,12 +104,12 @@ spec:
         analytics:
           reporting_enabled: false
     backend:
-      replicas: 3
+      replicas: 1
       persistence:
         size: 20Gi
         storageClass: openebs-hostpath
     gateway:
-      replicas: 3
+      replicas: 1
       image:
         registry: ghcr.io
       ingress:

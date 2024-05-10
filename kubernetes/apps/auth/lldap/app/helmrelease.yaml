@@ -24,7 +24,6 @@ spec:
   values:
     controllers:
       lldap:
-        replicas: 2
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:

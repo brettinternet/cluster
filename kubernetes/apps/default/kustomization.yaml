@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   # - ./busybox/ks.yaml
-  - ./echo-server/ks.yaml
+  # - ./echo-server/ks.yaml

@@ -24,27 +24,43 @@ spec:
   values:
     controllers:
       ntfy:
+        annotations:
+          reloader.stakater.com/auto: "true"
         strategy: RollingUpdate
+        # initContainers:
+        #   init-dir:
+        #     image:
+        #       repository: docker.io/library/busybox
+        #       tag: latest
+        #     command: [sh, -c, mkdir -p /data/attachments]
+        #   init-ls:
+        #     dependsOn: init-dir
+        #     image:
+        #       repository: docker.io/library/bash
+        #       tag: latest
+        #     command: [ls, -l, /data]
         containers:
           app:
             image:
               repository: docker.io/binwiederhier/ntfy
-              tag: latest
+              tag: v2.10.0
+            args: [serve]
             env:
               TZ: "${TIMEZONE}"
+              BUMP: 1
               # https://docs.ntfy.sh/config/#config-options
+              NTFY_LOG_LEVEL: DEBUG
               NTFY_UPSTREAM_BASE_URL: https://ntfy.sh
               NTFY_BEHIND_PROXY: true
               NTFY_BASE_URL: "https://ntfy.${PUBLIC_DOMAIN}"
               NTFY_SMTP_SENDER_ADDR: maddy.comms.svc.cluster.local:25
               NTFY_SMTP_SENDER_FROM: "${SMTP_USER}"
               NTFY_AUTH_DEFAULT_ACCESS: read-only
-              NTFY_AUTH_FILE: /var/lib/ntfy/auth.db
-              NTFY_CACHE_FILE: /var/lib/ntfy/cache.db
-              NTFY_ATTACHMENT_CACHE_DIR: /var/lib/ntfy/attachments
+              NTFY_AUTH_FILE: /data/auth.db
+              NTFY_CACHE_FILE: /data/cache.db
+              # NTFY_ATTACHMENT_CACHE_DIR: /data/attachments
               NTFY_ENABLE_LOGIN: true
               NTFY_ENABLE_SIGNUP: true
-            args: [serve]
     service:
       app:
         controller: ntfy
@@ -53,7 +69,6 @@ spec:
             port: 80
     ingress:
       app:
-        enabled: true
         className: external
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${PUBLIC_DOMAIN}"
@@ -65,7 +80,15 @@ spec:
                   identifier: app
                   port: http
     persistance:
-      cache:
+      data:
         existingClaim: ntfy
         globalMounts:
-          - path: /var/lib/ntfy
+          - path: /data
+        # advancedMounts:
+        #   ntfy:
+        #     init-dir:
+        #       - path: /var/lib
+        #     init-ls:
+        #       - path: /var/lib
+        #     app:
+        #       - path: /var/lib/ntfy

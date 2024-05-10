@@ -151,7 +151,7 @@ spec:
         hosts:
           - "thanos-sidecar.${PUBLIC_DOMAIN}"
       prometheusSpec:
-        replicas: 3
+        replicas: 1
         replicaExternalLabelName: __replica__
         externalLabels:
           cluster: home
