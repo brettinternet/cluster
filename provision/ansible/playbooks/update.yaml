@@ -2,8 +2,8 @@
 - hosts: kubernetes
   become: true
   vars:
-    allow_reboot: false
-    allow_drain: false
+    allow_reboot: true
+    allow_drain: true
   pre_tasks:
     - name: Get k3s service status
       ansible.builtin.systemd:
@@ -75,10 +75,12 @@
           ansible.builtin.set_fact:
             drained: true
 
-  roles:
-    - role: upgrade
-      vars:
+    - name: Set allow reboot if not defined
+      ansible.builtin.set_fact:
         allow_reboot: "{{ allow_reboot if allow_reboot is defined else allow_drain }}"
+
+  roles:
+    - upgrade
 
   post_tasks:
     - name: Uncordon
