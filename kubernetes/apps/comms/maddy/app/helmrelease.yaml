@@ -43,7 +43,7 @@ spec:
               DEBUG: "false"
               SMTP_RELAY_PORT: &port 25
               SMTP_METRICS_PORT: &metricsPort 8080
-              SMTP_SERVER_PORT: 465
+              SMTP_REMOTE_PORT: 587
             envFrom:
               - secretRef:
                   name: *app

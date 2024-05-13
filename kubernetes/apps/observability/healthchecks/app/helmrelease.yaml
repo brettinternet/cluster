@@ -34,7 +34,7 @@ spec:
               PGID: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
               SITE_ROOT: "https://healthchecks.${PUBLIC_DOMAIN}"
               SITE_NAME: Healthchecks
-              DEFAULT_FROM_EMAIL: "${SMTP_USER}"
+              DEFAULT_FROM_EMAIL: "Healthchecks <${SMTP_FROM}>"
               EMAIL_HOST: maddy.comms.svc.cluster.local
               EMAIL_PORT: 25
               EMAIL_USE_TLS: "False"

@@ -36,7 +36,7 @@ spec:
             email_configs:
               send_resolved: false
               to: "${NOTIFY_EMAIL}"
-              from: "AlertManager <${SMTP_USER}>"
+              from: "AlertManager <${SMTP_FROM}>"
               smarthost: maddy.comms.svc.cluster.local:2525
               require_tls: false
         route:
