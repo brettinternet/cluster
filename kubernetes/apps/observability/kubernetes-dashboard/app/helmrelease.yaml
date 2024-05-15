@@ -35,5 +35,10 @@ spec:
       ingress:
         enabled: true
         ingressClassName: internal
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Observability
+          gethomepage.dev/name: Kubernetes Dashboard
+          gethomepage.dev/icon: mdi-kubernetes
         hosts:
           - "kubernetes.${PUBLIC_DOMAIN}"

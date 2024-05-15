@@ -95,6 +95,11 @@ spec:
     ingress:
       app:
         className: internal
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Database
+          gethomepage.dev/name: Minio
+          gethomepage.dev/icon: mdi-pail
         hosts:
           - host: "minio.${PUBLIC_DOMAIN}"
             paths:

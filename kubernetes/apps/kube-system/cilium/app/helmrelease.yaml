@@ -61,6 +61,10 @@ spec:
           enabled: true
           annotations:
             grafana_folder: Cilium
+            gethomepage.dev/enabled: "true"
+            gethomepage.dev/group: Observability
+            gethomepage.dev/name: Cilium
+            gethomepage.dev/icon: mdi-network-pos
       relay:
         enabled: true
         rollOutPods: true
