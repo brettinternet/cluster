@@ -1,7 +1,7 @@
 ---
 - search:
     provider: [google, duckduckgo]
-    focus: true
+    focus: false
     target: _self
     suggestionUrl: https://ac.ecosia.org/autocomplete?type=list&q=
     showSearchSuggestions: true

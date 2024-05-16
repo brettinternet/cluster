@@ -46,7 +46,11 @@ spec:
                   secretKeyRef:
                     name: gatus-secret
                     key: POSTGRES_PASSWORD
-              INIT_POSTGRES_SUPER_PASS: "${POSTGRES_SUPER_PASSWORD}"
+              INIT_POSTGRES_SUPER_PASS:
+                valueFrom:
+                  secretKeyRef:
+                    name: cloudnative-pg-secret
+                    key: password
           init-config:
             dependsOn: init-db
             image:
@@ -77,6 +81,7 @@ spec:
               CUSTOM_WEB_PORT: &port 80
               POSTGRES_HOST: postgres16-rw.database.svc.cluster.local
               POSTGRES_DB: gatus
+              PUBLIC_DOMAIN: "${PUBLIC_DOMAIN}"
             envFrom:
               - secretRef:
                   name: gatus-secret

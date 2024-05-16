@@ -9,6 +9,14 @@
           url: https://home.${MEDIA_PUBLIC_DOMAIN}
           key: "{{HOMEPAGE_VAR_HASS_TOKEN}}"
 - Observability:
+    - Gatus:
+        href: https://status.${PUBLIC_DOMAIN}
+        siteMonitor: https://status.${PUBLIC_DOMAIN}
+        icon: gatus.png
+        description: Status page
+        widget:
+          type: gatus
+          url: http://gatus.observability.svc.cluster.local
     - Healthchecks:
         href: https://healthchecks.${MEDIA_PUBLIC_DOMAIN}
         siteMonitor: https://healthchecks.${MEDIA_PUBLIC_DOMAIN}

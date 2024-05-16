@@ -6,9 +6,6 @@
     - Spotify:
         - icon: spotify.png
           href: http://open.spotify.com
-    - Plex:
-        - icon: plex.png
-          href: http://plex.${PUBLC_DOMAIN}
 - Git:
     - GitHub:
         - icon: github.png

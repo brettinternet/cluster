@@ -6,8 +6,9 @@ resources:
   - ./secret.sops.yaml
   - ./helmrelease.yaml
   - ../../../../templates/gatus/external
+  - ../../../database/cloudnative-pg/app/secret.sops.yaml
 configMapGenerator:
-  - name: authelia-configmap
+  - name: authelia-config
     files:
       - configuration.yaml=./resources/configuration.yaml
 generatorOptions:

@@ -85,7 +85,7 @@ spec:
     persistence:
       config:
         type: configMap
-        name: maddy-configmap
+        name: maddy-config
         globalMounts:
           - path: /data/maddy.conf
             subPath: maddy.conf

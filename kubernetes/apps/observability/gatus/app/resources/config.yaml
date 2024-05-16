@@ -30,7 +30,6 @@ endpoints:
       - "[STATUS] == 200"
     alerts:
       - type: ntfy
-
   - name: flux-webhook
     group: external
     url: https://flux-webhook.$${PUBLIC_DOMAIN}

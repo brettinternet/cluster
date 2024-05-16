@@ -5,8 +5,8 @@ resources:
   - ./helmrelease.yaml
   - ./secret.sops.yaml
 configMapGenerator:
-  - name: maddy-configmap
+  - name: maddy-config
     files:
-      - ./maddy.conf
+      - maddy.conf=./resources/maddy.conf
 generatorOptions:
   disableNameSuffixHash: true
