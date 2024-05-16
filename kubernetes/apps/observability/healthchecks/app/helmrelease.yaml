@@ -54,10 +54,12 @@ spec:
             image:
               repository: docker.io/healthchecks/healthchecks
               tag: v3.3
+            # https://healthchecks.io/docs/self_hosted_configuration/
             env:
-              DEBUG: "True"
+              DEBUG: "False"
               SITE_ROOT: "https://healthchecks.${PUBLIC_DOMAIN}"
               SITE_NAME: Healthchecks
+              SITE_LOGO_URL: /static/img/logo.svg
               DEFAULT_FROM_EMAIL: "Healthchecks <${SMTP_FROM}>"
               EMAIL_HOST: maddy.comms.svc.cluster.local
               EMAIL_PORT: 25
@@ -82,7 +84,7 @@ spec:
                 enabled: true
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
+              readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
             resources:
               limits:
@@ -125,6 +127,7 @@ spec:
         type: configMap
         name: healthchecks-config
         globalMounts:
+          # gets turned into `/static/img/logo.svg`
           - path: /opt/healthchecks/static-collected/img/logo.svg
             subPath: logo.svg
             readOnly: true
