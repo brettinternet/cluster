@@ -24,30 +24,90 @@ spec:
     controllers:
       healthchecks:
         strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16
+            env:
+              INIT_POSTGRES_HOST: &dbHost postgres16-rw.database.svc.cluster.local
+              INIT_POSTGRES_DBNAME: &dbName healthchecks
+              INIT_POSTGRES_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: healthchecks-secret
+                    key: DB_USER
+              INIT_POSTGRES_PASS:
+                valueFrom:
+                  secretKeyRef:
+                    name: healthchecks-secret
+                    key: DB_PASSWORD
+              INIT_POSTGRES_SUPER_PASS:
+                valueFrom:
+                  secretKeyRef:
+                    name: cloudnative-pg-secret
+                    key: password
         containers:
           app:
             image:
-              repository: lscr.io/linuxserver/healthchecks
-              tag: 33
+              repository: docker.io/healthchecks/healthchecks
+              tag: v3.3
             env:
-              PUID: "${SECURITY_CONTEXT_RUN_AS_USER}"
-              PGID: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
+              DEBUG: "True"
               SITE_ROOT: "https://healthchecks.${PUBLIC_DOMAIN}"
               SITE_NAME: Healthchecks
               DEFAULT_FROM_EMAIL: "Healthchecks <${SMTP_FROM}>"
               EMAIL_HOST: maddy.comms.svc.cluster.local
               EMAIL_PORT: 25
               EMAIL_USE_TLS: "False"
-              SUPERUSER_EMAIL: "${HEALTHCHECKS_ADMIN_EMAIL}"
-              SUPERUSER_PASSWORD: "${HEALTHCHECKS_ADMIN_PASSWORD}"
-              SECRET_KEY: "${HEALTHCHECKS_SECRET_KEY}"
               INTEGRATIONS_ALLOW_PRIVATE_IPS: "True"
+              DB: postgres
+              DB_HOST: *dbHost
+              DB_NAME: *dbName
+              DB_PORT: 5432
+            envFrom:
+              - secretRef:
+                  name: healthchecks-secret
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+            resources:
+              limits:
+                memory: 512Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+        seccompProfile: { type: RuntimeDefault }
     service:
       app:
         controller: healthchecks
         ports:
           http:
             port: 8000
+    serviceMonitor:
+      healthchecks:
+        enabled: true
+        serviceName: healthchecks
+        endpoints:
+          - port: http
+            scheme: http
+            path: ${service_monitor_path}
     ingress:
       app:
         className: external
@@ -60,3 +120,11 @@ spec:
                 service:
                   identifier: app
                   port: http
+    persistence:
+      logo:
+        type: configMap
+        name: healthchecks-config
+        globalMounts:
+          - path: /opt/healthchecks/static-collected/img/logo.svg
+            subPath: logo.svg
+            readOnly: true

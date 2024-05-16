@@ -25,6 +25,7 @@ spec:
   values:
     controllers:
       gatus:
+        strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
