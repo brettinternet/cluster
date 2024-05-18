@@ -69,6 +69,7 @@ spec:
               DB_HOST: *dbHost
               DB_NAME: *dbName
               DB_PORT: 5432
+              REGISTRATION_OPEN: "True"
             envFrom:
               - secretRef:
                   name: healthchecks-secret

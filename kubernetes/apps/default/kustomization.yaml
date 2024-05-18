@@ -6,3 +6,4 @@ resources:
   # - ./busybox/ks.yaml
   - ./echo-server/ks.yaml
   - ./homepage/ks.yaml
+  # - ./iventoy/ks.yaml

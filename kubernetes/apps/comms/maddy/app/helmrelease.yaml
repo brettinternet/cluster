@@ -63,7 +63,7 @@ spec:
                 memory: 128Mi
     service:
       app:
-        controller: maddy
+        controller: *app
         type: LoadBalancer
         annotations:
           io.cilium/lb-ipam-ips: "${LB_MADDY_ADDR}"
@@ -75,7 +75,7 @@ spec:
             port: *port
     serviceMonitor:
       app:
-        serviceName: maddy
+        serviceName: *app
         endpoints:
           - port: http
             scheme: http
