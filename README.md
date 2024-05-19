@@ -6,8 +6,7 @@
 
 - Lots of [self-hosted services](./kubernetes/apps)
 - [Flux](https://toolkit.fluxcd.io/) GitOps with this repository ([kubernetes directory](./kubernetes))
-- Ansible node provisioning and [K3s setup](https://github.com/PyratLabs/ansible-role-k3s) (Ansible [roles](./provision/ansible/roles) and [playbooks](./provision/ansible))
-- Terraform DNS records ([terraform](./provision/terraform))
+- Ansible node provisioning and [K3s setup](https://github.com/PyratLabs/ansible-role-k3s) (Ansible [roles](./ansible/roles) and [playbooks](./ansible))
 - [SOPS](https://github.com/mozilla/sops) secrets stored in Git
 - [Renovate bot](https://github.com/renovatebot/renovate) dependency updates
 - WireGuard VPN pod gateway via paid service
@@ -31,6 +30,8 @@ Looking for a simpler devops experience? Checkout my docker deployment at [brett
 
 ### Setup
 
+#### Dependencies
+
 [Install go-task](https://taskfile.dev/installation/)
 
 Install dependencies and setup environment:
@@ -39,19 +40,29 @@ Install dependencies and setup environment:
 task init
 ```
 
+#### Provision
+
 Then, provision your infrastructure:
 
 ```sh
 task ansible:{init,list,ping,setup,install,status}
 ```
 
+#### DNS and Tunnel
+
 Setup a Cloudflare Tunnel.
 
 ```sh
-task terraform:{init,tunnel-plan,tunnel-apply}
+cloudflared tunnel login
+cloudflared tunnel create cluster
 ```
 
-Add tunnel information to cluster settings.
+Add the tunnel's `credentials.json` to the value in [`cloudflared-secret`](kubernetes/apps/network/cloudflared/app/secret.sops.yaml) and tunnel ID to `cluster-secrets.sops.yaml`.
+
+Add a Cloudflare API token with these permissions to the value in [`external-dns-secret`](kubernetes/apps/network/external-dns/app/secret.sops.yaml).
+
+- `Zone - DNS - Edit`
+- `Account - Cloudflare Tunnel - Read`
 
 ### Deploy
 

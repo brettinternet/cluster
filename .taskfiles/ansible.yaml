@@ -11,69 +11,69 @@ vars:
 tasks:
   init:
     desc: Install / Upgrade Ansible galaxy deps
-    dir: provision/ansible
+    dir: ansible
     cmds:
       - ansible-galaxy install -r requirements.yaml -f
 
   list:
     desc: List all the hosts
-    dir: provision/ansible
+    dir: ansible
     aliases: [hosts]
     cmds:
       - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml --list-hosts
 
   setup:
     desc: Setup all the k8s nodes for running k3s
-    dir: provision/ansible
+    dir: ansible
     cmds:
       - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/setup.yaml
 
   install:
     desc: Install Kubernetes on the nodes
-    dir: provision/ansible
+    dir: ansible
     cmds:
       - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/install.yaml
 
   status:
     desc: Show k3s service status
-    dir: provision/ansible
+    dir: ansible
     cmds:
       - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/status.yaml
 
   destroy:
     desc: Uninstall Kubernetes on the nodes
-    dir: provision/ansible
+    dir: ansible
     interactive: true
     cmds:
       - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/destroy.yaml
 
   ping:
     desc: Ping all the hosts
-    dir: provision/ansible
+    dir: ansible
     cmds:
       - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml --one-line -m 'ping'
 
   uptime:
     desc: Uptime of all the hosts
-    dir: provision/ansible
+    dir: ansible
     cmds:
       - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml --one-line -a 'uptime'
 
   reboot:
     desc: Reboot all the k8s nodes
-    dir: provision/ansible
+    dir: ansible
     cmds:
       - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/reboot.yaml
 
   poweroff:
     desc: Shutdown all the k8s nodes
-    dir: provision/ansible
+    dir: ansible
     cmds:
       - ansible kubernetes -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml -a '/usr/bin/systemctl poweroff' --become
 
   update:
     aliases: [upgrade]
     desc: Update dependencies
-    dir: provision/ansible
+    dir: ansible
     cmds:
       - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/update.yaml

@@ -6,7 +6,7 @@
 archive/
 containers/
 docs/
-provision/
+ansible/
 scripts/
 .envrc
 .gitattributes

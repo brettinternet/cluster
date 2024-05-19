@@ -3,8 +3,7 @@ version: "3"
 
 vars:
   KUBERNETES_DIR: "{{.ROOT_DIR}}/kubernetes"
-  ANSIBLE_DIR: "{{.ROOT_DIR}}/provision/ansible"
-  TERRAFORM_DIR: "{{.ROOT_DIR}}/provision/terraform"
+  ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
   SCRIPTS_DIR: "{{.ROOT_DIR}}/scripts"
   AGE_DIR: ~/.config/sops/age
   AGE_FILE: "{{.AGE_DIR}}/keys.txt"
@@ -32,7 +31,6 @@ includes:
   precommit: .taskfiles/precommit.yaml
   setup: .taskfiles/setup_{{OS}}.yaml
   sops: .taskfiles/sops.yaml
-  terraform: .taskfiles/terraform.yaml
 
 tasks:
   default:

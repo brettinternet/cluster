@@ -9,9 +9,10 @@ data:
   CLUSTER_CIDR: "10.69.0.0/16"
   NODE_CIDR: "10.1.2.0/24"
   HOME_CIDR: "10.1.1.0/24"
+  # match included from `kubernetes/apps/network/ingress-nginx/certificates/kustomization.yaml`
   LETSENCRYPT_ENVIRONMENT: production
 
-  # Value also in `provision/ansible/inventory/group_vars/kubernetes/kube-vip.yaml`
+  # Value also in `ansible/inventory/group_vars/kubernetes/kube-vip.yaml`
   KUBE_VIP_ADDR: 10.1.2.200
 
   LB_INTERNAL_INGRESS_ADDR: 10.1.2.201
