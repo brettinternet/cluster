@@ -49,6 +49,48 @@ spec:
                   secretKeyRef:
                     name: cloudnative-pg-secret
                     key: password
+          init-user:
+            dependsOn: [init-db]
+            image:
+              repository: docker.io/healthchecks/healthchecks
+              tag: v3.3
+            command: [python3]
+            args:
+              - manage.py
+              - shell
+              - -v
+              - '3'
+              - -c
+              # https://github.com/linuxserver/docker-healthchecks/blob/9aedb6911bd4dd49f637145b04ad2aeb4339e78b/root/etc/s6-overlay/s6-rc.d/init-healthchecks-config/run#L52-L66
+              - |-
+                """
+                from django.contrib.auth.models import User;
+                from hc.accounts.views import _make_user;
+
+                email = '$SUPERUSER_EMAIL';
+                password = '$SUPERUSER_PASSWORD';
+
+                if User.objects.filter(email=email).count()==0:
+                    user = _make_user(email);
+                    user.set_password(password);
+                    user.is_staff = True;
+                    user.is_superuser = True;
+                    user.save();
+                    print('Superuser created.');
+                else:
+                    print('Superuser creation skipped. Already exists.');
+                """
+            env:
+              SUPERUSER_EMAIL:
+                valueFrom:
+                  secretKeyRef:
+                    name: healthchecks-secret
+                    key: SUPERUSER_EMAIL
+              SUPERUSER_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: healthchecks-secret
+                    key: SUPERUSER_PASSWORD
         containers:
           app:
             image:
@@ -70,6 +112,11 @@ spec:
               DB_NAME: *dbName
               DB_PORT: 5432
               REGISTRATION_OPEN: "False"
+              ADMINS:
+                valueFrom:
+                  secretKeyRef:
+                    name: healthchecks-secret
+                    key: SUPERUSER_EMAIL
             envFrom:
               - secretRef:
                   name: healthchecks-secret
