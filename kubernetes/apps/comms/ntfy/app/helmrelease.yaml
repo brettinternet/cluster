@@ -47,7 +47,7 @@ spec:
               NTFY_CACHE_FILE: /var/lib/ntfy/cache.db
               NTFY_ATTACHMENT_CACHE_DIR: /var/lib/ntfy/attachments
               NTFY_ENABLE_LOGIN: true
-              NTFY_ENABLE_SIGNUP: true
+              NTFY_ENABLE_SIGNUP: false
     service:
       app:
         controller: ntfy
