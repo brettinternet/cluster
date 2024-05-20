@@ -51,7 +51,7 @@ spec:
     ingress:
       enabled: true
       ingressClassName: internal
-      host: "longhorn.${PUBLIC_DOMAIN}"
+      host: "longhorn.${PRIVATE_DOMAIN}"
       tls: true
       annotations:
         gethomepage.dev/enabled: "true"

@@ -101,13 +101,13 @@ spec:
           gethomepage.dev/name: Minio
           gethomepage.dev/icon: mdi-pail
         hosts:
-          - host: "minio.${PUBLIC_DOMAIN}"
+          - host: "minio.${PRIVATE_DOMAIN}"
             paths:
               - path: /
                 service:
                   identifier: app
                   port: http
-          - host: s3.${PUBLIC_DOMAIN}
+          - host: s3.${PRIVATE_DOMAIN}
             paths:
               - path: /
                 service:
