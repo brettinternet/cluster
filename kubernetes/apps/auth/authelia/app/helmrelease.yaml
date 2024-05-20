@@ -99,7 +99,8 @@ spec:
               AUTHELIA_TOTP_ISSUER: authelia.com
               X_AUTHELIA_CONFIG: /config/configuration.yaml
               X_AUTHELIA_CONFIG_FILTERS: template
-              DOMAIN: "${PUBLIC_DOMAIN}"
+              PUBLIC_DOMAIN: "${PUBLIC_DOMAIN}"
+              PRIVATE_DOMAIN: "${PRIVATE_DOMAIN}"
               CLUSTER_CIDR: "${CLUSTER_CIDR}"
               NODE_CIDR: "${NODE_CIDR}"
               HOME_CIDR: "${HOME_CIDR}"

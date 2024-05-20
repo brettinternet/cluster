@@ -75,7 +75,7 @@ spec:
       app:
         className: internal
         hosts:
-          - host: "iventoy.${PUBLIC_DOMAIN}"
+          - host: "iventoy.${PRIVATE_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -83,10 +83,10 @@ spec:
                   port: http
     persistence:
       isos:
-        existingClaim: ntfy
+        existingClaim: *app
         globalMounts:
           - path: /app/iso
       config:
-        existingClaim: ntfy
+        existingClaim: *app
         globalMounts:
           - path: /app/data
