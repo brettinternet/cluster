@@ -68,7 +68,7 @@ spec:
         className: internal
         annotations:
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Database
+          gethomepage.dev/group: Services
           gethomepage.dev/name: *app
           gethomepage.dev/icon: si-postgresql
         hosts:

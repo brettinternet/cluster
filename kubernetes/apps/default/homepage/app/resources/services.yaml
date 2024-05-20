@@ -1,14 +1,5 @@
 ---
-- Home:
-    - HomeAssistant:
-        href: https://home.${MEDIA_PUBLIC_DOMAIN}
-        icon: home-assistant.png
-        description: Home Assistant
-        widget:
-          type: homeassistant
-          url: https://home.${MEDIA_PUBLIC_DOMAIN}
-          key: "{{HOMEPAGE_VAR_HASS_TOKEN}}"
-- Observability:
+- Services:
     - Gatus:
         href: https://status.${PUBLIC_DOMAIN}
         siteMonitor: https://status.${PUBLIC_DOMAIN}
@@ -18,15 +9,23 @@
           type: gatus
           url: http://gatus.observability.svc.cluster.local
     - Healthchecks:
-        href: https://healthchecks.${MEDIA_PUBLIC_DOMAIN}
-        siteMonitor: https://healthchecks.${MEDIA_PUBLIC_DOMAIN}
+        href: https://healthchecks.${PUBLIC_DOMAIN}
+        siteMonitor: https://healthchecks.${PUBLIC_DOMAIN}
         icon: healthchecks.png
         description: Job status
         widget:
           type: healthchecks
-          url: https://healthchecks.${MEDIA_PUBLIC_DOMAIN}
+          url: http://healthchecks.observability.svc.cluster.local
           key: "{{HOMEPAGE_VAR_HEALTHCHECKS_TOKEN}}"
-- Media:
+- External:
+    - HomeAssistant:
+        href: https://home.${MEDIA_PUBLIC_DOMAIN}
+        icon: home-assistant.png
+        description: Home Assistant
+        widget:
+          type: homeassistant
+          url: https://home.${MEDIA_PUBLIC_DOMAIN}
+          key: "{{HOMEPAGE_VAR_HASS_TOKEN}}"
     - Plex:
         href: https://plex.${MEDIA_PUBLIC_DOMAIN}
         siteMonitor: https://plex.${MEDIA_PUBLIC_DOMAIN}
@@ -66,7 +65,6 @@
           type: sabnzbd
           url: https://nzb.${MEDIA_PRIVATE_DOMAIN}
           key: "{{HOMEPAGE_VAR_SABNZBD_TOKEN}}"
-- Calendar:
     - Agenda:
         widget:
           type: calendar
@@ -74,8 +72,8 @@
           maxEvents: 5
           integrations:
             - type: sonarr
-              service_group: Media
+              service_group: External
               service_name: Sonarr
             - type: radarr
-              service_group: Media
+              service_group: External
               service_name: Radarr

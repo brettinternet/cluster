@@ -55,7 +55,7 @@ spec:
       tls: true
       annotations:
         gethomepage.dev/enabled: "true"
-        gethomepage.dev/group: Observability
+        gethomepage.dev/group: Services
         gethomepage.dev/name: Longhorn
         gethomepage.dev/icon: mdi-zip-disk
         nginx.ingress.kubernetes.io/auth-method: GET

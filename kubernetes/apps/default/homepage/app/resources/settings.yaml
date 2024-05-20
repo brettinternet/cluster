@@ -4,26 +4,19 @@ theme: dark
 color: zinc
 headerStyle: boxedWidgets
 layout:
-  Calendar:
+  Services:
     style: column
-    icon: mdi-calendar
-  Media:
+    icon: mdi-kubernetes
+  External:
+    style: column
+    icon: mdi-server
+  Personal:
     style: column
     icon: mdi-play-circle
-  Infrastructure:
+  Work:
     style: row
     columns: 3
-    icon: mdi-server
-  Storage:
-    style: row
-    columns: 2
-    icon: mdi-desktop-tower
-  Home:
-    style: column
-    icon: mdi-home-analytics
-  Observability:
-    style: column
-    icon: mdi-chart-line
+    icon: mdi-briefcase
 quicklaunch:
   searchDescriptions: true
   hideInternetSearch: false

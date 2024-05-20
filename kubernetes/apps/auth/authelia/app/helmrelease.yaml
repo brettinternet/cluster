@@ -170,7 +170,7 @@ spec:
             add_header X-Frame-Options "SAMEORIGIN";
             add_header X-XSS-Protection "1; mode=block";
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Auth
+          gethomepage.dev/group: Services
           gethomepage.dev/name: Authelia
           gethomepage.dev/icon: mdi-two-factor-authentication
         hosts:
