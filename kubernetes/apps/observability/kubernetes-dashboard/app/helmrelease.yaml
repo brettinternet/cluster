@@ -41,4 +41,4 @@ spec:
           gethomepage.dev/name: Kubernetes Dashboard
           gethomepage.dev/icon: mdi-kubernetes
         hosts:
-          - "kubernetes.${PUBLIC_DOMAIN}"
+          - "kubernetes.${PRIVATE_DOMAIN}"

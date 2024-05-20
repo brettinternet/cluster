@@ -6,3 +6,7 @@ resources:
   - ./secret.sops.yaml
   - ./pvc.yaml
   - ./helmrelease.yaml
+  # minio dashboard
+  - ../../../../templates/gatus/internal
+  # S3
+  - ./gatus.yaml

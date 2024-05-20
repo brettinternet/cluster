@@ -10,5 +10,6 @@ spec:
     kind: ClusterIssuer
   commonName: "${PUBLIC_DOMAIN}"
   dnsNames:
-    - "${PUBLIC_DOMAIN}"
+    # - "${PUBLIC_DOMAIN}"
     - "*.${PUBLIC_DOMAIN}"
+    - "*.${PRIVATE_DOMAIN}"

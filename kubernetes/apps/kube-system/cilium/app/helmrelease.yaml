@@ -77,7 +77,7 @@ spec:
         ingress:
           enabled: true
           className: internal
-          hosts: ["hubble.${PUBLIC_DOMAIN}"]
+          hosts: ["hubble.${PRIVATE_DOMAIN}"]
     ipam:
       mode: kubernetes
     ipv4NativeRoutingCIDR: "${CLUSTER_CIDR}"

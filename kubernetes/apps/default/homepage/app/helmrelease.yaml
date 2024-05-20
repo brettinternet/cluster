@@ -58,7 +58,7 @@ spec:
       app:
         className: internal
         hosts:
-          - host: "dashboard.${PUBLIC_DOMAIN}"
+          - host: "dashboard.${PRIVATE_DOMAIN}"
             paths:
               - path: /
                 service:
