@@ -1,0 +1,137 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: crowdsec
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: crowdsec
+      version: 0.10.0
+      sourceRef:
+        kind: HelmRepository
+        name: crowdsec
+        namespace: flux-system
+      interval: 10m
+  install:
+    timeout: 10m
+    replace: true
+    crds: CreateReplace
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      remediateLastFailure: true
+      retries: 3
+      strategy: rollback
+    cleanupOnFail: true
+    crds: CreateReplace
+  test:
+    enable: true
+  rollback:
+    recreate: true
+    force: true
+    cleanupOnFail: true
+  uninstall:
+    keepHistory: false
+  driftDetection:
+    mode: enabled
+  maxHistory: 3
+  # https://github.com/crowdsecurity/helm-charts/blob/main/charts/crowdsec/values.yaml
+  values:
+    container_runtime: containerd
+    config:
+      capi_whitelists.yaml: |
+        cidrs:
+          - ${CLUSTER_CIDR}
+          - ${NODE_CIDR}
+      # config.yaml.local: |
+      #   db_config:
+      #     type:     postgresql
+      #     user:     ${CS_CONFIG_DB_USER}
+      #     password: ${CS_CONFIG_DB_PASSWORD}
+      #     db_name:  crowdsec
+      #     host:     postgres16-rw.database.svc.cluster.local
+      #     port:     5432
+      #     sslmode:  disable
+      notifications:
+        email.yaml: |
+          type: email
+          name: email_default
+          log_level: warn
+          smtp_host: maddy.comms.svc.cluster.local
+          smtp_port: 25
+          auth_type: none
+          sender_name: "CrowdSec"
+          sender_email: "${CS_CONFIG_EMAIL_FROM}"
+          email_subject: "CrowdSec Notification"
+    lapi:
+      env:
+        # - name: CS_CONFIG_DB_USER
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: crowdsec-secret
+        #       key: DB_USER
+        # - name: CS_CONFIG_DB_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: crowdsec-secret
+        #       key: DB_PASSWORD
+        - name: CS_CONFIG_EMAIL_FROM
+          value: "${SMTP_FROM}"
+      dashboard:
+        # no arm64 support with metabase https://github.com/metabase/metabase/issues/13119
+        enabled: false
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+      service:
+        type: LoadBalancer
+        annotations:
+          io.cilium/lb-ipam-ips: "${LB_CROWDSEC_ADDR}"
+      ingress:
+        enabled: true
+        annotations:
+        ingressClassName: internal
+        host: "crowdsec-api.${PRIVATE_DOMAIN}"
+      persistentVolume:
+        data:
+          enabled: true
+          accessModes: [ReadWriteOnce]
+          storageClassName: longhorn
+          size: 1Gi
+        config:
+          enabled: true
+          accessModes: [ReadWriteOnce]
+          storageClassName: longhorn
+          size: 100Mi
+      resources:
+        requests:
+          cpu: 100m
+          memory: 250Mi
+        limits:
+          memory: 500Mi
+    agent:
+      acquisition:
+        - namespace: network
+          podName: ingress-nginx-external-controller-*
+          program: nginx
+          poll_without_inotify: true
+        - namespace: network
+          podName: ingress-nginx-internal-controller-*
+          program: nginx
+          poll_without_inotify: true
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+      resources:
+        requests:
+          cpu: 300m
+          memory: 250Mi
+        limits:
+          memory: 250Mi
