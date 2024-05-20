@@ -6,7 +6,6 @@ resources:
   - ./brettinternet.yaml
   - ./cilium.yaml
   - ./cloudnative-pg.yaml
-  - ./crowdsec.yaml
   - ./descheduler.yaml
   - ./external-dns.yaml
   - ./grafana.yaml
