@@ -107,6 +107,17 @@ spec:
                 service:
                   identifier: app
                   port: http
+      s3:
+        className: internal
+        annotations:
+          nginx.ingress.kubernetes.io/proxy-body-size: "0"
+          nginx.ingress.kubernetes.io/proxy-buffering: "off"
+          nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+          nginx.ingress.kubernetes.io/server-snippet: |
+            client_max_body_size 200M;
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            chunked_transfer_encoding off;
+        hosts:
           - host: s3.${PRIVATE_DOMAIN}
             paths:
               - path: /
