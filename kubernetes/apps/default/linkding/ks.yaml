@@ -3,17 +3,16 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app pgadmin
+  name: &app linkding
   namespace: flux-system
 spec:
-  targetNamespace: database
+  targetNamespace: default
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: longhorn
-    - name: cloudnative-pg
-  path: ./kubernetes/apps/database/pgadmin/app
+  path: ./kubernetes/apps/default/linkding/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -25,3 +24,4 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_SUBDOMAIN: bookmarks

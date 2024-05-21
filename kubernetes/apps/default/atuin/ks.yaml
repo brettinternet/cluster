@@ -11,7 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: longhorn
+    - name: cloudnative-pg
   path: ./kubernetes/apps/default/atuin/app
   prune: true
   sourceRef:

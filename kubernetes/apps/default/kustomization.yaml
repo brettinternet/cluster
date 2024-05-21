@@ -5,4 +5,6 @@ resources:
   - ./namespace.yaml
   - ./atuin/ks.yaml
   - ./echo-server/ks.yaml
+  - ./filebrowser/ks.yaml
   - ./homepage/ks.yaml
+  - ./linkding/ks.yaml
