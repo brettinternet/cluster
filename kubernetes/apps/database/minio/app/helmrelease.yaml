@@ -33,13 +33,19 @@ spec:
               repository: quay.io/minio/minio
               tag: RELEASE.2024-05-01T01-11-10Z
             env:
-              MINIO_API_CORS_ALLOW_ORIGIN: "https://minio.${PUBLIC_DOMAIN},https://s3.${PUBLIC_DOMAIN}"
-              MINIO_BROWSER_REDIRECT_URL: "https://minio.${PUBLIC_DOMAIN}"
+              MINIO_API_CORS_ALLOW_ORIGIN: "https://minio.${PRIVATE_DOMAIN},https://s3.${PRIVATE_DOMAIN}"
+              MINIO_BROWSER_REDIRECT_URL: "https://minio.${PRIVATE_DOMAIN}"
               MINIO_PROMETHEUS_JOB_ID: minio
-              MINIO_PROMETHEUS_URL: "https://prometheus.${PUBLIC_DOMAIN}"
+              MINIO_PROMETHEUS_URL: "https://prometheus.${PRIVATE_DOMAIN}"
               MINIO_PROMETHEUS_AUTH_TYPE: public
-              MINIO_SERVER_URL: "https://s3.${PUBLIC_DOMAIN}"
+              MINIO_SERVER_URL: "https://s3.${PRIVATE_DOMAIN}"
               MINIO_UPDATE: "off"
+              MINIO_IDENTITY_OPENID_CONFIG_URL: "https://auth.${PUBLIC_DOMAIN}/.well-known/openid-configuration"
+              MINIO_IDENTITY_OPENID_DISPLAY_NAME: Authelia
+              MINIO_IDENTITY_OPENID_CLIENT_ID: minio
+              MINIO_IDENTITY_OPENID_CLAIM_NAME: groups
+              MINIO_IDENTITY_OPENID_SCOPES: "openid,profile,email,groups"
+              MINIO_IDENTITY_OPENID_REDIRECT_URI: "https://minio.${PRIVATE_DOMAIN}/oauth_callback"
             envFrom:
               - secretRef:
                   name: minio-secret
