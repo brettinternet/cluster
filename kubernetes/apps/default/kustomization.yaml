@@ -8,3 +8,4 @@ resources:
   - ./filebrowser/ks.yaml
   - ./homepage/ks.yaml
   - ./linkding/ks.yaml
+  - ./miniflux/ks.yaml
