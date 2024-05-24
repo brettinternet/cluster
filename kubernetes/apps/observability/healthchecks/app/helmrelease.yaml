@@ -167,10 +167,6 @@ spec:
         className: external
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${PUBLIC_DOMAIN}"
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Services
-          gethomepage.dev/name: Healthchecks
-          gethomepage.dev/icon: mdi-hospital-box
         hosts:
           - host: "healthchecks.${PUBLIC_DOMAIN}"
             paths:

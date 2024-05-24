@@ -114,10 +114,6 @@ spec:
         className: external
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${PUBLIC_DOMAIN}"
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Services
-          gethomepage.dev/name: Miniflux
-          gethomepage.dev/icon: mdi-rss
         hosts:
           - host: "rss.${PUBLIC_DOMAIN}"
             paths:
