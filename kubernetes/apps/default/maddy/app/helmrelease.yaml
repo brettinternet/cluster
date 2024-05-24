@@ -4,7 +4,7 @@
 # - https://anonaddy.com/self-hosting/
 
 # Right now, maddy only works as a relay to the SMTP values defined in the secret
-# maddy.comms.svc.cluster.local:2525
+# maddy.default.svc.cluster.local:25
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2

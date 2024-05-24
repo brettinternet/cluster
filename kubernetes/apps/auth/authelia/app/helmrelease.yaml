@@ -72,7 +72,7 @@ spec:
               AUTHELIA_STORAGE_POSTGRES_DATABASE: *dbName
               AUTHELIA_STORAGE_POSTGRES_ADDRESS: *dbHost
               AUTHELIA_NOTIFIER_DISABLE_STARTUP_CHECK: "true"
-              AUTHELIA_NOTIFIER_SMTP_ADDRESS: maddy.comms.svc.cluster.local:25
+              AUTHELIA_NOTIFIER_SMTP_ADDRESS: maddy.default.svc.cluster.local:25
               AUTHELIA_NOTIFIER_SMTP_SENDER: "Authelia <${SMTP_FROM}>"
               AUTHELIA_NOTIFIER_SMTP_DISABLE_REQUIRE_TLS: "true"
               AUTHELIA_AUTHENTICATION_BACKEND_PASSWORD_RESET_DISABLE: "true"

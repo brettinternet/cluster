@@ -11,10 +11,16 @@ ui:
   title: Status
   header: Status
 alerting:
-  ntfy:
-    topic: cluster
-    url: http://ntfy.comms.svc.cluster.local
-    token: $${NTFY_TOKEN}
+  pushover:
+    title: Gatus (Kubernetes)
+    application-token: $${PUSHOVER_TOKEN}
+    user-key: $${PUSHOVER_USER_KEY}
+    priority: 1
+    default-alert:
+      description: healthcheck failed
+      send-on-resolved: true
+      failure-threshold: 3
+      success-threshold: 3
 connectivity:
   checker:
     target: 1.1.1.1:53
@@ -29,7 +35,7 @@ endpoints:
     conditions:
       - "[STATUS] == 200"
     alerts:
-      - type: ntfy
+      - type: pushover
   - name: status
     group: external
     url: https://status.$${PUBLIC_DOMAIN}
@@ -39,7 +45,7 @@ endpoints:
     conditions:
       - "[STATUS] == 200"
     alerts:
-      - type: ntfy
+      - type: pushover
   - name: flux-webhook
     group: external
     url: https://flux-webhook.$${PUBLIC_DOMAIN}
@@ -49,4 +55,4 @@ endpoints:
     conditions:
       - "[STATUS] == 404"
     alerts:
-      - type: ntfy
+      - type: pushover

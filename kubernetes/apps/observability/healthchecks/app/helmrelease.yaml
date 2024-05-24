@@ -103,7 +103,7 @@ spec:
               SITE_NAME: Healthchecks
               SITE_LOGO_URL: /static/img/logo.svg
               DEFAULT_FROM_EMAIL: "Healthchecks <${SMTP_FROM}>"
-              EMAIL_HOST: maddy.comms.svc.cluster.local
+              EMAIL_HOST: maddy.default.svc.cluster.local
               EMAIL_PORT: 25
               EMAIL_USE_TLS: "False"
               INTEGRATIONS_ALLOW_PRIVATE_IPS: "True"

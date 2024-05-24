@@ -40,7 +40,7 @@ spec:
               NTFY_UPSTREAM_BASE_URL: https://ntfy.sh
               NTFY_BEHIND_PROXY: true
               NTFY_BASE_URL: "https://ntfy.${PUBLIC_DOMAIN}"
-              NTFY_SMTP_SENDER_ADDR: maddy.comms.svc.cluster.local:25
+              NTFY_SMTP_SENDER_ADDR: maddy.default.svc.cluster.local:25
               NTFY_SMTP_SENDER_FROM: "ntfy <${SMTP_FROM}>"
               NTFY_AUTH_DEFAULT_ACCESS: read-write
               NTFY_AUTH_FILE: /var/lib/ntfy/auth.db

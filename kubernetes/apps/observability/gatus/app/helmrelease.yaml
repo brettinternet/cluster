@@ -83,6 +83,7 @@ spec:
               POSTGRES_HOST: postgres16-rw.database.svc.cluster.local
               POSTGRES_DB: gatus
               PUBLIC_DOMAIN: "${PUBLIC_DOMAIN}"
+              PUSHOVER_USER_KEY: "${PUSHOVER_USER_KEY}"
             envFrom:
               - secretRef:
                   name: gatus-secret

@@ -5,13 +5,13 @@ metadata:
   name: &app ntfy
   namespace: flux-system
 spec:
-  targetNamespace: comms
+  targetNamespace: default
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: longhorn
-  path: ./kubernetes/apps/comms/ntfy/app
+  path: ./kubernetes/apps/default/ntfy/app
   prune: true
   sourceRef:
     kind: GitRepository

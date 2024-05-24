@@ -20,4 +20,4 @@ data:
         conditions:
           - "[CONNECTED] == true"
         alerts:
-          - type: ntfy
+          - type: pushover
