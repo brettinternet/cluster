@@ -107,6 +107,7 @@ spec:
               EMAIL_HOST: maddy.default.svc.cluster.local
               EMAIL_PORT: 25
               EMAIL_USE_TLS: "False"
+              EMAIL_USE_VERIFICATION: "False"
               INTEGRATIONS_ALLOW_PRIVATE_IPS: "True"
               DB: postgres
               DB_HOST: *dbHost
