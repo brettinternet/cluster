@@ -17,6 +17,15 @@
           type: healthchecks
           url: http://healthchecks.observability.svc.cluster.local
           key: "{{HOMEPAGE_VAR_HEALTHCHECKS_TOKEN}}"
+    - Miniflux:
+        href: https://rss.${PUBLIC_DOMAIN}
+        siteMonitor: https://rss.${PUBLIC_DOMAIN}
+        icon: miniflux.png
+        description: RSS feed
+        widget:
+          type: miniflux
+          url: http://miniflux.default.svc.cluster.local
+          key: "{{HOMEPAGE_VAR_MINIFLUX_TOKEN}}"
 - External:
     - HomeAssistant:
         href: https://home.${MEDIA_PUBLIC_DOMAIN}

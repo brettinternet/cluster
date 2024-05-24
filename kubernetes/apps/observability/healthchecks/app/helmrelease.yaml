@@ -99,6 +99,7 @@ spec:
             # https://healthchecks.io/docs/self_hosted_configuration/
             env:
               DEBUG: "False"
+              REGISTRATION_OPEN: "False"
               SITE_ROOT: "https://healthchecks.${PUBLIC_DOMAIN}"
               SITE_NAME: Healthchecks
               SITE_LOGO_URL: /static/img/logo.svg
@@ -111,12 +112,13 @@ spec:
               DB_HOST: *dbHost
               DB_NAME: *dbName
               DB_PORT: 5432
-              REGISTRATION_OPEN: "False"
               ADMINS:
                 valueFrom:
                   secretKeyRef:
                     name: healthchecks-secret
                     key: SUPERUSER_EMAIL
+              PUSHOVER_EMERGENCY_RETRY_DELAY: 300 # 5 minutes
+              PUSHOVER_EMERGENCY_EXPIRATION: 86400 # 24 hours
             envFrom:
               - secretRef:
                   name: healthchecks-secret
