@@ -28,7 +28,8 @@ spec:
     architecture: "standalone"
     auth:
       enabled: true
-      password: ${REDIS_PASSWORD}
+      existingSecret: redis-secret
+      existingSecretPasswordKey: password
     master:
       resourcesPreset: "nano"
       persistence:

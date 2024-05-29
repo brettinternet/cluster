@@ -1,86 +1,177 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: kube-prometheus-stack
-  namespace: monitoring
 spec:
-  interval: 15m
+  interval: 30m
+  timeout: 15m
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: 40.0.2
+      version: 58.7.2
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
         namespace: flux-system
-  maxHistory: 2
   install:
-    createNamespace: true
+    crds: CreateReplace
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
+    crds: CreateReplace
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
+  dependsOn:
+    - name: openebs
+      namespace: openebs-system
   values:
+    cleanPrometheusOperatorObjectNames: true
+    crds:
+      enabled: true
     alertmanager:
-      config:
-        global:
-          resolve_timeout: 5m
-        receivers:
-          - name: "null"
-          - name: email
-            email_configs:
-              send_resolved: false
-              to: "${NOTIFY_EMAIL}"
-              from: "AlertManager <${SMTP_FROM}>"
-              smarthost: maddy.default.svc.cluster.local:25
-              require_tls: false
-        route:
-          group_by: [alertname, job]
-          group_wait: 30s
-          group_interval: 5m
-          repeat_interval: 6h
-          receiver: email
-          routes:
-            - receiver: "null"
-              matchers:
-                - alertname =~ "InfoInhibitor|Watchdog"
-            - receiver: email
-              matchers:
-                - severity = "critical"
-              continue: true
-        inhibit_rules:
-          - source_matchers:
-              - severity = "critical"
-            target_matchers:
-              - severity = "warning"
-            equal: [alertname, namespace]
       ingress:
         enabled: true
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Services
+          gethomepage.dev/name: Alert Manager
+          gethomepage.dev/icon: alertmanager.png
+        ingressClassName: internal
+        hosts: ["alertmanager.${PRIVATE_DOMAIN}"]
         pathType: Prefix
-        ingressClassName: nginx
-        hosts:
-          - "alert-manager.${PUBLIC_DOMAIN}"
       alertmanagerSpec:
         replicas: 1
-        podAntiAffinity: hard
+        useExistingSecret: true
+        configSecret: &secret kube-prometheus-stack-secret
         storage:
           volumeClaimTemplate:
             spec:
-              storageClassName: local-path
+              storageClassName: openebs-hostpath
               resources:
                 requests:
                   storage: 1Gi
+    kubelet:
+      enabled: true
+      serviceMonitor:
+        metricRelabelings:
+          # Remove duplicate labels provided by k3s
+          - action: keep
+            sourceLabels: ["__name__"]
+            regex: (apiserver_audit|apiserver_client|apiserver_delegated|apiserver_envelope|apiserver_storage|apiserver_webhooks|authentication_token|cadvisor_version|container_blkio|container_cpu|container_fs|container_last|container_memory|container_network|container_oom|container_processes|container|csi_operations|disabled_metric|get_token|go|hidden_metric|kubelet_certificate|kubelet_cgroup|kubelet_container|kubelet_containers|kubelet_cpu|kubelet_device|kubelet_graceful|kubelet_http|kubelet_lifecycle|kubelet_managed|kubelet_node|kubelet_pleg|kubelet_pod|kubelet_run|kubelet_running|kubelet_runtime|kubelet_server|kubelet_started|kubelet_volume|kubernetes_build|kubernetes_feature|machine_cpu|machine_memory|machine_nvm|machine_scrape|node_namespace|plugin_manager|prober_probe|process_cpu|process_max|process_open|process_resident|process_start|process_virtual|registered_metric|rest_client|scrape_duration|scrape_samples|scrape_series|storage_operation|volume_manager|volume_operation|workqueue)_(.+)
+          - action: replace
+            sourceLabels: ["node"]
+            targetLabel: instance
+          # Drop high cardinality labels
+          - action: labeldrop
+            regex: (uid)
+          - action: labeldrop
+            regex: (id|name)
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)
+    kubeApiServer:
+      enabled: true
+      serviceMonitor:
+        metricRelabelings:
+          # Remove duplicate labels provided by k3s
+          - action: keep
+            sourceLabels: ["__name__"]
+            regex: (aggregator_openapi|aggregator_unavailable|apiextensions_openapi|apiserver_admission|apiserver_audit|apiserver_cache|apiserver_cel|apiserver_client|apiserver_crd|apiserver_current|apiserver_envelope|apiserver_flowcontrol|apiserver_init|apiserver_kube|apiserver_longrunning|apiserver_request|apiserver_requested|apiserver_response|apiserver_selfrequest|apiserver_storage|apiserver_terminated|apiserver_tls|apiserver_watch|apiserver_webhooks|authenticated_user|authentication|disabled_metric|etcd_bookmark|etcd_lease|etcd_request|field_validation|get_token|go|grpc_client|hidden_metric|kube_apiserver|kubernetes_build|kubernetes_feature|node_authorizer|pod_security|process_cpu|process_max|process_open|process_resident|process_start|process_virtual|registered_metric|rest_client|scrape_duration|scrape_samples|scrape_series|serviceaccount_legacy|serviceaccount_stale|serviceaccount_valid|watch_cache|workqueue)_(.+)
+          # Drop high cardinality labels
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (apiserver|etcd|rest_client)_request(|_sli|_slo)_duration_seconds_bucket
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (apiserver_response_sizes_bucket|apiserver_watch_events_sizes_bucket)
+    kubeControllerManager:
+      enabled: true
+      endpoints: &cp
+        - 192.168.42.80
+      serviceMonitor:
+        metricRelabelings:
+          # Remove duplicate labels provided by k3s
+          - action: keep
+            sourceLabels: ["__name__"]
+            regex: "(apiserver_audit|apiserver_client|apiserver_delegated|apiserver_envelope|apiserver_storage|apiserver_webhooks|attachdetach_controller|authenticated_user|authentication|cronjob_controller|disabled_metric|endpoint_slice|ephemeral_volume|garbagecollector_controller|get_token|go|hidden_metric|job_controller|kubernetes_build|kubernetes_feature|leader_election|node_collector|node_ipam|process_cpu|process_max|process_open|process_resident|process_start|process_virtual|pv_collector|registered_metric|replicaset_controller|rest_client|retroactive_storageclass|root_ca|running_managed|scrape_duration|scrape_samples|scrape_series|service_controller|storage_count|storage_operation|ttl_after|volume_operation|workqueue)_(.+)"
+    kubeEtcd:
+      enabled: true
+      endpoints: *cp
+    kubeScheduler:
+      enabled: true
+      endpoints: *cp
+      serviceMonitor:
+        metricRelabelings:
+          # Remove duplicate labels provided by k3s
+          - action: keep
+            sourceLabels: ["__name__"]
+            regex: "(apiserver_audit|apiserver_client|apiserver_delegated|apiserver_envelope|apiserver_storage|apiserver_webhooks|authenticated_user|authentication|disabled_metric|go|hidden_metric|kubernetes_build|kubernetes_feature|leader_election|process_cpu|process_max|process_open|process_resident|process_start|process_virtual|registered_metric|rest_client|scheduler|scrape_duration|scrape_samples|scrape_series|workqueue)_(.+)"
+    kubeProxy:
+      enabled: false
+    prometheus:
+      ingress:
+        enabled: true
+        annotations:
+          external-dns.alpha.kubernetes.io/target: internal.turbo.ac
+        ingressClassName: internal
+        hosts: ["prometheus.turbo.ac"]
+        pathType: Prefix
+      prometheusSpec:
+        podMetadata:
+          annotations:
+            secret.reloader.stakater.com/reload: *secret
+        additionalAlertManagerConfigs:
+          - static_configs:
+              - targets: ["alertmanager.devbu.io"]
+        replicas: 1
+        replicaExternalLabelName: __replica__
+        scrapeInterval: 1m # Must match interval in Grafana Helm chart
+        ruleSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
+        podMonitorSelectorNilUsesHelmValues: false
+        probeSelectorNilUsesHelmValues: false
+        scrapeConfigSelectorNilUsesHelmValues: false
+        enableAdminAPI: true
+        walCompression: true
+        enableFeatures:
+          - auto-gomemlimit
+          - memory-snapshot-on-shutdown
+          - new-service-discovery-manager
+        retention: 2d
+        retentionSize: 15GB
+        externalLabels:
+          cluster: storage
         resources:
+          requests:
+            cpu: 100m
           limits:
-            memory: 400Mi
-    kube-state-metrics:
-      metricLabelsAllowlist:
-        - "persistentvolumeclaims=[*]"
+            memory: 1Gi
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: openebs-hostpath
+              resources:
+                requests:
+                  storage: 20Gi
+        thanos:
+          image: "quay.io/thanos/thanos:${THANOS_VERSION}"
+          version: "${THANOS_VERSION#v}"
+          objectStorageConfig:
+            existingSecret:
+              name: *secret
+              key: thanos-config
+      thanosService:
+        enabled: true
+      thanosServiceMonitor:
+        enabled: true
+    nodeExporter:
+      enabled: true
+    prometheus-node-exporter:
+      fullnameOverride: node-exporter
       prometheus:
         monitor:
           enabled: true
@@ -88,105 +179,24 @@ spec:
             - action: replace
               regex: (.*)
               replacement: $1
-              sourceLabels:
-                - __meta_kubernetes_pod_node_name
+              sourceLabels: ["__meta_kubernetes_pod_node_name"]
+              targetLabel: kubernetes_node
+    kubeStateMetrics:
+      enabled: true
+    kube-state-metrics:
+      fullnameOverride: kube-state-metrics
+      metricLabelsAllowlist:
+        - pods=[*]
+        - deployments=[*]
+        - persistentvolumeclaims=[*]
+      prometheus:
+        monitor:
+          enabled: true
+          relabelings:
+            - action: replace
+              regex: (.*)
+              replacement: $1
+              sourceLabels: ["__meta_kubernetes_pod_node_name"]
               targetLabel: kubernetes_node
     grafana:
       enabled: false
-      forceDeployDashboards: true
-      sidecar:
-        dashboards:
-          multicluster:
-            etcd:
-              enabled: true
-    kubelet:
-      enabled: true
-      serviceMonitor:
-        metricRelabelings:
-          - action: replace
-            sourceLabels:
-              - node
-            targetLabel: instance
-    kubeApiServer:
-      enabled: true
-    kubeControllerManager:
-      enabled: true
-      endpoints: &hosts
-        - 10.1.2.30
-        - 10.1.2.31
-        # - 10.1.2.32
-        # - 10.1.2.33
-        # - 10.1.2.34
-    kubeScheduler:
-      enabled: true
-      endpoints: *hosts
-    kubeProxy:
-      enabled: true
-      endpoints: *hosts
-    kubeEtcd:
-      enabled: true
-      endpoints: *hosts
-      service:
-        enabled: true
-        port: 2381
-        targetPort: 2381
-    prometheus:
-      ingress:
-        enabled: true
-        pathType: Prefix
-        ingressClassName: nginx
-        hosts:
-          - "prometheus.${PUBLIC_DOMAIN}"
-      thanosService:
-        enabled: true
-      thanosServiceMonitor:
-        enabled: true
-      thanosIngress:
-        enabled: true
-        pathType: Prefix
-        ingressClassName: nginx
-        annotations:
-          nginx.ingress.kubernetes.io/ssl-redirect: "true"
-          nginx.ingress.kubernetes.io/backend-protocol: GRPC
-        hosts:
-          - "thanos-sidecar.${PUBLIC_DOMAIN}"
-      prometheusSpec:
-        replicas: 1
-        replicaExternalLabelName: __replica__
-        externalLabels:
-          cluster: home
-        thanos:
-          image: quay.io/thanos/thanos:v0.28.0
-          # renovate: datasource=docker depName=quay.io/thanos/thanos
-          version: "v0.28.0"
-        podAntiAffinity: hard
-        ruleSelectorNilUsesHelmValues: false
-        serviceMonitorSelectorNilUsesHelmValues: false
-        podMonitorSelectorNilUsesHelmValues: false
-        probeSelectorNilUsesHelmValues: false
-        retention: 14d
-        retentionSize: 10GB
-        enableAdminAPI: true
-        walCompression: true
-        allowOverlappingBlocks: true
-        storageSpec:
-          volumeClaimTemplate:
-            spec:
-              storageClassName: local-path
-              resources:
-                requests:
-                  storage: 10Gi
-        # Prometheus is memory hungry! 😔
-        resources:
-          requests:
-            memory: 64Mi
-          limits:
-            memory: 512Mi
-        additionalScrapeConfigs:
-          - job_name: node-exporter
-            scrape_interval: 5m
-            scrape_timeout: 10s
-            honor_timestamps: true
-            static_configs:
-              - targets:
-                  - "opnsense.${PRIVATE_DOMAIN}:9100"

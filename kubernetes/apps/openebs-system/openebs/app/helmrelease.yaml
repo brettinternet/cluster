@@ -34,4 +34,4 @@ spec:
         name: openebs-hostpath
         isDefaultClass: false
         basePath: /var/openebs/local
-        reclaimPolicy: Retain
+        # reclaimPolicy: Retain

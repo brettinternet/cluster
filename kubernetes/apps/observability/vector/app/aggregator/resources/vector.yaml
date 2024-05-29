@@ -24,11 +24,6 @@ sources:
     version: "2"
     address: 0.0.0.0:6010
 
-  vyos_source:
-    type: syslog
-    address: 0.0.0.0:6020
-    mode: tcp
-
 #
 # Transforms
 #
@@ -71,14 +66,3 @@ sinks:
       app: '{{ custom_app_name }}'
       namespace: '{{ kubernetes.pod_namespace }}'
       node: '{{ kubernetes.pod_node_name }}'
-
-  vyos:
-    inputs: ["vyos_source", "vyos_firewall_geoip_remap"]
-    type: loki
-    endpoint: http://loki-gateway.observability.svc.cluster.local
-    encoding: { codec: json }
-    out_of_order_action: accept
-    remove_label_fields: true
-    remove_timestamp: true
-    labels:
-      hostname: '{{ host }}'
