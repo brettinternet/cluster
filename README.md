@@ -1,6 +1,8 @@
-# K8s Cluster
+# K8s Pi Cluster
 
 [![Lint](https://github.com/brettinternet/cluster/actions/workflows/lint.yaml/badge.svg)](https://github.com/brettinternet/cluster/actions/workflows/lint.yaml)
+
+![pi 4 cluster](./docs/cluster.png)
 
 ## Features
 
@@ -22,7 +24,11 @@
 - [Restic](https://restic.net) backups to remote and local buckets ([backup namespace](./kubernetes/apps/backup))
 - [go-task](https://taskfile.dev) shorthand for useful commands ([Taskfile](./Taskfile.yaml) and [taskfiles](./.taskfiles))
 
-## Usage
+## Hardware
+
+I'm using Raspberry Pi 4 (x 5) but the 4 GB RAM models are hungry for more memory. [Micro SD cards are insufficient](https://gist.github.com/brettinternet/94d6d8a1e01f4a90b6dfdc70d6b4a5e5) for etcd's demanding read/writes, so I recommend SATA over USB 3.0. Check out [this guide](https://jamesachambers.com/new-raspberry-pi-4-bootloader-usb-network-boot-guide/) for compatible interfaces. I use a [PicoCluster case](https://www.picocluster.com/collections/pico-5).
+
+## Software
 
 Setup and usage is inspired heavily by [this homelab gitops template](https://github.com/onedr0p/flux-cluster-template) and the [k8s-at-home](https://github.com/k8s-at-home) community. You can find similar setups with the [k8s at home search](https://nanne.dev/k8s-at-home-search/). Historical revisions of this repository had rootless Podman containers deployed with ansible as systemd units, and a single-node docker compose orchestration before that.
 

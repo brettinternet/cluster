@@ -116,17 +116,17 @@ spec:
       ingress:
         enabled: true
         annotations:
-          external-dns.alpha.kubernetes.io/target: internal.turbo.ac
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Services
+          gethomepage.dev/name: Prometheus
+          gethomepage.dev/icon: prometheus.png
         ingressClassName: internal
-        hosts: ["prometheus.turbo.ac"]
+        hosts: ["prometheus.${PRIVATE_DOMAIN}"]
         pathType: Prefix
       prometheusSpec:
         podMetadata:
           annotations:
             secret.reloader.stakater.com/reload: *secret
-        additionalAlertManagerConfigs:
-          - static_configs:
-              - targets: ["alertmanager.devbu.io"]
         replicas: 1
         replicaExternalLabelName: __replica__
         scrapeInterval: 1m # Must match interval in Grafana Helm chart

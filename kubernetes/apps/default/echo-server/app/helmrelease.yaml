@@ -28,12 +28,12 @@ spec:
           app:
             image:
               repository: ghcr.io/mendhak/http-https-echo
-              tag: 33
+              tag: "33"
             env:
               TZ: "${TIMEZONE}"
               HTTP_PORT: &port 8080
               LOG_WITHOUT_NEWLINE: true
-              LOG_IGNORE_PATH: /healthz
+              LOG_IGNORE_PATH: &healthPath /healthz
               PROMETHEUS_ENABLED: true
             probes:
               liveness: &probes
@@ -41,12 +41,12 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /healthz
+                    path: *healthPath
                     port: *port
-                  initialDelaySeconds: 0
+                  initialDelaySeconds: 5
                   periodSeconds: 10
                   timeoutSeconds: 1
-                  failureThreshold: 3
+                  failureThreshold: 5
               readiness: *probes
             securityContext:
               allowPrivilegeEscalation: false
