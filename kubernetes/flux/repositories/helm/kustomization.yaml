@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - ./authelia.yaml
   - ./bjw-s.yaml
+  - ./bitnami.yaml
   - ./brettinternet.yaml
   - ./cilium.yaml
   - ./cloudnative-pg.yaml
@@ -20,3 +21,4 @@ resources:
   - ./prometheus-community.yaml
   - ./rook-ceph.yaml
   - ./stakater.yaml
+  - ./stevehipwell.yaml

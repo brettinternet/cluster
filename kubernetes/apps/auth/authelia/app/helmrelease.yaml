@@ -67,7 +67,11 @@ spec:
               AUTHELIA_TELEMETRY_METRICS_ENABLED: "true"
               AUTHELIA_SESSION_REDIS_HOST: redis-master.database.svc.cluster.local
               AUTHELIA_SESSION_REDIS_PORT: 6379
-              AUTHELIA_SESSION_REDIS_PASSWORD: "${REDIS_PASSWORD}"
+              AUTHELIA_SESSION_REDIS_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: redis-secret
+                    key: password
               AUTHELIA_SESSION_REDIS_DATABASE_INDEX: 2
               AUTHELIA_STORAGE_POSTGRES_DATABASE: *dbName
               AUTHELIA_STORAGE_POSTGRES_ADDRESS: *dbHost

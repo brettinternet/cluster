@@ -35,7 +35,7 @@ identity_providers:
         authorization_policy: *policy
         pre_configured_consent_duration: 1y
         scopes: [openid, profile, groups, email]
-        redirect_uris: ['https://grafana.{{ env "PUBLIC_DOMAIN" }}/login/generic_oauth']
+        redirect_uris: ['https://grafana.{{ env "PRIVATE_DOMAIN" }}/login/generic_oauth']
         userinfo_signed_response_alg: none
       - client_name: pgAdmin
         client_id: pgadmin
