@@ -1,4 +1,4 @@
-# K8s Pi Cluster
+# Kubernetes Pi Cluster
 
 [![Lint](https://github.com/brettinternet/cluster/actions/workflows/lint.yaml/badge.svg)](https://github.com/brettinternet/cluster/actions/workflows/lint.yaml)
 
@@ -11,17 +11,14 @@
 - Ansible node provisioning and [K3s setup](https://github.com/PyratLabs/ansible-role-k3s) (Ansible [roles](./ansible/roles) and [playbooks](./ansible))
 - [SOPS](https://github.com/mozilla/sops) secrets stored in Git
 - [Renovate bot](https://github.com/renovatebot/renovate) dependency updates
-- WireGuard VPN pod gateway via paid service
-- WireGuard VPN proxy hosted on VPS
 - [Cloudflared HTTP tunnel](https://github.com/cloudflare/cloudflared)
 - [K8s gateway](https://github.com/ori-edge/k8s_gateway) for local DNS resolution to the cluster and [NGINX ingress controller](https://kubernetes.github.io/ingress-nginx/)
 - Both internal & external services with a service [gateway](https://github.com/ori-edge/k8s_gateway/)
 - OIDC [authentication](https://www.authelia.com/configuration/identity-providers/open-id-connect/) with [LDAP](https://github.com/nitnelave/lldap)
-- Automatic Cloudflare DNS updates ([ddns cronjob](./kubernetes/apps/networking/cloudflare-ddns))
+- Automatic Cloudflare DNS updates with [external-dns](./kubernetes/apps/network/external-dns/app/helmrelease.yaml)
 - [Cilium](https://cilium.io/) container networking interface (CNI) and [layer 4 loadbalancing](https://cilium.io/use-cases/load-balancer/)
-- [ZFS](https://wiki.archlinux.org/index.php/ZFS)
-- JBOD [mergerfs](https://github.com/trapexit/mergerfs) union NFS with [SnapRAID](https://www.snapraid.it) backup for low-touch media files ([snapraid-runner kubernetes cronjob](./kubernetes/apps/media/snapraid-runner))
-- [Restic](https://restic.net) backups to remote and local buckets ([backup namespace](./kubernetes/apps/backup))
+- [CloudNative-PG](https://cloudnative-pg.io/) with automatic failover
+- [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) with various Grafana dashboards
 - [go-task](https://taskfile.dev) shorthand for useful commands ([Taskfile](./Taskfile.yaml) and [taskfiles](./.taskfiles))
 
 ## Hardware
@@ -30,7 +27,7 @@ I'm using Raspberry Pi 4 (x 5) but the 4 GB RAM models are hungry for more memor
 
 ## Software
 
-Setup and usage is inspired heavily by [this homelab gitops template](https://github.com/onedr0p/flux-cluster-template) and the [k8s-at-home](https://github.com/k8s-at-home) community. You can find similar setups with the [k8s at home search](https://nanne.dev/k8s-at-home-search/). Historical revisions of this repository had rootless Podman containers deployed with ansible as systemd units, and a single-node docker compose orchestration before that.
+Setup and usage is inspired heavily by [this homelab gitops template](https://github.com/onedr0p/flux-cluster-template) and the [k8s-at-home](https://github.com/k8s-at-home) community. You can find similar setups with the [k8s at home search](https://nanne.dev/k8s-at-home-search/). See my other [homelab](https://github.com/brettinternet/homelab) setups.
 
 Looking for a simpler devops experience? Checkout my docker deployment at [brettinternet/homelab](https://github.com/brettinternet/homelab).
 
