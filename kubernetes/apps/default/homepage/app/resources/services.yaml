@@ -26,7 +26,7 @@
           type: miniflux
           url: http://miniflux.default.svc.cluster.local
           key: "{{HOMEPAGE_VAR_MINIFLUX_TOKEN}}"
-- External:
+- Home:
     - HomeAssistant:
         href: https://home.${MEDIA_PUBLIC_DOMAIN}
         icon: home-assistant.png

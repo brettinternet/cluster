@@ -157,17 +157,6 @@ spec:
               resources:
                 requests:
                   storage: 20Gi
-        thanos:
-          image: "quay.io/thanos/thanos:${THANOS_VERSION}"
-          version: "${THANOS_VERSION#v}"
-          objectStorageConfig:
-            existingSecret:
-              name: *secret
-              key: thanos-config
-      thanosService:
-        enabled: true
-      thanosServiceMonitor:
-        enabled: true
     nodeExporter:
       enabled: true
     prometheus-node-exporter:
