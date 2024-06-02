@@ -9,9 +9,9 @@ data:
   config.yaml: |
     endpoints:
       - name: s3
-        group: internal
+        group: guarded
         url: 1.1.1.1
-        interval: 1m
+        interval: 5m
         dns:
           query-name: "s3.${PRIVATE_DOMAIN}"
           query-type: A
@@ -20,5 +20,16 @@ data:
           hide-hostname: true
         conditions:
           - "len([BODY]) == 0"
+        alerts:
+          - type: pushover
+      - name: s3
+        group: internal
+        url: "https://s3.${PRIVATE_DOMAIN}"
+        interval: 1m
+        ui:
+          hide-url: true
+          hide-hostname: true
+        conditions:
+          - "[CONNECTED] == true"
         alerts:
           - type: pushover
