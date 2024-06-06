@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: ntfy
+  name: livebook
 spec:
-  accessModes: [ReadWriteOnce]
+  accessModes: [ReadWriteMany]
   resources:
     requests:
-      storage: 1Gi
+      storage: 5Gi
   storageClassName: longhorn

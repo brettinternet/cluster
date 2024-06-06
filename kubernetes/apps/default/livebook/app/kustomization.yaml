@@ -6,3 +6,9 @@ resources:
   - ./pvc.yaml
   - ./helmrelease.yaml
   - ../../../../templates/gatus/external
+configMapGenerator:
+  - name: livebook-config
+    files:
+      - env.sh=./resources/env.sh
+generatorOptions:
+  disableNameSuffixHash: true
