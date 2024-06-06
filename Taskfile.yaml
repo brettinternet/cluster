@@ -7,8 +7,10 @@ vars:
   SCRIPTS_DIR: "{{.ROOT_DIR}}/scripts"
   AGE_DIR: ~/.config/sops/age
   AGE_FILE: "{{.AGE_DIR}}/keys.txt"
-  PIP_REQUIREMENTS_FILE: "{{.ROOT_DIR}}/requirements.txt"
   KUBECONFIG_FILE: "{{.ROOT_DIR}}/kubeconfig"
+  SOPS_CONFIG_FILE: "{{.ROOT_DIR}}/.sops.yaml"
+  PIP_REQUIREMENTS_FILE: "{{.ROOT_DIR}}/requirements.txt"
+  PYTHON_BIN: python3
 
 env:
   ROOT_DIR: "{{.ROOT_DIR}}"

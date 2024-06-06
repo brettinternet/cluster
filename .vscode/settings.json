@@ -10,5 +10,6 @@
     "Kubernetes": "kubernetes/*.yaml"
   },
   "editor.bracketPairColorization.enabled": true,
-  "editor.guides.bracketPairs": "active"
+  "editor.guides.bracketPairs": "active",
+  "ansible.python.interpreterPath": "/Users/brett/dev/me/cluster/.venv/bin/python"
 }
