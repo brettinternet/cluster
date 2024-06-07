@@ -43,11 +43,6 @@ spec:
               # https://hexdocs.pm/livebook/docker.html#clustering
               LIVEBOOK_CLUSTER: dns:livebook.default.svc.cluster.local
               LIVEBOOK_DISTRIBUTION: name
-              NAMESPACE:
-                valueFrom:
-                  fieldRef:
-                    apiVersion: v1
-                    fieldPath: metadata.namespace
               POD_IP:
                 valueFrom:
                   fieldRef:
