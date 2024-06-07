@@ -96,11 +96,6 @@ spec:
           gethomepage.dev/group: Services
           gethomepage.dev/name: Livebook
           gethomepage.dev/icon: mdi-book
-          nginx.ingress.kubernetes.io/auth-method: GET
-          nginx.ingress.kubernetes.io/auth-url: "http://authelia.auth.svc.cluster.local/api/verify"
-          nginx.ingress.kubernetes.io/auth-signin: "https://auth.${PUBLIC_DOMAIN}/?rm=$request_method"
-          nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
-          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
         hosts:
           - host: "livebook.${PUBLIC_DOMAIN}"
             paths:
@@ -108,17 +103,17 @@ spec:
                 service:
                   identifier: app
                   port: http
-      # public:
-      #   className: external
-      #   annotations:
-      #     external-dns.alpha.kubernetes.io/target: "external.${PUBLIC_DOMAIN}"
-      #   hosts:
-      #     - host: "livebook.${PUBLIC_DOMAIN}"
-      #       paths:
-      #         - path: /public
-      #           service:
-      #             identifier: app
-      #             port: http
+      public:
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${PUBLIC_DOMAIN}"
+        hosts:
+          - host: "livebook.${PUBLIC_DOMAIN}"
+            paths:
+              - path: /public
+                service:
+                  identifier: app
+                  port: http
     persistence:
       data:
         existingClaim: livebook
