@@ -11,3 +11,4 @@ resources:
   - ./livebook/ks.yaml
   - ./maddy/ks.yaml
   - ./miniflux/ks.yaml
+  # - ./netshoot/ks.yaml

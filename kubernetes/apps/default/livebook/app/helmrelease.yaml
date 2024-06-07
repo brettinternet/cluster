@@ -36,13 +36,12 @@ spec:
               tag: edge
             env:
               TZ: "${TIMEZONE}"
-              LIVEBOOK_DEBUG: true
+              # LIVEBOOK_DEBUG: true
               LIVEBOOK_PORT: &port 8080
               LIVEBOOK_APP_SERVICE_URL: "https://livebook.${PUBLIC_DOMAIN}"
               LIVEBOOK_TOKEN_ENABLED: false
-              # https://hexdocs.pm/livebook/docker.html
-              # https://hexdocs.pm/libcluster/Cluster.Strategy.Kubernetes.DNS.html
-              LIVEBOOK_CLUSTER: dns:QUERY
+              # https://hexdocs.pm/livebook/docker.html#clustering
+              LIVEBOOK_CLUSTER: dns:livebook.default.svc.cluster.local
               LIVEBOOK_DISTRIBUTION: name
               NAMESPACE:
                 valueFrom:
@@ -77,7 +76,7 @@ spec:
                 cpu: 10m
               limits:
                 cpu: 2000m
-                memory: 2Gi
+                memory: 1Gi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -90,6 +89,7 @@ spec:
     service:
       app:
         controller: *app
+        clusterIP: None
         ports:
           http:
             port: *port
