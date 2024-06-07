@@ -41,7 +41,7 @@ spec:
               LIVEBOOK_APP_SERVICE_URL: "https://livebook.${PUBLIC_DOMAIN}"
               LIVEBOOK_TOKEN_ENABLED: false
               # https://hexdocs.pm/livebook/docker.html#clustering
-              LIVEBOOK_CLUSTER: dns:livebook.default.svc.cluster.local
+              LIVEBOOK_CLUSTER: dns:livebook-headless.default.svc.cluster.local
               LIVEBOOK_DISTRIBUTION: name
               POD_IP:
                 valueFrom:
@@ -84,7 +84,6 @@ spec:
     service:
       app:
         controller: *app
-        clusterIP: None
         ports:
           http:
             port: *port
