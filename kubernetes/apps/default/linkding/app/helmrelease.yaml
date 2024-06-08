@@ -57,7 +57,7 @@ spec:
           app:
             image:
               repository: docker.io/sissbruecker/linkding
-              tag: 1.30.0-plus
+              tag: 1.30.0-plus-alpine
             env:
               LD_DB_ENGINE: postgres
               LD_DB_DATABASE: *dbName
@@ -67,28 +67,31 @@ spec:
               - secretRef:
                   name: *secret
             probes:
-              liveness:
+              liveness: &probes
                 enabled: true
-              readiness:
-                enabled: true
-              startup:
-                enabled: true
+                custom: true
                 spec:
-                  failureThreshold: 30
+                  httpGet:
+                    path: /health
+                    port: &port 9090
+                  initialDelaySeconds: 10
                   periodSeconds: 5
+                  timeoutSeconds: 10
+                  failureThreshold: 30
+              readiness: *probes
             resources:
               requests:
                 cpu: 12m
                 memory: 256M
               limits:
-                # For snapshot spike
+                # For HTML snapshot spike
                 memory: 1G
     service:
       app:
         controller: linkding
         ports:
           http:
-            port: 9090
+            port: *port
     ingress:
       app:
         className: external
