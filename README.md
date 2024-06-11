@@ -14,7 +14,7 @@
 - [Cloudflared HTTP tunnel](https://github.com/cloudflare/cloudflared)
 - [K8s gateway](https://github.com/ori-edge/k8s_gateway) for local DNS resolution to the cluster and [NGINX ingress controller](https://kubernetes.github.io/ingress-nginx/)
 - Both internal & external services with a service [gateway](https://github.com/ori-edge/k8s_gateway/)
-- OIDC [authentication](https://www.authelia.com/configuration/identity-providers/open-id-connect/) with [LDAP](https://github.com/nitnelave/lldap)
+- OIDC [authentication](https://www.authelia.com/configuration/identity-providers/open-id-connect/) with [LDAP](https://github.com/glauth/glauth)
 - Automatic Cloudflare DNS updates with [external-dns](./kubernetes/apps/network/external-dns/app/helmrelease.yaml)
 - [Cilium](https://cilium.io/) container networking interface (CNI) and [layer 4 loadbalancing](https://cilium.io/use-cases/load-balancer/)
 - [CloudNative-PG](https://cloudnative-pg.io/) with automatic failover
@@ -28,8 +28,6 @@ I'm using Raspberry Pi 4 (x 5) but the 4 GB RAM models are hungry for more memor
 ## Software
 
 Setup and usage is inspired heavily by [this homelab gitops template](https://github.com/onedr0p/flux-cluster-template) and the [k8s-at-home](https://github.com/k8s-at-home) community. You can find similar setups with the [k8s at home search](https://nanne.dev/k8s-at-home-search/). See my other [homelab](https://github.com/brettinternet/homelab) setups.
-
-Looking for a simpler devops experience? Checkout my docker deployment at [brettinternet/homelab](https://github.com/brettinternet/homelab).
 
 ### Setup
 
