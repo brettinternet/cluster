@@ -41,17 +41,17 @@ spec:
         compression: bzip2
         maxParallel: 8
       destinationPath: s3://cloudnative-pg/
-      endpointURL: http://minio.database.svc.cluster.local:9000
+      endpointURL: s3.us-west-004.backblazeb2.com
       # Note: serverName version needs to be implemented
       # when recovering from an existing cnpg cluster
       serverName: &currentCluster postgres16-v6
       s3Credentials:
         accessKeyId:
-          name: &minioSecret minio-secret
-          key: MINIO_ROOT_USER
+          name: &minioSecret cloudnative-pg-cluster-secret
+          key: AWS_ACCESS_KEY_ID
         secretAccessKey:
           name: *minioSecret
-          key: MINIO_ROOT_PASSWORD
+          key: AWS_SECRET_ACCESS_KEY
   # bootstrap:
   #   recovery:
   #     source: &previousCluster postgres16-v5
