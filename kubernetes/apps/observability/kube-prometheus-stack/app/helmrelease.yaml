@@ -35,11 +35,6 @@ spec:
     alertmanager:
       ingress:
         enabled: true
-        annotations:
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Services
-          gethomepage.dev/name: Alert Manager
-          gethomepage.dev/icon: alertmanager.png
         ingressClassName: internal
         hosts: ["alertmanager.${PRIVATE_DOMAIN}"]
         pathType: Prefix
@@ -115,11 +110,6 @@ spec:
     prometheus:
       ingress:
         enabled: true
-        annotations:
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Services
-          gethomepage.dev/name: Prometheus
-          gethomepage.dev/icon: prometheus.png
         ingressClassName: internal
         hosts: ["prometheus.${PRIVATE_DOMAIN}"]
         pathType: Prefix

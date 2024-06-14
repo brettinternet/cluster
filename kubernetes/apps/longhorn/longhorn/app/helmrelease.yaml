@@ -54,10 +54,6 @@ spec:
       host: "longhorn.${PRIVATE_DOMAIN}"
       tls: true
       annotations:
-        gethomepage.dev/enabled: "true"
-        gethomepage.dev/group: Services
-        gethomepage.dev/name: Longhorn
-        gethomepage.dev/icon: mdi-zip-disk
         nginx.ingress.kubernetes.io/auth-method: GET
         nginx.ingress.kubernetes.io/auth-url: "http://authelia.auth.svc.cluster.local/api/verify"
         nginx.ingress.kubernetes.io/auth-signin: "https://auth.${PUBLIC_DOMAIN}/?rm=$request_method"

@@ -66,11 +66,6 @@ spec:
       app:
         enabled: true
         className: internal
-        annotations:
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Services
-          gethomepage.dev/name: *app
-          gethomepage.dev/icon: si-postgresql
         hosts:
           - host: "{{ .Release.Name }}.${PRIVATE_DOMAIN}"
             paths:

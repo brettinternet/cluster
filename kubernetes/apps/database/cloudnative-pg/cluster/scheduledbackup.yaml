@@ -5,7 +5,7 @@ metadata:
   name: postgres
 spec:
   # schedule: "@daily"
-  schedule: "0 */6 * * *" # every 6 hours at minute 0
+  schedule: "0 */4 * * *" # every 6 hours at minute 0
   immediate: true
   backupOwnerReference: self
   cluster:

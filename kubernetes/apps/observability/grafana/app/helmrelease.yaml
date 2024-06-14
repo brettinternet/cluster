@@ -289,11 +289,6 @@ spec:
       enabled: true
     ingress:
       enabled: true
-      annotations:
-        gethomepage.dev/enabled: "true"
-        gethomepage.dev/group: Services
-        gethomepage.dev/name: Grafana
-        gethomepage.dev/icon: grafana.png
       ingressClassName: internal
       hosts: ["grafana.${PRIVATE_DOMAIN}"]
     persistence:

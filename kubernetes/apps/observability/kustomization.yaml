@@ -4,9 +4,8 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./gatus/ks.yaml
-  - ./healthchecks/ks.yaml
+  # - ./healthchecks/ks.yaml
   - ./grafana/ks.yaml
   - ./kubernetes-dashboard/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
-  # - ./smartctl-exporter/ks.yaml
   # - ./vector/ks.yaml
