@@ -1,5 +1,7 @@
 # Kubernetes Pi Cluster
 
+This repo is retired. See my [homeops](https://github.com/brettinternet/homeops).
+
 [![Lint](https://github.com/brettinternet/cluster/actions/workflows/lint.yaml/badge.svg)](https://github.com/brettinternet/cluster/actions/workflows/lint.yaml)
 
 ![pi 4 cluster](./docs/cluster.png)
